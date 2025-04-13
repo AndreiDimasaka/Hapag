@@ -49,7 +49,7 @@ fun GreetingPreview() {
 fun test() {
 
     Text(
-        text = "Successful!",
+        text = "Testing!",
         modifier = Modifier
     )
 }
