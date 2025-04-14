@@ -26,4 +26,4 @@ class SplashActivity : AppCompatActivity() {
 @Composable
 @Preview
 
-fun SplashScreen() {
+fun SplashScreen() { }
