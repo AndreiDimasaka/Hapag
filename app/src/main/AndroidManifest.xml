@@ -18,6 +18,15 @@
             android:label="@string/title_activity_upload"
             android:theme="@style/Theme.Hapag" />
         <activity
+            android:name="com.example.BaseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BaseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.theme.FrontActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
