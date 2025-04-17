@@ -1,10 +1,7 @@
-package com.example.hapag
+package com.example.hapag.ui
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import android.view.WindowManager
 import android.view.View
 

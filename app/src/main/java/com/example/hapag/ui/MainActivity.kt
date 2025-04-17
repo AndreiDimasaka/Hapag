@@ -1,7 +1,6 @@
-package com.example.hapag
+package com.example.hapag.ui
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.animateColorAsState
@@ -25,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.Row
@@ -33,9 +31,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.runtime.LaunchedEffect
 
 class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,7 +145,7 @@ fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: C
                 onClick = { /* Handle Uploaded click */ },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonBackgroundColor,
-                    contentColor = com.example.hapag.ui.theme.buttonTextColor
+                    contentColor = buttonTextColor
                 ),
                 shape = RoundedCornerShape(0.dp)
             ) { Text(text = "Uploaded") }
@@ -159,7 +155,7 @@ fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: C
                 onClick = { /* Handle Your Favorites click */ },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonBackgroundColor,
-                    contentColor = com.example.hapag.ui.theme.buttonTextColor
+                    contentColor = buttonTextColor
                 ),
                 shape = RoundedCornerShape(0.dp)
             ) { Text(text = "Your Favorites") }
