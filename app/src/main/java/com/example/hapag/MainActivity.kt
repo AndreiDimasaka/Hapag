@@ -31,11 +31,15 @@ import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.res.painterResource
 
 class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,34 +53,55 @@ class MainActivity : BaseActivity() {
     @Composable
     @Preview(showBackground = true, showSystemUi = true)
     fun MainActivityScreen() {
-        val buttonBackgroundColor = Color(0xFF403A35)
+        Scaffold(
+            bottomBar = {
+                NavigationBar(
+                    tonalElevation = 0.dp
+                ) {
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.Home, contentDescription = "Home", modifier = Modifier.size(24.dp)) },
+                        label = { Text("Home", fontSize = 10.sp) },
+                        selected = true,
+                        onClick = { /* TODO: Navigate to Home */ }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.Home, contentDescription = "Upload", modifier = Modifier.size(24.dp)) },
+                        label = { Text("Upload", fontSize = 10.sp) },
+                        selected = false,
+                        onClick = { /* TODO: Navigate to Upload */ }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(painterResource(id = R.drawable.home_icon), contentDescription = "My Recipes", modifier = Modifier.size(24.dp)) }, // Replace with your actual icon
+                        label = { Text("My Recipes", fontSize = 10.sp) },
+                        selected = false,
+                        onClick = { /* TODO: Navigate to My Recipes */ }
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.FavoriteBorder, contentDescription = "Favorites", modifier = Modifier.size(24.dp)) },
+                        label = { Text("Favorites", fontSize = 10.sp) },
+                        selected = false,
+                        onClick = { /* TODO: Navigate to Favorites */ }
+                    )
+                }
+            }
+        ) { paddingValues ->
+            ConstraintLayout(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(buttonTextColor)
+            ) {
+                val dashboard = createRef()
 
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(buttonTextColor)
-        ) {
-            val dashboard = createRef()
-            val bottomMenu = createRef()
-
-            FigmaDashboardLayout(
-                modifier = Modifier.constrainAs(dashboard) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(bottomMenu.top)
-                },
-                buttonBackgroundColor = buttonBackgroundColor
-            )
-
-            BottomNavigationBar(
-                modifier = Modifier.constrainAs(bottomMenu) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-                buttonBackgroundColor = buttonBackgroundColor
-            )
+                FigmaDashboardLayout(
+                    modifier = Modifier.constrainAs(dashboard) {
+                        top.linkTo(parent.top) // Constrain top to the parent's top
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom) // Dashboard fills the remaining space above bottom nav
+                    },
+                    buttonBackgroundColor = buttonBackgroundColor
+                )
+            }
         }
     }
 }
@@ -237,64 +262,6 @@ fun RecipeCard() {
         }
         Text(text = "Recipe Title", fontWeight = FontWeight.Bold)
         Text(text = "Food Type")
-    }
-}
-
-@Composable
-fun BottomNavigationBar(
-    modifier: Modifier = Modifier,
-    buttonBackgroundColor: Color
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        NavigationButton(
-            text = "Home",
-            onClick = { /* Handle Home click */ },
-            buttonBackgroundColor = buttonBackgroundColor,
-            fontSize = 12.sp
-        )
-        NavigationButton(
-            text = "Upload",
-            onClick = { /* Handle Upload click */ },
-            buttonBackgroundColor = buttonBackgroundColor,
-            fontSize = 12.sp
-        )
-        NavigationButton(
-            text = "My Recipes",
-            onClick = { /* Handle My Recipes click */ },
-            buttonBackgroundColor = buttonBackgroundColor,
-            fontSize = 12.sp
-        )
-        NavigationButton(
-            text = "Favorites",
-            onClick = { /* Handle Favorites click */ },
-            buttonBackgroundColor = buttonBackgroundColor,
-            fontSize = 12.sp
-        )
-    }
-}
-
-@Composable
-fun NavigationButton(
-    text: String,
-    onClick: () -> Unit,
-    buttonBackgroundColor: Color,
-    fontSize: TextUnit
-) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = buttonBackgroundColor
-        ),
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp, pressedElevation = 0.dp)
-    ) {
-        Text(text = text, fontSize = fontSize)
     }
 }
 

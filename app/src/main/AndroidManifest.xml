@@ -13,6 +13,15 @@
         android:theme="@style/Theme.Hapag"
         tools:targetApi="31">
         <activity
+            android:name="com.example.MyRecipes"
+            android:exported="false" />
+        <activity
+            android:name="com.example.FavoriteActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.recipe"
+            android:exported="false" />
+        <activity
             android:name=".Upload"
             android:exported="false"
             android:label="@string/title_activity_upload"
