@@ -1,4 +1,4 @@
-package com.example.hapag
+package com.example.hapag.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,6 +30,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,6 +48,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.hapag.R
 import com.example.hapag.ui.theme.HapagTheme
 
 class Upload : ComponentActivity() {
@@ -130,6 +132,7 @@ class Upload : ComponentActivity() {
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
+                .background(Color.White),
         ) {
             items.forEachIndexed { index, item ->
                 NavigationBarItem(
@@ -138,7 +141,7 @@ class Upload : ComponentActivity() {
                             Box(
                                 modifier = Modifier
                                     .size(24.dp)
-                                    .background(Color.LightGray)
+                                    .background(Color.Transparent)
                             )
                             { Icon(icons[index], contentDescription = item) }
                             Spacer(modifier = Modifier.height(4.dp))
@@ -155,17 +158,15 @@ class Upload : ComponentActivity() {
 
     @Composable
     fun MyScreen() {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = { BottomNavigationBar() }
+        ) { innerPadding ->
             LazyColumn(
                 modifier = Modifier
-                    .weight(1f)
-
-                    .padding(20.dp)
+                    .padding(innerPadding)
+                    .padding(20.dp), // Keep content padding separate for clarity
+                verticalArrangement = Arrangement.spacedBy(15.dp) // Apply item spacing here
             ) {
                 item {
                     Icon(
@@ -305,7 +306,6 @@ class Upload : ComponentActivity() {
                 }
 
             }
-            BottomNavigationBar()
         }
     }
 
@@ -314,7 +314,7 @@ class Upload : ComponentActivity() {
     @Composable
     fun GreetingPreview2() {
         HapagTheme {
-            BottomNavigationBar()
+            MyScreen()
         }
     }
 }
