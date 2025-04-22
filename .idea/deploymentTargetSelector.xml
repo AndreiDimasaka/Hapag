@@ -8,16 +8,16 @@
       <SelectionState runConfigName="GreetingPreview2">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="RecipeDetailScreen">
+      <SelectionState runConfigName="GreetingPreview2 (2)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Recipe">
+      <SelectionState runConfigName="MyFavoritesScreenPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="RecipeScreen">
+      <SelectionState runConfigName="Upload">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MainActivityScreen">
+      <SelectionState runConfigName="GreetingPreview2 (3)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
