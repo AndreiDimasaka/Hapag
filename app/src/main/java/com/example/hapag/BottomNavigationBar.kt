@@ -36,7 +36,7 @@ fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
     var selectedItem by remember { mutableIntStateOf(selectedIndex) }
     val items = listOf("Home", "Upload", "My Recipes", "Favorites")
     val icons =
-        listOf(Icons.Filled.Home, Icons.Filled.Home, painterResource(id = R.drawable.home_icon), Icons.Filled.Favorite)
+        listOf(Icons.Filled.Home, painterResource(id = R.drawable.baseline_file_upload_24), painterResource(id = R.drawable.baseline_menu_book_24), Icons.Filled.Favorite)
     NavigationBar(
         modifier = Modifier
             .fillMaxWidth()

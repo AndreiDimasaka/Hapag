@@ -1,5 +1,6 @@
 package com.example.hapag
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +46,7 @@ class MainActivity : BaseActivity() {
     @Composable
     @Preview(showBackground = true, showSystemUi = true)
     fun MainActivityScreen() {
+        val context = LocalContext.current
         Scaffold(
             bottomBar = {
                 BottomNavigationBar(onItemSelected = { index ->
@@ -73,7 +76,13 @@ class MainActivity : BaseActivity() {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                    buttonBackgroundColor = buttonBackgroundColor
+                    buttonBackgroundColor = buttonBackgroundColor,
+                    onRecipeClick = { recipeName ->
+                        val intent = Intent(context, RecipeActivity::class.java).apply {
+                            putExtra("recipe", recipeName)
+                        }
+                        context.startActivity(intent)
+                    }
                 )
             }
         }
@@ -82,7 +91,11 @@ class MainActivity : BaseActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: Color) {
+fun FigmaDashboardLayout(
+    modifier: Modifier = Modifier,
+    buttonBackgroundColor: Color,
+    onRecipeClick: (String) -> Unit
+) {
     var searchText by remember { mutableStateOf("") }
     var isActive by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf("All") }
@@ -276,7 +289,12 @@ fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: C
                         val foodIndex = rowIndex * 2 + i
                         if (foodIndex < displayFoods.size) {
                             val (foodName, foodType, imageRes) = displayFoods[foodIndex]
-                            RecipeCard(foodName = foodName, foodType = foodType, imageRes = imageRes)
+                            RecipeCard(
+                                foodName = foodName,
+                                foodType = foodType,
+                                imageRes = imageRes,
+                                onClick = { onRecipeClick(foodName) }
+                            )
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
                         }
@@ -311,9 +329,16 @@ fun FilterButton(
 }
 
 @Composable
-fun RecipeCard(foodName: String = "Recipe Title", foodType: String = "Food Type", imageRes: Int? = null) {
+fun RecipeCard(
+    foodName: String = "Recipe Title",
+    foodType: String = "Food Type",
+    imageRes: Int? = null,
+    onClick: () -> Unit
+) {
     Column(
-        modifier = Modifier.width(170.dp),
+        modifier = Modifier
+            .width(170.dp)
+            .clickable(onClick = onClick),
         horizontalAlignment = Alignment.Start
     ) {
         Box(
