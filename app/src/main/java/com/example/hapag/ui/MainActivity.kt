@@ -7,39 +7,30 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.hapag.ui.theme.buttonTextColor
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Dp
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.Button
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.hapag.ui.BaseActivity
+import com.example.hapag.ui.BottomNavigationBar
+import com.example.hapag.ui.theme.buttonTextColor
 
 class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,49 +46,32 @@ class MainActivity : BaseActivity() {
     fun MainActivityScreen() {
         Scaffold(
             bottomBar = {
-                NavigationBar(
-                    tonalElevation = 0.dp
-                ) {
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Filled.Home, contentDescription = "Home", modifier = Modifier.size(24.dp)) },
-                        label = { Text("Home", fontSize = 10.sp) },
-                        selected = true,
-                        onClick = { /* TODO: Navigate to Home */ }
-                    )
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Filled.Home, contentDescription = "Upload", modifier = Modifier.size(24.dp)) },
-                        label = { Text("Upload", fontSize = 10.sp) },
-                        selected = false,
-                        onClick = { /* TODO: Navigate to Upload */ }
-                    )
-                    NavigationBarItem(
-                        icon = { Icon(painterResource(id = R.drawable.home_icon), contentDescription = "My Recipes", modifier = Modifier.size(24.dp)) }, // Replace with your actual icon
-                        label = { Text("My Recipes", fontSize = 10.sp) },
-                        selected = false,
-                        onClick = { /* TODO: Navigate to My Recipes */ }
-                    )
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Filled.FavoriteBorder, contentDescription = "Favorites", modifier = Modifier.size(24.dp)) },
-                        label = { Text("Favorites", fontSize = 10.sp) },
-                        selected = false,
-                        onClick = { /* TODO: Navigate to Favorites */ }
-                    )
-                }
+                BottomNavigationBar(onItemSelected = { index ->
+                    // TODO: Implement navigation in MainActivity
+                    println("Main Activity: Bottom navigation item selected at index: $index")
+                    // Example navigation (you'll need to set up Navigation Compose):
+                    // when (index) {
+                    //     0 -> navController.navigate("home")
+                    //     1 -> navController.navigate("upload")
+                    //     2 -> navController.navigate("my_recipes")
+                    //     3 -> navController.navigate("favorites")
+                    // }
+                }, selectedIndex = 0)
             }
         ) { paddingValues ->
             ConstraintLayout(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(buttonTextColor)
+                    .padding(paddingValues)
             ) {
                 val dashboard = createRef()
 
                 FigmaDashboardLayout(
                     modifier = Modifier.constrainAs(dashboard) {
-                        top.linkTo(parent.top) // Constrain top to the parent's top
+                        top.linkTo(parent.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom) // Dashboard fills the remaining space above bottom nav
                     },
                     buttonBackgroundColor = buttonBackgroundColor
                 )
@@ -111,12 +85,59 @@ class MainActivity : BaseActivity() {
 fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: Color) {
     var searchText by remember { mutableStateOf("") }
     var isActive by remember { mutableStateOf(false) }
-    var selectedTab by remember { mutableStateOf("Sweet") }
+    var selectedCategory by remember { mutableStateOf("All") }
+    var selectedSweetSavoryTab by remember { mutableStateOf("All") }
 
+    val sweetFilipinoFoods = remember {
+        listOf(
+            Triple("Halo-Halo", "Merienda", R.drawable.halohalo),
+            Triple("Leche Flan", "Dessert", R.drawable.lecheflan),
+            Triple("Ube Halaya", "Dessert", R.drawable.ubehalaya),
+            Triple("Bibingka", "Breakfast", R.drawable.bibingka),
+            Triple("Puto Bumbong", "Breakfast", R.drawable.bumbong),
+            Triple("Kutsinta", "Merienda", R.drawable.kutsinta),
+            Triple("Suman", "Breakfast", R.drawable.suman),
+            Triple("Buko Pandan", "Dessert", R.drawable.bukopandan),
+            Triple("Turon", "Merienda", R.drawable.turon),
+            Triple("Banana Cue", "Merienda", R.drawable.bananacue)
+        )
+    }
+
+    val savoryFilipinoFoods = remember {
+        listOf(
+            Triple("Pork Adobo", "Lunch", R.drawable.adobo),
+            Triple("Pork Sinigang", "Dinner", R.drawable.sinigang),
+            Triple("Tortang Talong", "Dinner", R.drawable.torta),
+            Triple("Kare-Kare", "Lunch", R.drawable.karekare),
+            Triple("Pinakbet", "Lunch", R.drawable.pinakbet),
+            Triple("Laing", "Dinner", R.drawable.laing),
+            Triple("Pancit Bihon", "Merienda", R.drawable.pancit),
+            Triple("Lumpia", "Merienda", R.drawable.lumpia),
+            Triple("Sisig", "Lunch", R.drawable.sisig),
+            Triple("Bulalo", "Dinner", R.drawable.bulalo)
+        )
+    }
+
+    val filteredFoods = remember(selectedCategory) {
+        if (selectedCategory == "All") {
+            sweetFilipinoFoods + savoryFilipinoFoods
+        } else {
+            (sweetFilipinoFoods + savoryFilipinoFoods).filter { it.second.equals(selectedCategory, ignoreCase = true) }
+        }
+    }
+
+    val displayFoods = remember(selectedSweetSavoryTab, filteredFoods) {
+        when (selectedSweetSavoryTab) {
+            "All" -> filteredFoods
+            "Sweet" -> filteredFoods.filter { it.first in sweetFilipinoFoods.map { it.first } }
+            "Savory" -> filteredFoods.filter { it.first in savoryFilipinoFoods.map { it.first } }
+            else -> filteredFoods
+        }
+    }
 
     Column(
         modifier = modifier
-            .padding(16.dp)
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.Start
     ) {
@@ -134,7 +155,9 @@ fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: C
         Text(
             text = "Category",
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.Start)
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.Start)
         )
         Spacer(modifier = Modifier.height(15.dp))
 
@@ -145,22 +168,41 @@ fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: C
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(
-                onClick = { /* Handle Breakfast click */ },
-                colors = ButtonDefaults.buttonColors(containerColor = buttonBackgroundColor)
-            ) { Text(text = "Breakfast") }
-            Button(
-                onClick = { /* Handle Lunch click */ },
-                colors = ButtonDefaults.buttonColors(containerColor = buttonBackgroundColor)
-            ) { Text(text = "Lunch") }
-            Button(
-                onClick = { /* Handle Merienda click */ },
-                colors = ButtonDefaults.buttonColors(containerColor = buttonBackgroundColor)
-            ) { Text(text = "Merienda") }
-            Button(
-                onClick = { /* Handle Dinner click */ },
-                colors = ButtonDefaults.buttonColors(containerColor = buttonBackgroundColor)
-            ) { Text(text = "Dinner") }
+            FilterButton(
+                text = "All",
+                isSelected = selectedCategory == "All",
+                onClick = { selectedCategory = "All" },
+                backgroundColor = buttonBackgroundColor,
+                textColor = buttonTextColor
+            )
+            FilterButton(
+                text = "Breakfast",
+                isSelected = selectedCategory == "Breakfast",
+                onClick = { selectedCategory = "Breakfast" },
+                backgroundColor = buttonBackgroundColor,
+                textColor = buttonTextColor
+            )
+            FilterButton(
+                text = "Lunch",
+                isSelected = selectedCategory == "Lunch",
+                onClick = { selectedCategory = "Lunch" },
+                backgroundColor = buttonBackgroundColor,
+                textColor = buttonTextColor
+            )
+            FilterButton(
+                text = "Merienda",
+                isSelected = selectedCategory == "Merienda",
+                onClick = { selectedCategory = "Merienda" },
+                backgroundColor = buttonBackgroundColor,
+                textColor = buttonTextColor
+            )
+            FilterButton(
+                text = "Dinner",
+                isSelected = selectedCategory == "Dinner",
+                onClick = { selectedCategory = "Dinner" },
+                backgroundColor = buttonBackgroundColor,
+                textColor = buttonTextColor
+            )
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -200,23 +242,23 @@ fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: C
             Text(
                 text = "Sweet",
                 color = animateColorAsState(
-                    targetValue = if (selectedTab == "Sweet") Color.Black else Color.Gray,
+                    targetValue = if (selectedSweetSavoryTab == "Sweet") Color.Black else Color.Gray,
                     animationSpec = tween(durationMillis = 300)
                 ).value,
                 modifier = Modifier
                     .weight(1f)
-                    .clickable { selectedTab = "Sweet" },
+                    .clickable { selectedSweetSavoryTab = "Sweet" },
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Savory",
                 color = animateColorAsState(
-                    targetValue = if (selectedTab == "Savory") Color.Black else Color.Gray,
+                    targetValue = if (selectedSweetSavoryTab == "Savory") Color.Black else Color.Gray,
                     animationSpec = tween(durationMillis = 300)
                 ).value,
                 modifier = Modifier
                     .weight(1f)
-                    .clickable { selectedTab = "Savory" },
+                    .clickable { selectedSweetSavoryTab = "Savory" },
                 textAlign = TextAlign.Center
             )
         }
@@ -225,13 +267,19 @@ fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: C
         Spacer(modifier = Modifier.height(20.dp))
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            repeat(5) {
+            repeat(displayFoods.size / 2 + displayFoods.size % 2) { rowIndex ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    repeat(2) {
-                        RecipeCard()
+                    for (i in 0 until 2) {
+                        val foodIndex = rowIndex * 2 + i
+                        if (foodIndex < displayFoods.size) {
+                            val (foodName, foodType, imageRes) = displayFoods[foodIndex]
+                            RecipeCard(foodName = foodName, foodType = foodType, imageRes = imageRes)
+                        } else {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -243,12 +291,27 @@ fun FigmaDashboardLayout(modifier: Modifier = Modifier, buttonBackgroundColor: C
 }
 
 @Composable
-fun RoundedCornerShape(x0: Dp) {
-    androidx.compose.foundation.shape.RoundedCornerShape(x0)
+fun FilterButton(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    backgroundColor: Color,
+    textColor: Color
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primary else backgroundColor,
+            contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else textColor
+        ),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Text(text = text)
+    }
 }
 
 @Composable
-fun RecipeCard() {
+fun RecipeCard(foodName: String = "Recipe Title", foodType: String = "Food Type", imageRes: Int? = null) {
     Column(
         modifier = Modifier.width(170.dp),
         horizontalAlignment = Alignment.Start
@@ -256,12 +319,21 @@ fun RecipeCard() {
         Box(
             modifier = Modifier
                 .size(170.dp, 100.dp)
-                .background(Color.LightGray)
+                .background(Color.LightGray),
+            contentAlignment = Alignment.Center
         ) {
-            // Image placeholder
+            if (imageRes != null) {
+                Image(
+                    painter = painterResource(id = imageRes),
+                    contentDescription = foodName,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                Text("No Image", textAlign = TextAlign.Center)
+            }
         }
-        Text(text = "Recipe Title", fontWeight = FontWeight.Bold)
-        Text(text = "Food Type")
+        Text(text = foodName, fontWeight = FontWeight.Bold)
+        Text(text = foodType)
     }
 }
 

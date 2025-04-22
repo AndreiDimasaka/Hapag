@@ -10,7 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +20,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hapag.ui.BaseActivity
+import androidx.compose.material3.Icon
+import com.example.hapag.ui.BottomNavigationBar
+
+
 
 class MyFavoritesActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,32 +52,10 @@ fun MyFavoritesScreen() {
             )
         },
         bottomBar = {
-            NavigationBar(tonalElevation = 0.dp) {
-                NavigationBarItem(
-                    icon = { Icon(painterResource(id = R.drawable.home_icon), contentDescription = "Home", modifier = Modifier.size(24.dp), tint = buttonBackgroundColor) },
-                    label = { Text("Home", fontSize = 10.sp, color = buttonBackgroundColor) },
-                    selected = false,
-                    onClick = { /* TODO: Navigate to Home */ }
-                )
-                NavigationBarItem(
-                    icon = { Icon(painterResource(id = R.drawable.home_icon), contentDescription = "Upload", modifier = Modifier.size(24.dp), tint = buttonBackgroundColor) },
-                    label = { Text("Upload", fontSize = 10.sp, color = buttonBackgroundColor) },
-                    selected = false,
-                    onClick = { /* TODO: Navigate to Upload */ }
-                )
-                NavigationBarItem(
-                    icon = { Icon(painterResource(id = R.drawable.home_icon), contentDescription = "My Recipes", modifier = Modifier.size(24.dp), tint = buttonBackgroundColor) },
-                    label = { Text("My Recipes", fontSize = 10.sp, color = buttonBackgroundColor) },
-                    selected = false,
-                    onClick = { /* TODO: Navigate to My Recipes */ }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Filled.Favorite, contentDescription = "Favorites", modifier = Modifier.size(24.dp), tint = buttonBackgroundColor) },
-                    label = { Text("Favorites", fontSize = 10.sp, color = buttonBackgroundColor) },
-                    selected = true,
-                    onClick = { /* TODO: Stay on Favorites */ }
-                )
-            }
+            BottomNavigationBar(onItemSelected = { index ->
+                // TODO: Implement navigation based on the selected index
+                println("Favorites: Bottom navigation item selected at index: $index")
+            }, selectedIndex = 3) // Favorites is at index 3
         },
         containerColor = buttonTextColor
     ) { paddingValues ->
