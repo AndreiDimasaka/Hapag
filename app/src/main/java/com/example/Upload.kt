@@ -1,9 +1,8 @@
 
 package com.example
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,23 +24,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.AddCircle
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
@@ -49,9 +42,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -59,19 +49,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hapag.R
-import com.example.hapag.buttonBackgroundColor
-import com.example.hapag.buttonTextColor
+import kotlin.collections.toMutableList
 
 class Upload : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,7 +115,7 @@ class Upload : ComponentActivity() {
     }
 
     @Composable
-    fun OverlayButton(onAddClick : () -> Unit, text: String) {
+    fun OverlayButton(onAddClick: () -> Unit, text: String) {
         Column(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier.fillMaxWidth()
@@ -140,96 +131,355 @@ class Upload : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-            FloatingActionButton(
-                onClick = onAddClick,
-                containerColor = Color.Transparent,
-                elevation = FloatingActionButtonDefaults.elevation(0.dp)
+                FloatingActionButton(
+                    onClick = onAddClick,
+                    containerColor = Color.Transparent,
+                    elevation = FloatingActionButtonDefaults.elevation(0.dp)
 
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.add_circle),
-                    contentDescription = "add icon",
-                    modifier = Modifier.size(80.dp)
-                )
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.add_circle),
+                        contentDescription = "add icon",
+                        modifier = Modifier.size(80.dp)
+                    )
+                }
             }
-        }
 
         }
     }
-
     @Composable
-    fun InputList(onClose: () -> Unit, text : String) {
+    fun IngredientInputList(onClose: () -> Unit) {
+        var ingredientText by remember { mutableStateOf("") }
+        var measurementText by remember { mutableStateOf("") }
+        var ingredientList by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
+        val context = LocalContext.current
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.6f)),
             contentAlignment = Alignment.Center
         ) {
-        Card(
-            colors = CardDefaults.cardColors(Color.White),
-            border = BorderStroke(1.dp, Color.Black),
-            shape = RoundedCornerShape(25.dp),
-            modifier = Modifier
-                .padding(bottom = 180.dp, start = 30.dp, end = 30.dp, top = 100.dp)
-        )
-        {
-            Column(
+            Card(
+                colors = CardDefaults.cardColors(Color.White),
+                border = BorderStroke(1.dp, Color.Black),
+                shape = RoundedCornerShape(25.dp),
                 modifier = Modifier
-                    .padding(top = 10.dp, start = 5.dp, end = 5.dp)
+                    .padding(bottom = 180.dp, start = 20.dp, end = 20.dp, top = 100.dp)
+                    .fillMaxSize()
             )
             {
-                IconButton(onClick = onClose) {
-                    Icon(
-                        painter = painterResource(R.drawable.arrow_back),
-                        contentDescription = "return",
-                        modifier = Modifier.padding(start = 10.dp)
-                            .size(30.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height(5.dp))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                        .border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(20.dp))
-                        .height(50.dp)
+                Column(
+                    modifier = Modifier
+                        .padding(top = 10.dp, start = 5.dp, end = 5.dp)
+                )
+                {
+                        IconButton(onClick = onClose) {
+                            Icon(
+                                painter = painterResource(R.drawable.arrow_back),
+                                contentDescription = "return",
+                                modifier = Modifier.padding(start = 10.dp)
+                                    .size(30.dp)
+                            )
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier.fillMaxWidth().padding(8.dp)
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            Text(
+                                text = "Required",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(end = 70.dp)
+                            )
+                            Text(
+                                text = "Optional",
+                                modifier = Modifier.padding(end = 10.dp)
+                            )
 
-                ) {
-                    Text(
-                        text = text,
-                        fontSize = 15.sp
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    FloatingActionButton(
-                        onClick = { },
-                        containerColor = Color.White,
-                        elevation = FloatingActionButtonDefaults.elevation(0.dp),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.add_circle),
-                            contentDescription = "Add Ingredient",
-                            modifier = Modifier.size(40.dp)
-                        )
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+
+
+                        ) {
+                            OutlinedTextField(
+                                value = ingredientText,
+                                onValueChange = { ingredientText = it },
+                                label = { Text(text = "Ingredient") },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(end = 8.dp)
+
+
+                            )
+                            OutlinedTextField(
+                                value = measurementText,
+                                onValueChange = { measurementText = it },
+                                label = { Text(text = "Measurement") },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 8.dp, end = 8.dp)
+                            )
+
+
+                        }
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
+                            FloatingActionButton(
+                                onClick = {
+                                    val ingredient = ingredientText
+                                    val measurement = measurementText
+
+                                    if (ingredient.isBlank()) {
+                                        Toast.makeText(
+                                            context,
+                                            "Please enter an ingredient",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        ingredientList =
+                                            ingredientList + (ingredient to measurement)
+
+                                        ingredientText = ""
+                                        measurementText = ""
+                                    }
+                                },
+                                containerColor = Color.White,
+                                elevation = FloatingActionButtonDefaults.elevation(0.dp),
+                            ) { Icon(
+                                    painter = painterResource(R.drawable.add_circle),
+                                    contentDescription = "Add Ingredient",
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(20.dp))
+                            LazyColumn(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+
+                                items(ingredientList) { item ->
+                                    val (ingredient, measurement) = item
+                                    if (measurement.isNotBlank()) {
+                                        Row(
+                                            horizontalArrangement = Arrangement.SpaceEvenly,
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier
+                                                .padding(start =30.dp, end = 30.dp)
+                                        ){
+                                            Text(
+                                                text = ingredient,
+                                                fontSize = 12.sp,
+                                                modifier = Modifier.weight(0.5f)
+                                            )
+                                            Text(
+                                                text = measurement,
+                                                fontSize = 12.sp,
+                                                modifier = Modifier.weight(0.5f)
+                                            )
+                                            FloatingActionButton(
+                                                onClick = {
+                                                    val mutableList = ingredientList.toMutableList()
+                                                    mutableList.remove(item)
+                                                    ingredientList = mutableList.toList()
+
+                                                },
+                                                containerColor = Color.White,
+                                                elevation = FloatingActionButtonDefaults.elevation(0.dp),
+                                                modifier = Modifier.size(15.dp)) {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.close),
+                                                    contentDescription = "Remove Ingredient",
+                                                    tint = Color.Red,
+                                                    modifier = Modifier.size(20.dp)
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        ingredient
+                                        Row(
+                                            horizontalArrangement = Arrangement.SpaceEvenly,
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier
+                                                .padding(start =30.dp, end = 30.dp)
+                                        ) {
+                                            Text(
+                                                text = ingredient,
+                                                fontSize = 12.sp,
+                                                modifier = Modifier.weight(0.5f)
+                                            )
+                                            FloatingActionButton(
+                                                onClick = {
+                                                    val mutableList = ingredientList.toMutableList()
+                                                    mutableList.remove(item)
+                                                    ingredientList = mutableList.toList()
+
+                                                },
+                                                containerColor = Color.White,
+                                                elevation = FloatingActionButtonDefaults.elevation(0.dp),
+                                                modifier = Modifier.size(15.dp)) {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.close),
+                                                    contentDescription = "Remove Ingredient",
+                                                    tint = Color.Red,
+                                                    modifier = Modifier.size(20.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                     }
-
                 }
             }
         }
+    @Composable
+    fun ProcedureInputList(onClose: () -> Unit) {
+        var procedureText by remember { mutableStateOf("") }
+        var procedureList by remember { mutableStateOf<List<String>>(emptyList()) }
+        val context = LocalContext.current
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.6f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Card(
+                colors = CardDefaults.cardColors(Color.White),
+                border = BorderStroke(1.dp, Color.Black),
+                shape = RoundedCornerShape(25.dp),
+                modifier = Modifier
+                    .padding(bottom = 180.dp, start = 20.dp, end = 20.dp, top = 100.dp)
+                    .fillMaxSize()
+            )
+            {
+                Column(
+                    modifier = Modifier
+                        .padding(top = 10.dp, start = 5.dp, end = 5.dp)
+                )
+                {
+                    IconButton(onClick = onClose) {
+                        Icon(
+                            painter = painterResource(R.drawable.arrow_back),
+                            contentDescription = "return",
+                            modifier = Modifier.padding(start = 10.dp)
+                                .size(30.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(){
+                    OutlinedTextField(
+                        value = procedureText,
+                        onValueChange = { procedureText = it },
+                        label = { Text(text = "Procedure") },
+                        singleLine = true,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 15.dp, end = 15.dp)
+
+
+                    )
+                        }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        FloatingActionButton(
+                            onClick = {
+                                val procedure = procedureText
+
+                                if (procedure.isBlank()) {
+                                    Toast.makeText(
+                                        context,
+                                        "Please enter a step",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    procedureList =
+                                        procedureList + (procedure)
+                                    procedureText = ""
+                                }
+                            },
+                            containerColor = Color.White,
+                            elevation = FloatingActionButtonDefaults.elevation(0.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.add_circle),
+                                contentDescription = "Add Ingredient",
+                                modifier = Modifier.size(40.dp)
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(20.dp))
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+
+                        items(procedureList) { item ->
+                            val procedure = item
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .padding(start = 30.dp, end = 30.dp)
+                            ) {
+                                Text(
+                                    text = "Step ${procedureList.indexOf(item) + 1}",
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.weight(0.5f)
+                                )
+                                Text(
+                                    text = procedure,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.weight(0.5f)
+                                )
+                                FloatingActionButton(
+                                    onClick = {
+
+                                        val mutableList = procedureList.toMutableList()
+                                        mutableList.remove(procedure)
+                                        procedureList = mutableList.toList()
+
+                                    },
+                                    containerColor = Color.White,
+                                    elevation = FloatingActionButtonDefaults.elevation(0.dp),
+                                    modifier = Modifier.size(15.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.close),
+                                        contentDescription = "Remove Ingredient",
+                                        tint = Color.Red,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-        @Composable
-        fun BottomNavigationBar() {
-            var selectedItem by remember { mutableIntStateOf(0) }
-            val items = listOf("Home", "Upload", "My Recipes", "Favorites")
-            val icons =
-                listOf(Icons.Filled.Home, Icons.Filled.Home, Icons.Filled.Home, Icons.Filled.Home)
+
+
+    @Composable
+    fun BottomNavigationBar() {
+        var selectedItem by remember { mutableIntStateOf(0) }
+        val items = listOf("Home", "Upload", "My Recipes", "Favorites")
+        val icons = listOf(Icons.Filled.Home, Icons.Filled.Home, Icons.Filled.Home, Icons.Filled.Home)
             NavigationBar(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -255,33 +505,14 @@ class Upload : ComponentActivity() {
                     )
                 }
             }
-        }
+    }
 
-        @OptIn(ExperimentalMaterial3Api::class)
-        @Composable
-        fun TopReturnBar() {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    IconButton(onClick = { /* TODO: Navigate back */ }) {
-                        Icon(
-                            Icons.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = buttonBackgroundColor
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = buttonTextColor)
-            )
-        }
+    @Composable
+    fun MyScreen() {
+        var showIngredientInput by remember { mutableStateOf(false) }
+        var showProcedureInput by remember { mutableStateOf(false) }
 
-
-        @Composable
-        fun MyScreen() {
-            var showIngredientInput by remember {mutableStateOf(false)}
-            var showProcedureInput by remember {mutableStateOf(false)}
-
-            Scaffold(
+        Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = { BottomNavigationBar() },
             ) { innerPadding ->
@@ -366,13 +597,19 @@ class Upload : ComponentActivity() {
                         Spacer(modifier = Modifier.height(15.dp))
                     }
                     item {
-                        OverlayButton(onAddClick = { showIngredientInput= true }, text = "Ingredients used")
+                        OverlayButton(
+                            onAddClick = { showIngredientInput = true },
+                            text = "Ingredients used"
+                        )
                     }
                     item {
                         Spacer(modifier = Modifier.height(15.dp))
                     }
                     item {
-                        OverlayButton(onAddClick = { showProcedureInput = true }, text = "Procedure")
+                        OverlayButton(
+                            onAddClick = { showProcedureInput = true },
+                            text = "Procedure"
+                        )
                     }
                     item {
                         Spacer(modifier = Modifier.height(15.dp))
@@ -431,16 +668,15 @@ class Upload : ComponentActivity() {
                             }
                         }
                     }
-
                 }
             }
-
-            if (showIngredientInput)
-            { InputList(onClose = {showIngredientInput = false}, text = "Insert Ingredient and Measurement(Optional)") }
-            if (showProcedureInput)
-            { InputList(onClose = {showProcedureInput = false}, text = "Insert Steps or Procedures") }
+        if (showIngredientInput) {
+            IngredientInputList(onClose = { showIngredientInput = false })
         }
-
+        if (showProcedureInput) {
+            ProcedureInputList(onClose = { showProcedureInput = false })
+        }
+        }
 
         @Preview(showBackground = true)
         @Composable
