@@ -1,11 +1,17 @@
 
 package com.example
 
+import android.content.res.Resources
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,6 +41,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
@@ -53,6 +60,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -61,7 +69,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.hapag.R
+import com.example.hapag.buttonBackgroundColor
+import com.example.hapag.buttonTextColor
+import com.example.hapag.ui.BottomNavigationBar
+import com.example.ui.theme.DarkBrown
+import com.example.ui.theme.Light
 import kotlin.collections.toMutableList
 
 class Upload : ComponentActivity() {
@@ -73,8 +87,38 @@ class Upload : ComponentActivity() {
             }
         }
     }
-
-
+    @Composable
+    fun ImageSelectnDisplay() {
+        var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+        val singleImagePicker = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = { uri -> selectedImageUri = uri }
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(model = selectedImageUri,
+                contentDescription = "",
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(start = 8.dp),
+                contentScale = ContentScale.Crop)
+            Spacer(Modifier.width(60.dp))
+            OutlinedButton(
+                onClick = {singleImagePicker.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                ) },){
+                Text (
+                    text = "ADD IMAGE",
+                    color = DarkBrown,
+                    fontSize = 18.sp
+                )
+            }
+        }
+    }
     @Composable
     fun TextBoxWithTitle(
         title: String,
@@ -474,39 +518,6 @@ class Upload : ComponentActivity() {
     }
 
 
-
-    @Composable
-    fun BottomNavigationBar() {
-        var selectedItem by remember { mutableIntStateOf(0) }
-        val items = listOf("Home", "Upload", "My Recipes", "Favorites")
-        val icons = listOf(Icons.Filled.Home, Icons.Filled.Home, Icons.Filled.Home, Icons.Filled.Home)
-            NavigationBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .background(Color.White),
-            ) {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        icon = {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .background(Color.Transparent)
-                                )
-                                { Icon(icons[index], contentDescription = item) }
-                                Spacer(modifier = Modifier.height(4.dp))
-                            }
-                        },
-                        label = { Text(item) },
-                        selected = selectedItem == index,
-                        onClick = { selectedItem = index }
-                    )
-                }
-            }
-    }
-
     @Composable
     fun MyScreen() {
         var showIngredientInput by remember { mutableStateOf(false) }
@@ -514,7 +525,7 @@ class Upload : ComponentActivity() {
 
         Scaffold(
                 modifier = Modifier.fillMaxSize(),
-                bottomBar = { BottomNavigationBar() },
+                bottomBar = { BottomNavigationBar( onItemSelected = { index -> }, selectedIndex = 1 )},
             ) { innerPadding ->
                 LazyColumn(
                     modifier = Modifier
@@ -547,28 +558,9 @@ class Upload : ComponentActivity() {
                             modifier = Modifier
                                 .border(width = 1.dp, color = Color.Black, shape = RectangleShape)
                                 .size(height = 120.dp, width = 400.dp)
+                                .background(color = Light)
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(
-                                        start = 50.dp,
-                                        top = 20.dp,
-                                        bottom = 20.dp,
-                                        end = 50.dp
-                                    ),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.lightgray),
-                                    contentDescription = "upload icon"
-                                )
-                                Spacer(modifier = Modifier.width(50.dp))
-                                Text(
-                                    text = "ADD A PHOTO",
-                                    fontSize = 20.sp
-                                )
-                            }
+                            ImageSelectnDisplay()
                         }
                     }
                     item {

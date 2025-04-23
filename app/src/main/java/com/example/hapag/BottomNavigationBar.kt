@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hapag.MainActivity
 import com.example.hapag.MyFavoritesActivity
 import com.example.hapag.MyRecipesActivity
 import com.example.hapag.buttonBackgroundColor
@@ -85,8 +86,8 @@ fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
                     when (index) {
                         0 -> { // Index 0 corresponds to "Home" - You might want to navigate somewhere specific
                             // Example:
-                            // val intent = Intent(context, HomeActivity::class.java)
-                            // context.startActivity(intent)
+                            val intent = Intent(context, MainActivity::class.java)
+                            context.startActivity(intent)
                         }
                         1 -> { // Index 1 corresponds to "Upload"
                             val intent = Intent(context, Upload::class.java)
