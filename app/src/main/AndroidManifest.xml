@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Hapag"
         tools:targetApi="31" >
         <activity
-            android:name="com.example.Upload"
+            android:name=".ui.Upload"
             android:exported="false"
             android:label="@string/title_activity_upload"
             android:theme="@style/Theme.Hapag" />
@@ -21,11 +21,6 @@
             android:name="com.example.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main"
-            android:theme="@style/Theme.Hapag" />
-        <activity
-            android:name=".Upload"
-            android:exported="false"
-            android:label="@string/title_activity_upload"
             android:theme="@style/Theme.Hapag" />
         <activity
             android:name="com.example.IngredientsAdd"

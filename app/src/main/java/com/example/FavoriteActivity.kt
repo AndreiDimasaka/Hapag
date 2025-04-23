@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Icon
 import com.example.hapag.ui.BottomNavigationBar
+import androidx.compose.ui.platform.LocalContext
 
 class MyFavoritesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +38,13 @@ class MyFavoritesActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyFavoritesScreen(onBack: () -> Unit) { // Add onBack parameter
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = onBack) { // Call the onBack lambda
+                    IconButton(onClick = onBack) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = buttonBackgroundColor)
                     }
                 },
@@ -76,17 +78,24 @@ fun MyFavoritesScreen(onBack: () -> Unit) { // Add onBack parameter
             FavoriteRecipeCard(
                 title = "Recipe 1",
                 category = "Savory",
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onRecipeClick = {
+                    val intent = Intent(context, RecipeActivity::class.java).apply {
+                        putExtra("recipe", "blankrecipe")
+                    }
+                    context.startActivity(intent)
+                }
             )
         }
     }
 }
 
 @Composable
-fun FavoriteRecipeCard(title: String, category: String, modifier: Modifier = Modifier) {
+fun FavoriteRecipeCard(title: String, category: String, modifier: Modifier = Modifier, onRecipeClick: () -> Unit) {
     Row(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(onClick = onRecipeClick) // Make the entire row clickable
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

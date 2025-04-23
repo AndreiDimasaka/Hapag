@@ -10,6 +10,14 @@
       </SelectionState>
       <SelectionState runConfigName="MainActivityScreen">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-04-23T09:16:56.958443900Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=10HBB206U10009U" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="RecipeScreen">
         <option name="selectionMode" value="DROPDOWN" />

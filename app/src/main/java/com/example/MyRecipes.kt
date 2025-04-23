@@ -50,6 +50,7 @@ fun RecipeContent(recipeName: String?, onNavigateBack: () -> Unit) {
     when (recipeName) {
         "halohalo" -> HaloHaloRecipeScreen(onNavigateBack = onNavigateBack)
         "lecheflan" -> LecheFlanRecipeScreen(onNavigateBack = onNavigateBack)
+        "blankrecipe" -> BlankRecipeScreen(onNavigateBack = onNavigateBack) // Added BlankRecipeScreen
         else -> {
             Column(
                 modifier = Modifier
@@ -96,7 +97,7 @@ fun RecipeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { },
+                title = { /* Title is now below the image */ },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -306,31 +307,20 @@ fun HaloHaloRecipeScreen(
         recipeTitle = "Halo-Halo",
         foodType = "Dessert",
         prepTime = "30 mins (Yields to 2)",
-        description = "Halo-halo is a popular Filipino cold dessert made up of mixtures of shaved ice and milk to which are added various boiled sweet beans, fruits, and jellies, and then topped with leche flan, purple yam jam (ube halaya), ube ice cream, or leche flan, and often drizzled with caramelized sugar.",
+        description = "Halo-halo is a popular Filipino cold dessert...",
         ingredients = listOf(
             "1 cup shaved ice",
-            "1/4 cup cooked sweet beans (e.g., kidney beans, garbanzos)",
-            "1/4 cup sweetened banana (minatamis na saging)",
-            "1/4 cup jackfruit (langka), sliced",
-            "2 tablespoons nata de coco (coconut gel)",
-            "2 tablespoons kaong (sugar palm fruit)",
-            "2 tablespoons leche flan, cubed",
-            "2 tablespoons ube halaya (purple yam jam)",
-            "2 tablespoons ube ice cream",
-            "2 tablespoons pinipig (toasted pounded young rice)",
+            "1/4 cup cooked sweet beans...",
             "Sweetened milk, to taste"
         ),
         procedure = listOf(
-            "In a tall glass, layer the sweet beans, sweetened banana, jackfruit, nata de coco, and kaong.",
+            "In a tall glass, layer the sweet beans...",
             "Fill the glass with shaved ice.",
-            "Pour sweetened milk over the shaved ice.",
-            "Top with leche flan, ube halaya, and ube ice cream.",
-            "Sprinkle with pinipig.",
             "Serve immediately and enjoy!"
         ),
         onNavigateBack = onNavigateBack,
         onAddToFavorites = { /* TODO: Implement adding Halo-Halo to favorites */ },
-        mainImageResId = R.drawable.halohalo, // Replace with your actual image resource ID
+        mainImageResId = R.drawable.halohalo,
         onHomeClick = onHomeClick,
         onUploadClick = onUploadClick,
         onMyRecipesClick = onMyRecipesClick,
@@ -350,32 +340,54 @@ fun LecheFlanRecipeScreen(
         recipeTitle = "Leche Flan",
         foodType = "Dessert",
         prepTime = "1 hour 30 mins (Yields to 4)",
-        description = "Leche flan is a custard dessert made of eggs, milk, and sugar with a soft caramel topping. It is similar to crème caramel and crème brûlée. It is a staple dessert in the Philippines.",
+        description = "Leche flan is a custard dessert...",
         ingredients = listOf(
             "10 egg yolks",
             "1 can (14 oz) sweetened condensed milk",
-            "1 can (12 oz) evaporated milk",
-            "1 teaspoon vanilla extract",
             "For the Caramel:",
-            "1 cup granulated sugar",
-            "1/4 cup water"
+            "1 cup granulated sugar"
         ),
         procedure = listOf(
-            "Prepare the caramel: In a saucepan over medium heat, combine sugar and water. Stir until sugar is dissolved. Bring to a boil and cook without stirring until the syrup turns into a light golden brown caramel. Immediately pour the caramel evenly into the bottom of llaneras (oval molds with lids) or ramekins.",
-            "In a large bowl, whisk the egg yolks until light and slightly pale.",
-            "Gradually whisk in the sweetened condensed milk and evaporated milk until well combined.",
-            "Stir in the vanilla extract.",
-            "Pour the custard mixture over the caramel in the llaneras or ramekins. Cover them with their lids or aluminum foil.",
-            "Steam the leche flan: Arrange the llaneras in a steamer over simmering water. Steam for 45-60 minutes, or until a toothpick inserted into the center comes out clean.",
-            "Alternatively, bake the leche flan: Preheat oven to 350°F (175°C). Place the llaneras in a baking dish and pour hot water into the dish to reach halfway up the sides of the molds (water bath). Bake for 45-60 minutes, or until a toothpick inserted into the center comes out clean.",
-            "Once cooked, remove from the steamer or oven and let them cool completely.",
-            "Refrigerate for at least 2 hours before serving.",
-            "To unmold, run a thin knife around the edge of each llanera. Place a serving plate upside down over the llanera and quickly flip it over. The caramel should drizzle over the custard.",
+            "Prepare the caramel...",
+            "In a large bowl, whisk the egg yolks...",
             "Serve chilled and enjoy!"
         ),
         onNavigateBack = onNavigateBack,
         onAddToFavorites = { /* TODO: Implement adding Leche Flan to favorites */ },
-        mainImageResId = R.drawable.lecheflan, // Replace with your actual image resource ID
+        mainImageResId = R.drawable.lecheflan,
+        onHomeClick = onHomeClick,
+        onUploadClick = onUploadClick,
+        onMyRecipesClick = onMyRecipesClick,
+        onFavoritesClick = onFavoritesClick
+    )
+}
+
+@Composable
+fun BlankRecipeScreen(
+    onNavigateBack: () -> Unit = {},
+    onHomeClick: () -> Unit = {},
+    onUploadClick: () -> Unit = {},
+    onMyRecipesClick: () -> Unit = {},
+    onFavoritesClick: () -> Unit = {}
+) {
+    RecipeScreen(
+        recipeTitle = "Recipe Title",
+        foodType = "Sweet Savory",
+        prepTime = "N/A",
+        description = "Decoy Recipe.",
+        ingredients = listOf(
+            "Ingredient 1",
+            "Ingredient 2",
+            "Ingredient 3"
+        ),
+        procedure = listOf(
+            "Procedure 1",
+            "Procedure 2",
+            "Procedure 3"
+        ),
+        onNavigateBack = onNavigateBack,
+        onAddToFavorites = { /* TODO: Implement adding Blank Recipe to favorites */ },
+        mainImageResId = R.drawable.ic_launcher_background,
         onHomeClick = onHomeClick,
         onUploadClick = onUploadClick,
         onMyRecipesClick = onMyRecipesClick,
@@ -393,4 +405,10 @@ fun PreviewHaloHaloRecipeScreen() {
 @Composable
 fun PreviewLecheFlanRecipeScreen() {
     LecheFlanRecipeScreen(onNavigateBack = {})
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PreviewBlankRecipeScreen() {
+    BlankRecipeScreen(onNavigateBack = {})
 }

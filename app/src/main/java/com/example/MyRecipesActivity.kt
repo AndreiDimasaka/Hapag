@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.hapag.ui.BaseActivity
 import androidx.compose.material3.Icon
 import com.example.hapag.ui.BottomNavigationBar // Import
+import androidx.compose.ui.platform.LocalContext
 
 class MyRecipesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +40,7 @@ class MyRecipesActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyRecipesScreen(onBack: () -> Unit) { // Add the onBack parameter
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             TopAppBar(
@@ -86,17 +88,24 @@ fun MyRecipesScreen(onBack: () -> Unit) { // Add the onBack parameter
             MyRecipeCard(
                 title = "My Recipe 1",
                 category = "Sweet",
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onRecipeClick = {
+                    val intent = Intent(context, RecipeActivity::class.java).apply {
+                        putExtra("recipe", "blankrecipe")
+                    }
+                    context.startActivity(intent)
+                }
             )
         }
     }
 }
 
 @Composable
-fun MyRecipeCard(title: String, category: String, modifier: Modifier = Modifier) {
+fun MyRecipeCard(title: String, category: String, modifier: Modifier = Modifier, onRecipeClick: () -> Unit) {
     Row(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(onClick = onRecipeClick) // Make the entire row clickable
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -114,5 +123,5 @@ fun MyRecipeCard(title: String, category: String, modifier: Modifier = Modifier)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MyRecipesScreenPreview() {
-    MyRecipesScreen(onBack = {}) // Provide an empty lambda for the preview
+    MyRecipesScreen(onBack = {})
 }

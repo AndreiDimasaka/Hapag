@@ -1,5 +1,6 @@
 package com.example.hapag.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,14 +21,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hapag.MainActivity
 import com.example.hapag.R
 import com.example.hapag.ui.theme.HapagTheme
+
+val buttonTextColor = Color(0xFFF1EDE7)
+val buttonBackgroundColor = Color(0xFF403A35)
 
 class Upload : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +41,7 @@ class Upload : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             HapagTheme {
-                MyScreen() // Display MyScreen when the activity is created
+                MyScreen()
             }
         }
     }
@@ -51,7 +58,7 @@ class Upload : ComponentActivity() {
 
         Text(
             text = title,
-            style = TextStyle(color = Color.Black, fontSize = 20.sp)
+            style = TextStyle(color = buttonBackgroundColor, fontSize = 20.sp)
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -59,16 +66,16 @@ class Upload : ComponentActivity() {
         OutlinedTextField(
             value = textState,
             onValueChange = { textState = it },
-            placeholder = { Text(text = hint, fontSize = 12.sp) },
+            placeholder = { Text(text = hint, fontSize = 12.sp, color = Color.Gray) },
             modifier = modifier.size(height = height.dp, width = 400.dp),
             shape = RoundedCornerShape(round.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
+                focusedTextColor = buttonBackgroundColor,
+                unfocusedTextColor = buttonBackgroundColor,
                 unfocusedPlaceholderColor = Color.Gray,
                 disabledPlaceholderColor = Color.Gray,
                 focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Black
+                unfocusedBorderColor = buttonBackgroundColor
             )
         )
     }
@@ -81,34 +88,35 @@ class Upload : ComponentActivity() {
         ) {
             Text(
                 text = "Ingredients Used",
-                style = TextStyle(color = Color.Black, fontSize = 20.sp),
+                style = TextStyle(color = buttonBackgroundColor, fontSize = 20.sp),
                 modifier = Modifier.padding(end = 220.dp)
             )
 
             Icon(
                 painter = painterResource(R.drawable.add_circle),
                 contentDescription = "add icon",
-                modifier = Modifier.size(80.dp)
+                modifier = Modifier.size(80.dp),
+                tint = buttonBackgroundColor // Apply tint to the icon
             )
         }
     }
 
     @Composable
     fun MyScreen() {
-        var selectedBottomNavItemIndex by remember { mutableIntStateOf(1) } // Set initial selection to "Upload" (index 1)
+        val backgroundColor = buttonTextColor
+        val context = LocalContext.current
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             bottomBar = {
                 BottomNavigationBar(
                     onItemSelected = { index ->
-                        selectedBottomNavItemIndex = index
-                        // You can add navigation logic here based on the selected index
-                        println("Bottom navigation item selected: $index")
+                        println("Bottom navigation item selected in Upload: $index")
                     },
-                    selectedIndex = selectedBottomNavItemIndex
+                    selectedIndex = 1 // Highlight "Upload" (assuming it's at index 1)
                 )
-            }
+            },
+            containerColor = backgroundColor
         ) { innerPadding ->
             LazyColumn(
                 modifier = Modifier
@@ -119,7 +127,13 @@ class Upload : ComponentActivity() {
                 item {
                     Icon(
                         painter = painterResource(R.drawable.arrow_back),
-                        contentDescription = "back icon"
+                        contentDescription = "back icon",
+                        tint = buttonBackgroundColor,
+                        modifier = Modifier.clickable {
+                            val intent = Intent(context, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            context.startActivity(intent)
+                        }
                     )
                 }
 
@@ -127,7 +141,7 @@ class Upload : ComponentActivity() {
                     Row(Modifier.fillMaxWidth()) {
                         Text(text = "Cancel", color = Color.Red)
                         Spacer(modifier = Modifier.width(80.dp))
-                        Text(text = "UPLOAD A RECIPE")
+                        Text(text = "UPLOAD A RECIPE", color = buttonBackgroundColor)
                     }
                 }
 
@@ -137,8 +151,9 @@ class Upload : ComponentActivity() {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .border(width = 1.dp, color = Color.Black, shape = RectangleShape)
+                            .border(width = 1.dp, color = buttonBackgroundColor, shape = RectangleShape)
                             .size(height = 120.dp, width = 400.dp)
+                            .background(Color.White) // Added a white background for the box
                     ) {
                         Row(
                             modifier = Modifier
@@ -151,7 +166,7 @@ class Upload : ComponentActivity() {
                                 contentDescription = "upload icon"
                             )
                             Spacer(modifier = Modifier.width(50.dp))
-                            Text(text = "ADD A PHOTO", fontSize = 20.sp)
+                            Text(text = "ADD A PHOTO", fontSize = 20.sp, color = buttonBackgroundColor)
                         }
                     }
                 }
@@ -226,11 +241,11 @@ class Upload : ComponentActivity() {
                         OutlinedButton(
                             onClick = { },
                             modifier = Modifier.size(height = 40.dp, width = 200.dp),
-                            border = BorderStroke(1.dp, Color.Black)
+                            border = BorderStroke(1.dp, buttonBackgroundColor),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = buttonBackgroundColor)
                         ) {
                             Text(
                                 text = "UPLOAD",
-                                color = Color.Black,
                                 fontSize = 18.sp
                             )
                         }

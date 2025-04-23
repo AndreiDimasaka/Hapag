@@ -83,6 +83,15 @@ fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
                     selectedItem = index
                     onItemSelected(index)
                     when (index) {
+                        0 -> { // Index 0 corresponds to "Home" - You might want to navigate somewhere specific
+                            // Example:
+                            // val intent = Intent(context, HomeActivity::class.java)
+                            // context.startActivity(intent)
+                        }
+                        1 -> { // Index 1 corresponds to "Upload"
+                            val intent = Intent(context, Upload::class.java)
+                            context.startActivity(intent)
+                        }
                         2 -> { // Index 2 corresponds to "My Recipes"
                             val intent = Intent(context, MyRecipesActivity::class.java)
                             context.startActivity(intent)

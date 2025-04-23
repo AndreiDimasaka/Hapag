@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.hapag.ui.BaseActivity
 import com.example.hapag.ui.BottomNavigationBar
 import com.example.hapag.ui.theme.buttonTextColor
 
@@ -151,15 +150,17 @@ fun FigmaDashboardLayout(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.Start
     ) {
-        SearchBar(
-            modifier = Modifier.fillMaxWidth(),
-            query = searchText,
-            onQueryChange = { searchText = it },
-            onSearch = { isActive = false },
-            active = isActive,
-            onActiveChange = { isActive = it },
-            placeholder = { Text("Search") }
-        ) {}
+        Row(modifier = Modifier.fillMaxWidth()) { // Approach 2: Wrapping in Row
+            SearchBar(
+                modifier = Modifier.weight(1f), // Takes up available width
+                query = searchText,
+                onQueryChange = { searchText = it },
+                onSearch = { isActive = false },
+                active = isActive,
+                onActiveChange = { isActive = it },
+                placeholder = { Text("Search") }
+            ) {}
+        }
 
         Spacer(modifier = Modifier.height(15.dp))
         Text(
