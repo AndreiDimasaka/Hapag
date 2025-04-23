@@ -1,5 +1,6 @@
 package com.example.hapag
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,19 +26,19 @@ import com.example.hapag.ui.BaseActivity
 import androidx.compose.material3.Icon
 import com.example.hapag.ui.BottomNavigationBar // Import
 
-class MyRecipesActivity : BaseActivity() {
+class MyRecipesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyRecipesScreen()
+            MyRecipesScreen(onBack = { finish() }) // Pass the finish() lambda
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyRecipesScreen() {
+fun MyRecipesScreen(onBack: () -> Unit) { // Add the onBack parameter
     Scaffold(
         topBar = {
             TopAppBar(
@@ -51,7 +52,7 @@ fun MyRecipesScreen() {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* TODO: Navigate back */ }) {
+                    IconButton(onClick = onBack) { // Call the onBack lambda
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = buttonBackgroundColor)
                     }
                 },
@@ -113,6 +114,5 @@ fun MyRecipeCard(title: String, category: String, modifier: Modifier = Modifier)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MyRecipesScreenPreview() {
-    MyRecipesScreen()
+    MyRecipesScreen(onBack = {}) // Provide an empty lambda for the preview
 }
-

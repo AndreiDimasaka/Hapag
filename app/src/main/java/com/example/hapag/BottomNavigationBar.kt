@@ -1,5 +1,6 @@
 package com.example.hapag.ui
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,8 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.hapag.MyFavoritesActivity
+import com.example.hapag.MyRecipesActivity
 import com.example.hapag.buttonBackgroundColor
 import androidx.compose.ui.res.painterResource
 import com.example.hapag.R
@@ -37,6 +41,8 @@ fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
     val items = listOf("Home", "Upload", "My Recipes", "Favorites")
     val icons =
         listOf(Icons.Filled.Home, painterResource(id = R.drawable.baseline_file_upload_24), painterResource(id = R.drawable.baseline_menu_book_24), Icons.Filled.Favorite)
+    val context = LocalContext.current
+
     NavigationBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,6 +82,16 @@ fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
                 onClick = {
                     selectedItem = index
                     onItemSelected(index)
+                    when (index) {
+                        2 -> { // Index 2 corresponds to "My Recipes"
+                            val intent = Intent(context, MyRecipesActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                        3 -> { // Index 3 corresponds to "Favorites"
+                            val intent = Intent(context, MyFavoritesActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                    }
                 }
             )
         }

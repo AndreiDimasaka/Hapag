@@ -1,6 +1,5 @@
 package com.example.hapag
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,12 +47,31 @@ class RecipeActivity : ComponentActivity() {
 
 @Composable
 fun RecipeContent(recipeName: String?, onNavigateBack: () -> Unit) {
-    if (recipeName == "halohalo") {
-        HaloHaloRecipeScreen(onNavigateBack = onNavigateBack)
-    } else if (recipeName == "lecheflan") {
-        LecheFlanRecipeScreen(onNavigateBack = onNavigateBack)
+    when (recipeName) {
+        "halohalo" -> HaloHaloRecipeScreen(onNavigateBack = onNavigateBack)
+        "lecheflan" -> LecheFlanRecipeScreen(onNavigateBack = onNavigateBack)
+        else -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(buttonTextColor)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    "Recipe Not Found: $recipeName",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = buttonBackgroundColor,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = onNavigateBack, colors = ButtonDefaults.buttonColors(containerColor = buttonBackgroundColor, contentColor = buttonTextColor)) {
+                    Text("Go Back")
+                }
+            }
+        }
     }
-    // Add more conditions here for other recipes
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,10 +86,10 @@ fun RecipeScreen(
     onNavigateBack: () -> Unit,
     onAddToFavorites: () -> Unit,
     mainImageResId: Int?,
-    onHomeClick: () -> Unit,
-    onUploadClick: () -> Unit,
-    onMyRecipesClick: () -> Unit,
-    onFavoritesClick: () -> Unit
+    onHomeClick: () -> Unit = {},
+    onUploadClick: () -> Unit = {},
+    onMyRecipesClick: () -> Unit = {},
+    onFavoritesClick: () -> Unit = {}
 ) {
     var showFullScreenImage by remember { mutableStateOf(false) }
 
@@ -313,7 +330,7 @@ fun HaloHaloRecipeScreen(
         ),
         onNavigateBack = onNavigateBack,
         onAddToFavorites = { /* TODO: Implement adding Halo-Halo to favorites */ },
-        mainImageResId = R.drawable.halohalo, // Replace with your actual image resource
+        mainImageResId = R.drawable.halohalo, // Replace with your actual image resource ID
         onHomeClick = onHomeClick,
         onUploadClick = onUploadClick,
         onMyRecipesClick = onMyRecipesClick,
@@ -358,7 +375,7 @@ fun LecheFlanRecipeScreen(
         ),
         onNavigateBack = onNavigateBack,
         onAddToFavorites = { /* TODO: Implement adding Leche Flan to favorites */ },
-        mainImageResId = R.drawable.lecheflan,
+        mainImageResId = R.drawable.lecheflan, // Replace with your actual image resource ID
         onHomeClick = onHomeClick,
         onUploadClick = onUploadClick,
         onMyRecipesClick = onMyRecipesClick,

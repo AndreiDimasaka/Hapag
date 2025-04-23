@@ -11,30 +11,23 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.hapag.ui.BaseActivity
 import com.example.hapag.ui.BottomNavigationBar
 import com.example.hapag.ui.theme.buttonTextColor
 
-class MainActivity : BaseActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,15 +43,8 @@ class MainActivity : BaseActivity() {
         Scaffold(
             bottomBar = {
                 BottomNavigationBar(onItemSelected = { index ->
-                    // TODO: Implement navigation in MainActivity
+                    // Navigation for the bottom bar is handled within BottomNavigationBar
                     println("Main Activity: Bottom navigation item selected at index: $index")
-                    // Example navigation (you'll need to set up Navigation Compose):
-                    // when (index) {
-                    //     0 -> navController.navigate("home")
-                    //     1 -> navController.navigate("upload")
-                    //     2 -> navController.navigate("my_recipes")
-                    //     3 -> navController.navigate("favorites")
-                    // }
                 }, selectedIndex = 0)
             }
         ) { paddingValues ->
@@ -78,9 +64,18 @@ class MainActivity : BaseActivity() {
                     },
                     buttonBackgroundColor = buttonBackgroundColor,
                     onRecipeClick = { recipeName ->
+                        val formattedRecipeName = recipeName.lowercase().replace(" ", "").replace("-", "")
                         val intent = Intent(context, RecipeActivity::class.java).apply {
-                            putExtra("recipe", recipeName)
+                            putExtra("recipe", formattedRecipeName)
                         }
+                        context.startActivity(intent)
+                    },
+                    onUploadedClick = {
+                        val intent = Intent(context, MyRecipesActivity::class.java)
+                        context.startActivity(intent)
+                    },
+                    onFavoritesClick = {
+                        val intent = Intent(context, MyFavoritesActivity::class.java)
                         context.startActivity(intent)
                     }
                 )
@@ -94,7 +89,9 @@ class MainActivity : BaseActivity() {
 fun FigmaDashboardLayout(
     modifier: Modifier = Modifier,
     buttonBackgroundColor: Color,
-    onRecipeClick: (String) -> Unit
+    onRecipeClick: (String) -> Unit,
+    onUploadedClick: () -> Unit,
+    onFavoritesClick: () -> Unit
 ) {
     var searchText by remember { mutableStateOf("") }
     var isActive by remember { mutableStateOf(false) }
@@ -226,7 +223,7 @@ fun FigmaDashboardLayout(
         ) {
             Button(
                 modifier = Modifier.weight(1f),
-                onClick = { /* Handle Uploaded click */ },
+                onClick = onUploadedClick, // Call the onUploadedClick lambda
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonBackgroundColor,
                     contentColor = com.example.hapag.ui.theme.buttonTextColor
@@ -236,7 +233,7 @@ fun FigmaDashboardLayout(
             Spacer(modifier = Modifier.width(8.dp))
             Button(
                 modifier = Modifier.weight(1f),
-                onClick = { /* Handle Your Favorites click */ },
+                onClick = onFavoritesClick, // Call the onFavoritesClick lambda
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonBackgroundColor,
                     contentColor = com.example.hapag.ui.theme.buttonTextColor

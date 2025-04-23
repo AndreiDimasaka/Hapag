@@ -1,5 +1,6 @@
 package com.example.hapag
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,31 +21,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hapag.ui.BaseActivity
 import androidx.compose.material3.Icon
 import com.example.hapag.ui.BottomNavigationBar
 
-
-
-class MyFavoritesActivity : BaseActivity() {
+class MyFavoritesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyFavoritesScreen()
+            MyFavoritesScreen(onBack = { finish() }) // Pass a lambda to handle back navigation
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyFavoritesScreen() {
+fun MyFavoritesScreen(onBack: () -> Unit) { // Add onBack parameter
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = { /* TODO: Navigate back */ }) {
+                    IconButton(onClick = onBack) { // Call the onBack lambda
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = buttonBackgroundColor)
                     }
                 },
@@ -106,5 +104,5 @@ fun FavoriteRecipeCard(title: String, category: String, modifier: Modifier = Mod
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MyFavoritesScreenPreview() {
-    MyFavoritesScreen()
+    MyFavoritesScreen(onBack = {}) // Provide an empty lambda for the preview
 }
