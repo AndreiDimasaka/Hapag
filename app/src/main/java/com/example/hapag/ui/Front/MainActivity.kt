@@ -20,15 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.hapag.ui.BottomNavigationBar
-import com.example.hapag.ui.theme.buttonTextColor
-import com.example.ui.theme.DarkBrown
+import com.example.hapag.ui.theme.LeafyGreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,7 +154,7 @@ fun FigmaDashboardLayout(
     ) {
         Row(modifier = Modifier.fillMaxWidth()) { // Approach 2: Wrapping in Row
             SearchBar(
-                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "search", tint = DarkBrown) },
+                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "search", ) },
                 modifier = Modifier.weight(1f), // Takes up available width
                 query = searchText,
                 onQueryChange = { searchText = it },
@@ -232,7 +230,7 @@ fun FigmaDashboardLayout(
                 onClick = onUploadedClick, // Call the onUploadedClick lambda
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonBackgroundColor,
-                    contentColor = com.example.hapag.ui.theme.buttonTextColor
+                    contentColor = LeafyGreen
                 ),
                 shape = RoundedCornerShape(0.dp)
             ) { Text(text = "Uploaded") }
@@ -242,7 +240,7 @@ fun FigmaDashboardLayout(
                 onClick = onFavoritesClick, // Call the onFavoritesClick lambda
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonBackgroundColor,
-                    contentColor = com.example.hapag.ui.theme.buttonTextColor
+                    contentColor = LeafyGreen
                 ),
                 shape = RoundedCornerShape(0.dp)
             ) { Text(text = "Your Favorites") }

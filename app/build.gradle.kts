@@ -64,6 +64,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("sh.calvin.reorderable:reorderable:2.4.3")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.28.0")
@@ -75,4 +77,5 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
     implementation("androidx.compose.foundation:foundation:1.7.6")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
+
 }

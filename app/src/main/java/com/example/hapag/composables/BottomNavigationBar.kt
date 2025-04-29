@@ -1,7 +1,6 @@
 package com.example.hapag.ui
 
 import android.content.Intent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,10 +30,13 @@ import androidx.compose.ui.unit.sp
 import com.example.hapag.MainActivity
 import com.example.hapag.MyFavoritesActivity
 import com.example.hapag.MyRecipesActivity
-import com.example.hapag.buttonBackgroundColor
 import androidx.compose.ui.res.painterResource
 import com.example.hapag.R
 import androidx.compose.ui.graphics.painter.Painter
+import com.example.hapag.ui.Front.Upload
+import com.example.hapag.ui.theme.AppTheme
+import com.example.hapag.ui.theme.LeafyGreen
+import com.example.hapag.ui.theme.SandyBeige
 
 @Composable
 fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
@@ -47,9 +49,9 @@ fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
     NavigationBar(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .background(Color.White),
-        tonalElevation = 0.dp
+            .wrapContentHeight(),
+        tonalElevation = 0.dp,
+        containerColor = AppTheme.colorScheme.secondary,
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
@@ -58,27 +60,31 @@ fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
                         Box(
                             modifier = Modifier
                                 .size(24.dp)
-                                .background(Color.Transparent)
                         ) {
                             val icon = icons[index]
                             if (icon is ImageVector) {
                                 Icon(
                                     imageVector = icon,
                                     contentDescription = item,
-                                    tint = if (selectedItem == index) buttonBackgroundColor else Color.Gray
+                                    tint = AppTheme.colorScheme.onTertiary
                                 )
                             } else if (icon is Painter) {
                                 Icon(
                                     painter = icon,
                                     contentDescription = item,
-                                    tint = if (selectedItem == index) buttonBackgroundColor else Color.Gray
+                                    tint = AppTheme.colorScheme.onTertiary
                                 )
                             }
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                     }
                 },
-                label = { Text(item, color = if (selectedItem == index) buttonBackgroundColor else Color.Gray, fontSize = 10.sp) },
+                label = { Text (
+                    item, color = if (selectedItem == index) AppTheme.colorScheme.onTertiary else Color.Gray,
+                    fontSize = 10.sp,
+                    style = AppTheme.typography.labelSmall
+                )
+                        },
                 selected = selectedItem == index,
                 onClick = {
                     selectedItem = index

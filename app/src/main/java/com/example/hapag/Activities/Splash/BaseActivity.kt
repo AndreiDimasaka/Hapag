@@ -1,4 +1,4 @@
-package com.example.hapag.ui.theme
+package com.example.hapag.Activities.Splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

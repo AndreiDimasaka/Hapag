@@ -2,12 +2,16 @@ package com.example.hapag.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val ParchmentWhite = Color(0xFFFDF8F0)
+val MangoOrange = Color(0xFFE88C3A)
+val DarkCacaoBrown = Color(0xFF42372E)
+val LeafyGreen = Color(0xFF6A8A53)
+val SandyBeige = Color(0xFFD4BFAA)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-val buttonBackgroundColor = Color(0xFF403A35) // #403a35
-val buttonTextColor = Color(0xFFF1EDE7)       // #f1ede7
+val DeepUbe = Color(0xFF352A3B)
+val CreamyWhite = Color(0xFFF5EEDC)
+val GoldenYellow = Color(0xFFF7B731)
+val VibrantUbe = Color(0xFF8A4D9E)
+val MutedTeal = Color(0xFF788C84)
+
+val Light = Color(0xFFF1EDE7)
