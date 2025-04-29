@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,7 +45,6 @@ class MainActivity : ComponentActivity() {
         Scaffold(
             bottomBar = {
                 BottomNavigationBar(onItemSelected = { index ->
-                    // Navigation for the bottom bar is handled within BottomNavigationBar
                     println("Main Activity: Bottom navigation item selected at index: $index")
                 }, selectedIndex = 0)
             }
@@ -70,14 +70,6 @@ class MainActivity : ComponentActivity() {
                             putExtra("recipe", formattedRecipeName)
                         }
                         context.startActivity(intent)
-                    },
-                    onUploadedClick = {
-                        val intent = Intent(context, MyRecipesActivity::class.java)
-                        context.startActivity(intent)
-                    },
-                    onFavoritesClick = {
-                        val intent = Intent(context, MyFavoritesActivity::class.java)
-                        context.startActivity(intent)
                     }
                 )
             }
@@ -90,9 +82,7 @@ class MainActivity : ComponentActivity() {
 fun FigmaDashboardLayout(
     modifier: Modifier = Modifier,
     buttonBackgroundColor: Color,
-    onRecipeClick: (String) -> Unit,
-    onUploadedClick: () -> Unit,
-    onFavoritesClick: () -> Unit
+    onRecipeClick: (String) -> Unit
 ) {
     var searchText by remember { mutableStateOf("") }
     var isActive by remember { mutableStateOf(false) }
@@ -129,7 +119,7 @@ fun FigmaDashboardLayout(
         )
     }
 
-    val filteredFoods = remember(selectedCategory) {
+    val filteredByCategory = remember(selectedCategory) {
         if (selectedCategory == "All") {
             sweetFilipinoFoods + savoryFilipinoFoods
         } else {
@@ -137,14 +127,18 @@ fun FigmaDashboardLayout(
         }
     }
 
-    val displayFoods = remember(selectedSweetSavoryTab, filteredFoods) {
+    val displayFoods = remember(selectedSweetSavoryTab, filteredByCategory) {
         when (selectedSweetSavoryTab) {
-            "All" -> filteredFoods
-            "Sweet" -> filteredFoods.filter { it.first in sweetFilipinoFoods.map { it.first } }
-            "Savory" -> filteredFoods.filter { it.first in savoryFilipinoFoods.map { it.first } }
-            else -> filteredFoods
+            "All" -> filteredByCategory
+            "Sweet" -> filteredByCategory.filter { it.first in sweetFilipinoFoods.map { it.first } }
+            "Savory" -> filteredByCategory.filter { it.first in savoryFilipinoFoods.map { it.first } }
+            else -> filteredByCategory
         }
     }
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+    val columnCount = if (isLandscape) 4 else 2
 
     Column(
         modifier = modifier
@@ -152,10 +146,10 @@ fun FigmaDashboardLayout(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.Start
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) { // Approach 2: Wrapping in Row
+        Row(modifier = Modifier.fillMaxWidth()) {
             SearchBar(
                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "search", ) },
-                modifier = Modifier.weight(1f), // Takes up available width
+                modifier = Modifier.weight(1f),
                 query = searchText,
                 onQueryChange = { searchText = it },
                 onSearch = { isActive = false },
@@ -179,7 +173,7 @@ fun FigmaDashboardLayout(
             modifier = Modifier
                 .fillMaxWidth()
                 .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             FilterButton(
@@ -187,72 +181,66 @@ fun FigmaDashboardLayout(
                 isSelected = selectedCategory == "All",
                 onClick = { selectedCategory = "All" },
                 backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor
+                textColor = buttonTextColor,
+                modifier = Modifier
             )
+            Spacer(modifier = Modifier.width(4.dp))
             FilterButton(
                 text = "Breakfast",
                 isSelected = selectedCategory == "Breakfast",
                 onClick = { selectedCategory = "Breakfast" },
                 backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor
+                textColor = buttonTextColor,
+                modifier = Modifier
             )
+            Spacer(modifier = Modifier.width(4.dp))
             FilterButton(
                 text = "Lunch",
                 isSelected = selectedCategory == "Lunch",
                 onClick = { selectedCategory = "Lunch" },
                 backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor
+                textColor = buttonTextColor,
+                modifier = Modifier
             )
+            Spacer(modifier = Modifier.width(4.dp))
             FilterButton(
                 text = "Merienda",
                 isSelected = selectedCategory == "Merienda",
                 onClick = { selectedCategory = "Merienda" },
                 backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor
+                textColor = buttonTextColor,
+                modifier = Modifier
             )
+            Spacer(modifier = Modifier.width(4.dp))
             FilterButton(
                 text = "Dinner",
                 isSelected = selectedCategory == "Dinner",
                 onClick = { selectedCategory = "Dinner" },
                 backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor
+                textColor = buttonTextColor,
+                modifier = Modifier
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = onUploadedClick, // Call the onUploadedClick lambda
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = buttonBackgroundColor,
-                    contentColor = LeafyGreen
-                ),
-                shape = RoundedCornerShape(0.dp)
-            ) { Text(text = "Uploaded") }
-            Spacer(modifier = Modifier.width(8.dp))
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = onFavoritesClick, // Call the onFavoritesClick lambda
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = buttonBackgroundColor,
-                    contentColor = LeafyGreen
-                ),
-                shape = RoundedCornerShape(0.dp)
-            ) { Text(text = "Your Favorites") }
-        }
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(30.dp))
         Divider(color = Color.LightGray, thickness = 3.dp)
         Spacer(modifier = Modifier.height(30.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceAround,
         ) {
+            Text(
+                text = "All",
+                color = animateColorAsState(
+                    targetValue = if (selectedSweetSavoryTab == "All") Color.Black else Color.Gray,
+                    animationSpec = tween(durationMillis = 300)
+                ).value,
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { selectedSweetSavoryTab = "All" },
+                textAlign = TextAlign.Center
+            )
             Text(
                 text = "Sweet",
                 color = animateColorAsState(
@@ -280,24 +268,28 @@ fun FigmaDashboardLayout(
         Divider(color = Color.LightGray, thickness = 3.dp)
         Spacer(modifier = Modifier.height(20.dp))
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            repeat(displayFoods.size / 2 + displayFoods.size % 2) { rowIndex ->
+        Column(horizontalAlignment = Alignment.Start) {
+            for (rowIndex in 0 until (displayFoods.size + columnCount - 1) / columnCount) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    for (i in 0 until 2) {
-                        val foodIndex = rowIndex * 2 + i
+                    for (i in 0 until columnCount) {
+                        val foodIndex = rowIndex * columnCount + i
                         if (foodIndex < displayFoods.size) {
                             val (foodName, foodType, imageRes) = displayFoods[foodIndex]
                             RecipeCard(
                                 foodName = foodName,
                                 foodType = foodType,
                                 imageRes = imageRes,
-                                onClick = { onRecipeClick(foodName) }
+                                onClick = { onRecipeClick(foodName) },
+                                modifier = Modifier.weight(1f)
                             )
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
+                        }
+                        if (i < columnCount - 1 && foodIndex < displayFoods.size - 1) {
+                            Spacer(modifier = Modifier.width(8.dp))
                         }
                     }
                 }
@@ -315,7 +307,8 @@ fun FilterButton(
     isSelected: Boolean,
     onClick: () -> Unit,
     backgroundColor: Color,
-    textColor: Color
+    textColor: Color,
+    modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
@@ -323,9 +316,10 @@ fun FilterButton(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primary else backgroundColor,
             contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else textColor
         ),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        modifier = modifier
     ) {
-        Text(text = text)
+        Text(text = text, textAlign = TextAlign.Center)
     }
 }
 
@@ -334,17 +328,19 @@ fun RecipeCard(
     foodName: String = "Recipe Title",
     foodType: String = "Food Type",
     imageRes: Int? = null,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
-            .width(170.dp)
+        modifier = modifier
+            .padding(4.dp)
             .clickable(onClick = onClick),
         horizontalAlignment = Alignment.Start
     ) {
         Box(
             modifier = Modifier
-                .size(170.dp, 100.dp)
+                .fillMaxWidth()
+                .aspectRatio(1.7f)
                 .background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
@@ -353,6 +349,8 @@ fun RecipeCard(
                     painter = painterResource(id = imageRes),
                     contentDescription = foodName,
                     modifier = Modifier.fillMaxSize()
+                        .aspectRatio(1.7f),
+                    contentScale = androidx.compose.ui.layout.ContentScale.Crop
                 )
             } else {
                 Text("No Image", textAlign = TextAlign.Center)
