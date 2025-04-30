@@ -41,74 +41,8 @@ import com.example.hapag.ui.theme.AppTheme
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
-
-data class Item(val id: Int, val text: String)
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun IngredientItemRow(
-    item: String,
-    onTextChange: (String) -> Unit,
-    onOptionsClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    reorderHandlerModifier: Modifier
-){
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = AppTheme.colorScheme.background,
-                shape = AppTheme.shape.container)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-            )
-    {
-        Icon(
-            painter = painterResource( R.drawable.baseline_dehaze),
-            contentDescription = null,
-            tint = AppTheme.colorScheme.secondary,
-            modifier = reorderHandlerModifier
-        )
-        TextField(
-            shape = AppTheme.shape.textbox,
-            value = item,
-            onValueChange = onTextChange,
-            modifier = Modifier
-                .weight(1f)
-                .background(Color.Transparent),
-            colors = TextFieldDefaults.colors(
-
-
-
-                focusedContainerColor = AppTheme.colorScheme.tertiary,
-                unfocusedContainerColor = AppTheme.colorScheme.tertiary,
-                disabledContainerColor = AppTheme.colorScheme.tertiary,
-                errorContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent, // Remove underline indicator
-                unfocusedIndicatorColor = Color.Transparent, // Remove underline indicator
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-            ),
-            textStyle = AppTheme.typography.bodyMedium,
-            placeholder = {
-                Text (
-                text = "1 clove of garlic",
-                style = AppTheme.typography.bodyMedium,
-                color = AppTheme.colorScheme.onBackground) }
-        )
-        IconButton(onClick = onOptionsClick) {
-            Icon(
-                painter = painterResource(R.drawable.close),
-                contentDescription = "Options",
-                tint = AppTheme.colorScheme.secondary
-            )
-        }
-
-    }
-}
-
-@Composable
-fun ReorderableColumn(
+fun ReorderableIngredientColumn(
     onClose: () -> Unit
 ) {
     var nextId by rememberSaveable { mutableStateOf(3) }
@@ -168,7 +102,7 @@ fun ReorderableColumn(
                         key = ingredientItem.id
                     ) { isDragging ->
 
-                        IngredientItemRow(
+                        TextItemRow(
                             item = ingredientItem.text,
                             onTextChange = { newText ->
                                 ingredientList = ingredientList.map {
@@ -183,7 +117,8 @@ fun ReorderableColumn(
                                 ingredientList =
                                     ingredientList.filter { it.id != ingredientItem.id }
                             },
-                            reorderHandlerModifier = Modifier
+                            hint = "1 clove of garlic",
+                                reorderHandlerModifier = Modifier
                                 .draggableHandle()
                                 .background(Color.Transparent)
                                 .padding(8.dp)
@@ -222,6 +157,5 @@ fun ReorderableColumn(
 @Composable fun IngredientInputListPreview()
 {
     AppTheme {
-        ReorderableColumn(onClose = {})
     }
 }

@@ -1,50 +1,66 @@
 package com.example.hapag.composables
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.hapag.R
+import com.example.hapag.ui.Front.Item
+import com.example.hapag.ui.theme.AppTheme
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ProcedureInputList(onClose: () -> Unit) {
-    var procedureText by remember { mutableStateOf("") }
-    var procedureList by remember { mutableStateOf<List<String>>(emptyList()) }
-    val context = LocalContext.current
+fun ProcedureReorderableColumn(
+    onClose: () -> Unit
+) {
+    var nextId by rememberSaveable { mutableStateOf(3) }
+    var procedureList by remember {
+        mutableStateOf(
+            listOf(
+                Item(id = 1, text = ""),
+                Item(id = 2, text = "")
+            )
+        )
+    }
 
+    val lazyListState = rememberLazyListState()
+    val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
+        procedureList = procedureList.toMutableList().apply {
+            val fromIndex = from.index
+
+            add(to.index, removeAt(fromIndex))
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -52,116 +68,80 @@ fun ProcedureInputList(onClose: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Card(
-            colors = CardDefaults.cardColors(),
+            colors = CardDefaults.cardColors(
+                containerColor = AppTheme.colorScheme.background
+            ),
             border = BorderStroke(1.dp, Color.Black),
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
-                .padding(bottom = 180.dp, start = 20.dp, end = 20.dp, top = 100.dp)
+                .padding(bottom = 130.dp, start = 20.dp, end = 20.dp, top = 100.dp)
                 .fillMaxSize()
-        )
-        {
-            Column(
-                modifier = Modifier
-                    .padding(top = 10.dp, start = 5.dp, end = 5.dp)
-            )
-            {
-                IconButton(onClick = onClose) {
-                    Icon(
-                        painter = painterResource(R.drawable.arrow_back),
-                        contentDescription = "return",
-                        modifier = Modifier.padding(start = 10.dp)
-                            .size(30.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Row(){
-                    OutlinedTextField(
-                        value = procedureText,
-                        onValueChange = { procedureText = it },
-                        label = { Text(text = "Procedure") },
-                        singleLine = true,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 15.dp, end = 15.dp)
+        ) {
+            IconButton(onClick = onClose) {
+                Icon(
+                    painter = painterResource(R.drawable.arrow_back),
+                    contentDescription = "return",
+                    tint = AppTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(start = 10.dp)
+                        .size(30.dp)
+                )
+            }
 
+            LazyColumn(
+                state = lazyListState,
+                contentPadding = PaddingValues(16.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                itemsIndexed(
+                    procedureList,
+                    key = { _, item -> item.id }) { index, procedureItem ->
+                    ReorderableItem(
+                        reorderableLazyListState,
+                        key = procedureItem.id
+                    ) { isDragging ->
 
-                    )
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    FloatingActionButton(
-                        onClick = {
-                            val procedure = procedureText
-
-                            if (procedure.isBlank()) {
-                                Toast.makeText(
-                                    context,
-                                    "Please enter a step",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
+                        TextItemRow(
+                            item = procedureItem.text,
+                            onTextChange = { newText ->
+                                procedureList = procedureList.map {
+                                    if (it.id == procedureItem.id) {
+                                        it.copy(text = newText)
+                                    } else {
+                                        it
+                                    }
+                                }
+                            },
+                            onOptionsClick = {
                                 procedureList =
-                                    procedureList + (procedure)
-                                procedureText = ""
-                            }
-                        },
-                        elevation = FloatingActionButtonDefaults.elevation(0.dp),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.add_circle),
-                            contentDescription = "Add Step",
-                            modifier = Modifier.size(40.dp)
+                                    procedureList.filter { it.id != procedureItem.id }
+                            },
+                            hint = "Heat oil in pan and sauté garlic and onions add chicken to the pan and sear on all sides",
+                            reorderHandlerModifier = Modifier
+                                .draggableHandle()
+                                .background(Color.Transparent)
+                                .padding(8.dp)
+                                .size(24.dp)
                         )
                     }
                 }
-                Spacer(Modifier.height(20.dp))
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-
-                    items(procedureList) { item ->
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(20.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-
-                            modifier = Modifier
-                                .padding(start = 30.dp, end = 30.dp)
-                        ) {
-                            Text(
-                                text = "Step ${procedureList.indexOf(item) + 1}",
-                                fontSize = 12.sp,
-
-                                modifier = Modifier.weight(0.5f)
-                            )
-                            Text(
-                                text = item,
-                                fontSize = 12.sp,
-                                modifier = Modifier.weight(0.5f)
-                            )
-                            FloatingActionButton(
-                                onClick = {
-                                    val procedure = item
-                                    Log.d("procedure",procedure)
-                                    val mutableList = procedureList.toMutableList()
-                                    mutableList.remove(procedure)
-                                    procedureList = mutableList.toList()
-
-                                },
-                                elevation = FloatingActionButtonDefaults.elevation(0.dp),
-                                modifier = Modifier.size(15.dp)
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.close),
-                                    contentDescription = "Remove Ingredient",
-                                    tint = Color.Black,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        }
+                item {
+                    OutlinedButton(
+                        onClick = {
+                            procedureList = procedureList + Item(nextId++, "")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = AppTheme.colorScheme.onSecondary,
+                            containerColor = Color.Transparent
+                        ),
+                        border = null
+                    ) {
+                        Text(
+                            text = "+ Step",
+                            style = AppTheme.typography.labelMedium
+                        )
                     }
                 }
             }
@@ -169,3 +149,12 @@ fun ProcedureInputList(onClose: () -> Unit) {
     }
 }
 
+
+
+@Preview(showBackground = true)
+@Composable fun ProcedureInputListPreview()
+{
+    AppTheme {
+        ProcedureReorderableColumn(onClose = {})
+    }
+}
