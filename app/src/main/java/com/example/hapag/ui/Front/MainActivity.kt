@@ -1,6 +1,7 @@
 package com.example.hapag
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -27,7 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.hapag.ui.BottomNavigationBar
-import com.example.hapag.ui.theme.LeafyGreen
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +93,7 @@ fun FigmaDashboardLayout(
     var isActive by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf("All") }
     var selectedSweetSavoryTab by remember { mutableStateOf("All") }
+    val categories = listOf("All", "Breakfast", "Lunch", "Merienda", "Dinner")
 
     val sweetFilipinoFoods = remember {
         listOf(
@@ -142,6 +148,7 @@ fun FigmaDashboardLayout(
 
     Column(
         modifier = modifier
+            .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.Start
@@ -160,69 +167,38 @@ fun FigmaDashboardLayout(
         }
 
         Spacer(modifier = Modifier.height(15.dp))
+
         Text(
             text = "Category",
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentWidth(Alignment.Start)
         )
+
         Spacer(modifier = Modifier.height(15.dp))
 
-        Row(
+        LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                .wrapContentHeight(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            FilterButton(
-                text = "All",
-                isSelected = selectedCategory == "All",
-                onClick = { selectedCategory = "All" },
-                backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor,
-                modifier = Modifier
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            FilterButton(
-                text = "Breakfast",
-                isSelected = selectedCategory == "Breakfast",
-                onClick = { selectedCategory = "Breakfast" },
-                backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor,
-                modifier = Modifier
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            FilterButton(
-                text = "Lunch",
-                isSelected = selectedCategory == "Lunch",
-                onClick = { selectedCategory = "Lunch" },
-                backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor,
-                modifier = Modifier
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            FilterButton(
-                text = "Merienda",
-                isSelected = selectedCategory == "Merienda",
-                onClick = { selectedCategory = "Merienda" },
-                backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor,
-                modifier = Modifier
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            FilterButton(
-                text = "Dinner",
-                isSelected = selectedCategory == "Dinner",
-                onClick = { selectedCategory = "Dinner" },
-                backgroundColor = buttonBackgroundColor,
-                textColor = buttonTextColor,
-                modifier = Modifier
-            )
+            items(categories, key= {it}) { category ->
+
+                FilterButton(
+                    text = category,
+                    isSelected = selectedCategory == category,
+                    onClick = { selectedCategory = category },
+                    backgroundColor = buttonBackgroundColor,
+                    textColor = buttonTextColor,
+                    modifier = Modifier.widthIn(min = if (isLandscape) 220.dp else Dp.Unspecified).padding(start = 6.dp, end = 6.dp)
+                )
+
+            }
+
         }
 
-        Spacer(modifier = Modifier.height(30.dp))
         Divider(color = Color.LightGray, thickness = 3.dp)
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -299,7 +275,7 @@ fun FigmaDashboardLayout(
 
         Divider(color = Color.LightGray, thickness = 1.dp)
     }
-}
+    }
 
 @Composable
 fun FilterButton(
@@ -311,13 +287,14 @@ fun FilterButton(
     modifier: Modifier = Modifier
 ) {
     Button(
+        modifier =
+        modifier,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primary else backgroundColor,
             contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else textColor
         ),
         shape = RoundedCornerShape(8.dp),
-        modifier = modifier
     ) {
         Text(text = text, textAlign = TextAlign.Center)
     }
@@ -361,6 +338,7 @@ fun RecipeCard(
     }
 }
 
+@Preview
 @Composable
 fun MainActivityScreenPreview() {
     MainActivity().MainActivityScreen()
