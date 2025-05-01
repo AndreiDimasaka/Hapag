@@ -175,30 +175,28 @@ fun FigmaDashboardLayout(
                 .fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(8.dp)) // Added space after "Category"
 
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.spacedBy(8.dp), // Made categories closer
             verticalAlignment = Alignment.CenterVertically
         ) {
             items(categories, key= {it}) { category ->
-
                 FilterButton(
                     text = category,
                     isSelected = selectedCategory == category,
                     onClick = { selectedCategory = category },
                     backgroundColor = buttonBackgroundColor,
                     textColor = buttonTextColor,
-                    modifier = Modifier.widthIn(min = if (isLandscape) 220.dp else Dp.Unspecified).padding(start = 6.dp, end = 6.dp)
+                    modifier = Modifier.widthIn(min = if (isLandscape) 220.dp else Dp.Unspecified)
                 )
-
             }
-
         }
 
+        Spacer(modifier = Modifier.height(10.dp))
         Divider(color = Color.LightGray, thickness = 3.dp)
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -275,7 +273,7 @@ fun FigmaDashboardLayout(
 
         Divider(color = Color.LightGray, thickness = 1.dp)
     }
-    }
+}
 
 @Composable
 fun FilterButton(
@@ -287,8 +285,7 @@ fun FilterButton(
     modifier: Modifier = Modifier
 ) {
     Button(
-        modifier =
-        modifier,
+        modifier = modifier,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.primary else backgroundColor,
