@@ -33,13 +33,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.hapag.ui.BottomNavigationBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
+import com.example.hapag.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MainActivityScreen()
+            AppTheme {
+                MainActivityScreen()
+            }
         }
     }
 
@@ -341,5 +344,7 @@ fun RecipeCard(
 @Preview
 @Composable
 fun MainActivityScreenPreview() {
-    MainActivity().MainActivityScreen()
+    AppTheme {
+        MainActivity().MainActivityScreen()
+    }
 }

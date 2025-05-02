@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,14 +34,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.hapag.R
-import com.example.hapag.ui.Front.Item
 import com.example.hapag.ui.theme.AppTheme
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ProcedureReorderableColumn(
+fun ReorderableProcedureColumn(
     onClose: () -> Unit
 ) {
     var nextId by rememberSaveable { mutableStateOf(3) }
@@ -89,7 +89,7 @@ fun ProcedureReorderableColumn(
 
             LazyColumn(
                 state = lazyListState,
-                contentPadding = PaddingValues(16.dp),
+                contentPadding = PaddingValues(5.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
@@ -99,29 +99,36 @@ fun ProcedureReorderableColumn(
                         reorderableLazyListState,
                         key = procedureItem.id
                     ) { isDragging ->
-
-                        TextItemRow(
-                            item = procedureItem.text,
-                            onTextChange = { newText ->
-                                procedureList = procedureList.map {
-                                    if (it.id == procedureItem.id) {
-                                        it.copy(text = newText)
-                                    } else {
-                                        it
+                        Column(
+                            Modifier.fillMaxSize().padding(start = 16.dp)
+                        ) {
+                            Text(
+                                text = "Step ${index + 1}",
+                                style = AppTheme.typography.labelMedium,
+                                color = AppTheme.colorScheme.onBackground
+                            )
+                            TextItemRow(
+                                item = procedureItem.text,
+                                onTextChange = { newText ->
+                                    procedureList = procedureList.map {
+                                        if (it.id == procedureItem.id) {
+                                            it.copy(text = newText)
+                                        } else {
+                                            it
+                                        }
                                     }
-                                }
-                            },
-                            onOptionsClick = {
-                                procedureList =
-                                    procedureList.filter { it.id != procedureItem.id }
-                            },
-                            hint = "Heat oil in pan and sauté garlic and onions add chicken to the pan and sear on all sides",
-                            reorderHandlerModifier = Modifier
-                                .draggableHandle()
-                                .background(Color.Transparent)
-                                .padding(8.dp)
-                                .size(24.dp)
-                        )
+                                },
+                                onOptionsClick = {
+                                    procedureList =
+                                        procedureList.filter { it.id != procedureItem.id }
+                                },
+                                hint = "Heat oil in pan and sauté garlic and onions add chicken to the pan and sear on all sides",
+                                reorderHandlerModifier = Modifier
+                                    .draggableHandle()
+                                    .background(Color.Transparent)
+                                    .size(24.dp)
+                            )
+                        }
                     }
                 }
                 item {
@@ -155,6 +162,6 @@ fun ProcedureReorderableColumn(
 @Composable fun ProcedureInputListPreview()
 {
     AppTheme {
-        ProcedureReorderableColumn(onClose = {})
+        ReorderableProcedureColumn {  }
     }
 }

@@ -3,8 +3,10 @@ package com.example.hapag.composables
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -35,7 +37,7 @@ fun TextItemRow(
             .background(
                 color = AppTheme.colorScheme.background,
                 shape = AppTheme.shape.container)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     )
     {
@@ -45,6 +47,7 @@ fun TextItemRow(
             tint = AppTheme.colorScheme.secondary,
             modifier = reorderHandlerModifier
         )
+        Spacer(Modifier.width(6.dp))
         TextField(
             shape = AppTheme.shape.textbox,
             value = item,

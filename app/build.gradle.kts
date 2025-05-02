@@ -64,6 +64,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("sh.calvin.reorderable:reorderable:2.4.3")
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")

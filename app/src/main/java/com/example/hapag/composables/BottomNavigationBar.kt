@@ -22,21 +22,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hapag.MainActivity
 import com.example.hapag.MyFavoritesActivity
 import com.example.hapag.MyRecipesActivity
-import androidx.compose.ui.res.painterResource
 import com.example.hapag.R
-import androidx.compose.ui.graphics.painter.Painter
-import com.example.hapag.ui.Front.Upload
+import com.example.hapag.ui.View.Upload
 import com.example.hapag.ui.theme.AppTheme
-import com.example.hapag.ui.theme.LeafyGreen
-import com.example.hapag.ui.theme.SandyBeige
 
 @Composable
 fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
@@ -80,7 +77,7 @@ fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
                     }
                 },
                 label = { Text (
-                    item, color = if (selectedItem == index) AppTheme.colorScheme.onTertiary else Color.Gray,
+                    item, color = if (selectedItem == index) AppTheme.colorScheme.background else AppTheme.colorScheme.onTertiary,
                     fontSize = 10.sp,
                     style = AppTheme.typography.labelSmall
                 )

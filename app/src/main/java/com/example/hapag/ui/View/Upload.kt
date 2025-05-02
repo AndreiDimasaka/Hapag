@@ -1,4 +1,4 @@
-package com.example.hapag.ui.Front
+package com.example.hapag.ui.View
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
@@ -33,9 +35,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hapag.ui.ViewModel.IngredientILViewModel
 import com.example.hapag.R
 import com.example.hapag.composables.ImageSelect
 import com.example.hapag.composables.ReorderableIngredientColumn
+import com.example.hapag.composables.ReorderableProcedureColumn
 import com.example.hapag.composables.ThemedTitleTextField
 import com.example.hapag.composables.TopReturnBar
 import com.example.hapag.ui.BottomNavigationBar
@@ -53,12 +58,10 @@ class Upload : ComponentActivity() {
         }
     }
 
-data class Item(val id: Int, val text: String)
-
-
 @Composable
 fun MyScreen() {
-    var openIngredientList by remember { mutableStateOf(false) }
+    val viewModel = viewModel<IngredientILViewModel>()
+    var openProcedureList by remember { mutableStateOf(false) }
 
 
     Scaffold(
@@ -162,7 +165,7 @@ fun MyScreen() {
                         OutlinedButton(
                             modifier = Modifier.fillMaxWidth(),
                             contentPadding = PaddingValues(horizontal = (50.dp) ),
-                            onClick = { openIngredientList = true },
+                            onClick = {viewModel.openIngredientList()},
                             colors = ButtonDefaults.outlinedButtonColors(
                                 contentColor = AppTheme.colorScheme.onSecondary
                             ),
@@ -182,7 +185,7 @@ fun MyScreen() {
                         OutlinedButton(
                             modifier = Modifier.fillMaxWidth(),
                             contentPadding = PaddingValues(horizontal = (50.dp) ),
-                            onClick = { },
+                            onClick = { viewModel.openIngredientList() },
                             colors = ButtonDefaults.outlinedButtonColors(
                                 contentColor = AppTheme.colorScheme.onSecondary
                             ),
@@ -198,12 +201,31 @@ fun MyScreen() {
                                 modifier = Modifier.padding(start = 8.dp)
                             )
                         }
+                        Spacer(Modifier.height(10.dp))
+                        Row (
+                            Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center
+                        ){
+                            Button(
+                                onClick = {viewModel.openIngredientList()},
+                                shape = RoundedCornerShape(5.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = AppTheme.colorScheme.secondary
+                                )
+                            ) { Text(
+                                text = "UPLOAD",
+                                style = AppTheme.typography.labelLarge,
+                            ) }
+                        }
                     }
                 }
             }
         }
-        if (openIngredientList) {
-            ReorderableIngredientColumn(onClose = { openIngredientList = false })
+        if (viewModel.overlayIngredientList) {
+            ReorderableIngredientColumn(onClose = { viewModel.closeIngredientList()})
+        }
+        if(openProcedureList){
+            ReorderableProcedureColumn (onClose = {openProcedureList = false } )
         }
     }
 }
