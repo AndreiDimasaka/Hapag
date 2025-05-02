@@ -32,8 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.hapag.ui.BottomNavigationBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
-import com.example.hapag.ui.theme.AppTheme
+import com.example.hapag.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,7 +147,7 @@ fun FigmaDashboardLayout(
     }
 
     val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val columnCount = if (isLandscape) 4 else 2
 
     Column(
@@ -327,7 +328,7 @@ fun RecipeCard(
                     contentDescription = foodName,
                     modifier = Modifier.fillMaxSize()
                         .aspectRatio(1.7f),
-                    contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                    contentScale = ContentScale.Crop
                 )
             } else {
                 Text("No Image", textAlign = TextAlign.Center)

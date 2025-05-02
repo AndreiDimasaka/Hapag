@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.hapag.R
-import com.example.hapag.ui.theme.AppTheme
+import com.example.hapag.theme.AppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

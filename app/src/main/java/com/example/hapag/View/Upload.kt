@@ -1,4 +1,4 @@
-package com.example.hapag.ui.View
+package com.example.hapag.View
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.hapag.ui.ViewModel.IngredientILViewModel
+import com.example.hapag.ViewModel.IngredientILViewModel
 import com.example.hapag.R
 import com.example.hapag.composables.ImageSelect
 import com.example.hapag.composables.ReorderableIngredientColumn
@@ -44,7 +44,7 @@ import com.example.hapag.composables.ReorderableProcedureColumn
 import com.example.hapag.composables.ThemedTitleTextField
 import com.example.hapag.composables.TopReturnBar
 import com.example.hapag.ui.BottomNavigationBar
-import com.example.hapag.ui.theme.AppTheme
+import com.example.hapag.theme.AppTheme
 
 class Upload : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

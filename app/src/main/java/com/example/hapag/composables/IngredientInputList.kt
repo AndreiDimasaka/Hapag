@@ -27,9 +27,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.hapag.ui.ViewModel.IngredientILViewModel
+import com.example.hapag.ViewModel.IngredientILViewModel
 import com.example.hapag.R
-import com.example.hapag.ui.theme.AppTheme
+import com.example.hapag.theme.AppTheme
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 

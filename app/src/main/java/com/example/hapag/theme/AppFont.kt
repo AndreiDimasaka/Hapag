@@ -1,4 +1,4 @@
-package com.example.hapag.ui.theme
+package com.example.hapag.theme
 
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily

@@ -1,4 +1,4 @@
-package com.example.hapag.ui.ViewModel
+package com.example.hapag.ViewModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf

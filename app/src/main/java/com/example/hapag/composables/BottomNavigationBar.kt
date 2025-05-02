@@ -32,8 +32,8 @@ import com.example.hapag.MainActivity
 import com.example.hapag.MyFavoritesActivity
 import com.example.hapag.MyRecipesActivity
 import com.example.hapag.R
-import com.example.hapag.ui.View.Upload
-import com.example.hapag.ui.theme.AppTheme
+import com.example.hapag.View.Upload
+import com.example.hapag.theme.AppTheme
 
 @Composable
 fun BottomNavigationBar(onItemSelected: (Int) -> Unit, selectedIndex: Int = 0) {
