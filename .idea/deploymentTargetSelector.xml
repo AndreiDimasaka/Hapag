@@ -5,6 +5,7 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+<<<<<<< HEAD
       <SelectionState runConfigName="MainActivityScreenPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -20,6 +21,8 @@
       <SelectionState runConfigName="IngredientInputListPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+=======
+>>>>>>> a390fdff5cb35aa09589a1ab98becc85f1c28e4a
     </selectionStates>
   </component>
 </project>
