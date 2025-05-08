@@ -1,0 +1,104 @@
+package com.example.hapag.ViewModel
+
+import android.net.Uri
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import com.example.hapag.composables.Item
+
+class UploadViewModel: ViewModel() {
+
+    var uploadedImage by mutableStateOf<Uri?>(null)
+    var title = mutableStateOf("")
+    var description = mutableStateOf("")
+    var servingSize = mutableStateOf("")
+    var cookTime = mutableStateOf("")
+
+
+
+
+    //Ingredient
+    var overlayIngredientList by mutableStateOf(false)
+        internal set
+
+    val ingredientList = mutableStateListOf<Item>()
+    init {
+        ingredientList.addAll(listOf(
+            Item(1, ""),
+            Item(2, "")
+        ))
+    }
+
+    fun openIngredientList() {
+        overlayIngredientList = true
+    }
+
+    fun closeIngredientList() {
+        overlayIngredientList = false
+    }
+    fun addIngredient() {
+        val nextId = (ingredientList.maxOfOrNull { it.id } ?: 0) + 1
+        ingredientList.add(Item(nextId, ""))
+    }
+
+    fun removeIngredient(id: Int) {
+        ingredientList.removeAll { it.id == id }
+    }
+
+    fun updateIngredient(id: Int, newText: String) {
+        val index = ingredientList.indexOfFirst { it.id == id }
+        if (index != -1) {
+            ingredientList[index] = ingredientList[index].copy(text = newText)
+        }
+    }
+
+    fun reorderIngredients(fromIndex: Int, toIndex: Int) {
+        val item = ingredientList.removeAt(fromIndex)
+        ingredientList.add(toIndex, item)
+    }
+
+    // Procedure
+    var overlayProcedureList by mutableStateOf(false)
+        internal set
+
+
+    val prodecureList = mutableStateListOf<Item>()
+    init {
+        prodecureList.addAll(listOf(
+            Item(1, ""),
+            Item(2, "")
+        ))
+    }
+
+    fun openProcedureList() {
+        overlayProcedureList = true
+    }
+
+    fun closeProcedureList() {
+        overlayProcedureList = false
+    }
+
+    fun addProcedure() {
+        val nextId = (prodecureList.maxOfOrNull { it.id } ?: 0) + 1
+        prodecureList.add(Item(nextId, ""))
+    }
+
+    fun removeProcedure(id: Int) {
+        prodecureList.removeAll { it.id == id }
+    }
+
+    fun updateProcedure(id: Int, newText: String) {
+        val index = prodecureList.indexOfFirst { it.id == id }
+        if (index != -1) {
+            prodecureList[index] = prodecureList[index].copy(text = newText)
+        }
+    }
+
+    fun reorderProcedure(fromIndex: Int, toIndex: Int) {
+        val item = prodecureList.removeAt(fromIndex)
+        prodecureList.add(toIndex, item)
+    }
+}

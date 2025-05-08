@@ -24,29 +24,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.hapag.R
+import com.example.hapag.ViewModel.UploadViewModel
 import com.example.hapag.theme.AppTheme
 
 @Composable
 fun ImageSelect(
     modifier: Modifier = Modifier
 ) {
-    var selectedImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    val viewModel = viewModel<UploadViewModel>()
 
     val singleImagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            selectedImageUri = uri
+            viewModel.uploadedImage = uri
         }
     )
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        if (selectedImageUri != null) {
+        if (viewModel.uploadedImage != null) {
             AsyncImage(
-                model = selectedImageUri,
+                model = viewModel.uploadedImage,
                 contentDescription = "Selected Recipe Photo",
                 modifier = Modifier
                     .fillMaxSize(),
@@ -54,7 +56,7 @@ fun ImageSelect(
             )
             FloatingActionButton(
                 onClick = {
-                    selectedImageUri = null
+                    viewModel.uploadedImage = null
                 },
                 modifier = Modifier.align(Alignment.BottomEnd).padding(10.dp).size(30.dp),
                 containerColor = AppTheme.colorScheme.background,

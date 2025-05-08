@@ -17,7 +17,9 @@ import com.example.hapag.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopReturnBar(title : String) {
+fun TopReturnBar(title : String,
+                 onNavigateBack: () -> Unit = {},
+                 arrowBack: Boolean,) {
         androidx.compose.material3.TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = AppTheme.colorScheme.secondary,
@@ -26,12 +28,14 @@ fun TopReturnBar(title : String) {
             ),
             modifier = Modifier.height(80.dp),
             navigationIcon = {
+                if(arrowBack){
                 IconButton(onClick = {}) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.arrow_back),
-                        contentDescription = "Back",
-                        modifier = Modifier.size(30.dp)
-                    )
+                        Icon(
+                            painter = painterResource(id = R.drawable.arrow_back),
+                            contentDescription = "Back",
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
                 }
             },
             title = {
@@ -40,7 +44,11 @@ fun TopReturnBar(title : String) {
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 40.dp, top = 10.dp)
+                        .padding(
+                            top = 10.dp,
+                            end = if (arrowBack) 30.dp else 0.dp,
+                        )
+
                 ) {
                     Text(
                         text = title,
@@ -54,7 +62,7 @@ fun TopReturnBar(title : String) {
 @Composable
 fun TopReturnBarPreview(){
     AppTheme {
-        TopReturnBar(title = "Upload A Recipe")
+        TopReturnBar(title = "Upload A Recipe", arrowBack = true)
     }
 }
 
