@@ -21,9 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hapag.buttonBackgroundColor
+import com.example.hapag.theme.AppTheme
 
 @Composable
 fun RecipeDetails(
@@ -42,8 +44,8 @@ fun RecipeDetails(
     ) {
         Text(
             recipeTitle,
-            style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp),
-            color = buttonBackgroundColor,
+            style = AppTheme.typography.labelLarge.copy(fontSize = 26.sp),
+            color = AppTheme.colorScheme.onBackground,
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,13 +58,13 @@ fun RecipeDetails(
         ) {
             Text(
                 foodType,
-                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                color = buttonBackgroundColor
+                style = AppTheme.typography.labelMedium,
+                color = AppTheme.colorScheme.onBackground
             )
             Text(
                 prepTime,
-                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                color = buttonBackgroundColor
+                style = AppTheme.typography.labelSmall.copy(fontSize = 14.sp),
+                color = AppTheme.colorScheme.onBackground
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -77,58 +79,92 @@ fun RecipeDetails(
             Icon(
                 Icons.Filled.FavoriteBorder,
                 contentDescription = "Add to Favorites",
-                tint = buttonBackgroundColor,
-                modifier = Modifier.size(20.dp)
+                tint = AppTheme.colorScheme.onBackground,
+                modifier = Modifier.size(25.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 "Add to Favorites",
-                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
-                color = buttonBackgroundColor
+                style = AppTheme.typography.labelMedium.copy(fontSize = 14.sp),
+                color = AppTheme.colorScheme.onBackground
             )
         }
-        Divider(color = Color.LightGray, thickness = 1.dp)
+        Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             "Description",
-            style = MaterialTheme.typography.headlineSmall.copy(fontSize = 18.sp),
-            color = buttonBackgroundColor
+            style = AppTheme.typography.labelMedium,
+            color = AppTheme.colorScheme.onBackground
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(description, style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp), color = buttonBackgroundColor)
         Spacer(modifier = Modifier.height(8.dp))
-        Divider(color = Color.LightGray, thickness = 1.dp)
+        Text(description, style = AppTheme.typography.bodySmall, color = AppTheme.colorScheme.onBackground)
+        Spacer(modifier = Modifier.height(12.dp))
+        Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
+        Spacer(modifier = Modifier.height(12.dp))
         Text(
             "Ingredients",
-            style = MaterialTheme.typography.headlineSmall.copy(fontSize = 18.sp),
-            color = buttonBackgroundColor
+            style = AppTheme.typography.labelMedium,
+            color = AppTheme.colorScheme.onBackground
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         ingredients.forEach { ingredient ->
             Text(
                 "- $ingredient",
-                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp),
-                color = buttonBackgroundColor,
-                modifier = Modifier.padding(vertical = 1.dp)
+                style = AppTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                color = AppTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(vertical = 6.dp)
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             "Procedure",
-            style = MaterialTheme.typography.headlineSmall.copy(fontSize = 18.sp),
-            color = buttonBackgroundColor
+            style = AppTheme.typography.labelMedium,
+            color = AppTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.height(4.dp))
         Column {
             procedure.forEachIndexed { index, step ->
                 Text(
                     "${index + 1}. $step",
-                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp),
-                    color = buttonBackgroundColor,
-                    modifier = Modifier.padding(vertical = 2.dp)
+                    style = AppTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                    color = AppTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+}
+
+// Preview
+@Composable
+@Preview(showBackground = true)
+fun PreviewRecipeDetails() {
+ AppTheme {
+ RecipeDetails(
+ recipeTitle = "Delicious Chicken Adobo",
+ foodType = "Main Course",
+ prepTime = "45 mins",
+ description = "A classic Filipino dish made with chicken, soy sauce, vinegar, garlic, and black peppercorns.",
+ ingredients = listOf(
+ "1 kg chicken, cut into serving pieces",
+ "1/2 cup soy sauce",
+ "1/2 cup vinegar",
+ "1 head garlic, crushed",
+ "1 tbsp whole black peppercorns",
+ "2 pcs bay leaves",
+ "Cooking oil"
+ ),
+ procedure = listOf(
+ "In a large pot, combine chicken, soy sauce, vinegar, garlic, peppercorns, and bay leaves. Marinate for at least 30 minutes.",
+ "Place the pot over medium heat and bring to a boil. Reduce heat and simmer for 30-40 minutes, or until chicken is tender and sauce has thickened.",
+ "Remove chicken from the pot and pan-fry in a separate pan until golden brown.",
+ "Return fried chicken to the pot with the sauce. Simmer for another 5-10 minutes.",
+ "Serve hot with rice."
+ ),
+ onAddToFavorites = {
+ // Handle add to favorites action
+ }
+ )
+ }
 }

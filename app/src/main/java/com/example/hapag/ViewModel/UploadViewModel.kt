@@ -4,21 +4,40 @@ import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.hapag.composables.Item
+import com.example.hapag.data.Recipe
+import com.example.hapag.data.toggleableCategory
 
 class UploadViewModel: ViewModel() {
-
+    val viewmodel = MyRecipeViewModel()
     var uploadedImage by mutableStateOf<Uri?>(null)
     var title = mutableStateOf("")
     var description = mutableStateOf("")
     var servingSize = mutableStateOf("")
     var cookTime = mutableStateOf("")
+    var category = mutableStateOf("")
+
+    fun uploadRecipe(){
+        for (item in categoryCheckBox) {
+            if (item.isChecked) {
+                category.value = category.value + item.text + ", "
+            }
+        }
+        val uploadrecipe = Recipe(uploadedImage?: Uri.EMPTY,title.value, description.value, servingSize.value, cookTime.value, category.value, ingredientList.map {it.text}, prodecureList.map { it.text })
+        viewmodel.addMyRecipe(uploadrecipe)
+    }
 
 
-
+    val categoryCheckBox = mutableStateListOf<toggleableCategory>(
+        toggleableCategory(false, "Breakfast"),
+        toggleableCategory(false, "Lunch"),
+        toggleableCategory(false, "Dinner"),
+        toggleableCategory(false, "Merienda  "),
+        toggleableCategory(false, "Sweet"),
+        toggleableCategory(false, "Savory")
+    )
 
     //Ingredient
     var overlayIngredientList by mutableStateOf(false)
@@ -26,10 +45,7 @@ class UploadViewModel: ViewModel() {
 
     val ingredientList = mutableStateListOf<Item>()
     init {
-        ingredientList.addAll(listOf(
-            Item(1, ""),
-            Item(2, "")
-        ))
+        ingredientList.addAll(listOf())
     }
 
     fun openIngredientList() {
@@ -67,10 +83,7 @@ class UploadViewModel: ViewModel() {
 
     val prodecureList = mutableStateListOf<Item>()
     init {
-        prodecureList.addAll(listOf(
-            Item(1, ""),
-            Item(2, "")
-        ))
+        prodecureList.addAll(listOf())
     }
 
     fun openProcedureList() {

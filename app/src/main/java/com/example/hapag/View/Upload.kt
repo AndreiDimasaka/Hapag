@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -168,6 +170,34 @@ fun MyScreen() {
                             )
                         }
                         Spacer(Modifier.height(30.dp))
+                        Text(
+                            text = "Category",
+                            color = AppTheme.colorScheme.onBackground,
+                            style = AppTheme.typography.labelMedium,
+                        )
+                        Spacer(Modifier.height(10.dp))
+                        viewModel.categoryCheckBox.forEachIndexed{index, info ->
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                Checkbox(
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = AppTheme.colorScheme.secondary,
+                                        uncheckedColor = AppTheme.colorScheme.secondary,
+                                        checkmarkColor = AppTheme.colorScheme.background
+                                    ),
+                                    checked = info.isChecked,
+                                    onCheckedChange = {
+                                        viewModel.categoryCheckBox[index] = viewModel.categoryCheckBox[index].copy(isChecked = it)
+                                    },
+                                )
+                                Text( text = info.text, style = AppTheme.typography.labelSmall, color = AppTheme.colorScheme.onBackground)
+                            }
+                        }
+
+                        Spacer(Modifier.height(30.dp))
                         OutlinedButton(
                             modifier = Modifier.fillMaxWidth(),
                             contentPadding = PaddingValues(horizontal = (50.dp) ),
@@ -217,7 +247,7 @@ fun MyScreen() {
                             horizontalArrangement = Arrangement.Center
                         ){
                             Button(
-                                onClick = {TODO()},
+                                onClick = {viewModel.uploadRecipe()},
                                 shape = RoundedCornerShape(5.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = AppTheme.colorScheme.secondary
