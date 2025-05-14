@@ -1,10 +1,11 @@
 package com.example.hapag.data
 
-import android.net.Uri
-import androidx.compose.runtime.mutableStateOf
+import android.os.Parcelable import kotlinx.parcelize.Parcelize
 
-data class Item(val id: Int, val text: String)
+@Parcelize data class Procedure( val step: Int, val description: String ) : Parcelable
 
-data class toggleableCategory(val isChecked: Boolean, val text: String)
+@Parcelize data class Ingredient( val value: String ) : Parcelable
 
-data class Recipe(var photo : Uri ,val title: String, val description: String, val servingSize: String, val cookTime: String, val category: String, val ingredients: List<String>, val instructions: List<String>)
+@Parcelize data class toggleableCategory( val text: String, val isChecked: Boolean ) : Parcelable
+
+@Parcelize data class Recipe(val title: String, val description: String, val servingSize: String, val cookTime: String, val categories: List<String>, val ingredients: List<Ingredient>, val procedures: List<Procedure> ) : Parcelable

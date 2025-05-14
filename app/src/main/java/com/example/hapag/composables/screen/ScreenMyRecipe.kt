@@ -1,10 +1,6 @@
-package com.example.hapag
+package com.example.hapag.composables.screen
 
 import android.content.Intent
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,31 +15,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.hapag.ViewModel.MyRecipeViewModel
+import androidx.navigation.NavController
+import com.example.hapag.RecipeActivity
+import com.example.hapag.ViewModel.RecipeViewModel
 import com.example.hapag.composables.MyRecipeCard
 import com.example.hapag.composables.TopReturnBar
 import com.example.hapag.theme.AppTheme
 import com.example.hapag.ui.BottomNavigationBar
 
-class MyRecipesActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            AppTheme {
-                MyRecipesScreen(onBack = { finish() }) // Pass the finish() lambda
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyRecipesScreen(onBack: () -> Unit) { // Add the onBack parameter
-    val viewModel = viewModel<MyRecipeViewModel>()
+fun MyRecipesScreen(onBack: () -> Unit,
+                    navController: NavController,
+                    recipeViewModel: RecipeViewModel
+) { // Add the onBack parameter
+    val recipeViewModel = recipeViewModel
     val context = LocalContext.current
     Scaffold(
         topBar = { TopReturnBar(title = "My Recipes", arrowBack = false,) },
@@ -86,14 +73,7 @@ fun MyRecipesScreen(onBack: () -> Unit) { // Add the onBack parameter
                         }
                         context.startActivity(intent) }
                 )
+            }
         }
     }
-}
-    }
-
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MyRecipesScreenPreview() {
-    MyRecipesScreen(onBack = {})
 }

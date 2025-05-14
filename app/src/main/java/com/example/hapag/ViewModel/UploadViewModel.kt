@@ -1,117 +1,176 @@
 package com.example.hapag.ViewModel
 
-import android.net.Uri
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.hapag.composables.Item
+import androidx.lifecycle.viewModelScope
+import com.example.hapag.data.Ingredient
+import com.example.hapag.data.Procedure
 import com.example.hapag.data.Recipe
 import com.example.hapag.data.toggleableCategory
+import kotlinx.coroutines.launch
 
-class UploadViewModel: ViewModel() {
-    val viewmodel = MyRecipeViewModel()
-    var uploadedImage by mutableStateOf<Uri?>(null)
+class UploadViewModel : ViewModel() {
+
     var title = mutableStateOf("")
+        private set
+
     var description = mutableStateOf("")
+        private set
+
     var servingSize = mutableStateOf("")
+        private set
+
     var cookTime = mutableStateOf("")
-    var category = mutableStateOf("")
+        private set
 
-    fun uploadRecipe(){
-        for (item in categoryCheckBox) {
-            if (item.isChecked) {
-                category.value = category.value + item.text + ", "
-            }
-        }
-        val uploadrecipe = Recipe(uploadedImage?: Uri.EMPTY,title.value, description.value, servingSize.value, cookTime.value, category.value, ingredientList.map {it.text}, prodecureList.map { it.text })
-        viewmodel.addMyRecipe(uploadrecipe)
-    }
-
-
-    val categoryCheckBox = mutableStateListOf<toggleableCategory>(
-        toggleableCategory(false, "Breakfast"),
-        toggleableCategory(false, "Lunch"),
-        toggleableCategory(false, "Dinner"),
-        toggleableCategory(false, "Merienda  "),
-        toggleableCategory(false, "Sweet"),
-        toggleableCategory(false, "Savory")
+    // Category checkbox list
+    val categoryCheckBox = mutableStateListOf(
+        toggleableCategory("Breakfast", false),
+        toggleableCategory("Lunch", false),
+        toggleableCategory("Dinner", false),
+        toggleableCategory("Snack", false),
+        toggleableCategory("Dessert", false)
     )
 
-    //Ingredient
-    var overlayIngredientList by mutableStateOf(false)
-        internal set
+    // Ingredient and Procedure lists
+    val ingredientsList = mutableStateListOf<Ingredient>()
+    val proceduresList = mutableStateListOf<Procedure>()
 
-    val ingredientList = mutableStateListOf<Item>()
-    init {
-        ingredientList.addAll(listOf())
+    // Overlay states
+    var overlayIngredientList = mutableStateOf(false)
+        private set
+
+    var overlayProcedureList = mutableStateOf(false)
+        private set
+
+    // Update functions for text fields
+    fun updateTitle(newTitle: String) {
+        title.value = newTitle
     }
 
+    fun updateDescription(newDescription: String) {
+        description.value = newDescription
+    }
+
+    fun updateServingSize(newServingSize: String) {
+        servingSize.value = newServingSize
+    }
+
+    fun updateCookTime(newCookTime: String) {
+        cookTime.value = newCookTime
+    }
+
+    // Overlay control functions
     fun openIngredientList() {
-        overlayIngredientList = true
+        overlayIngredientList.value = true
     }
 
     fun closeIngredientList() {
-        overlayIngredientList = false
-    }
-    fun addIngredient() {
-        val nextId = (ingredientList.maxOfOrNull { it.id } ?: 0) + 1
-        ingredientList.add(Item(nextId, ""))
+        overlayIngredientList.value = false
     }
 
-    fun removeIngredient(id: Int) {
-        ingredientList.removeAll { it.id == id }
+    fun openProcedureList() {
+        overlayProcedureList.value = true
     }
 
-    fun updateIngredient(id: Int, newText: String) {
-        val index = ingredientList.indexOfFirst { it.id == id }
-        if (index != -1) {
-            ingredientList[index] = ingredientList[index].copy(text = newText)
+    fun closeProcedureList() {
+        overlayProcedureList.value = false
+    }
+
+    // Functions to manage ingredients and procedures
+    fun addIngredient(ingredient: Ingredient) {
+        ingredientsList.add(ingredient)
+    }
+
+    fun removeIngredient(index: Int) {
+        if (index in ingredientsList.indices) {
+            ingredientsList.removeAt(index)
+        }
+    }
+
+    fun updateIngredient(index: Int, ingredient: Ingredient) {
+        if (index in ingredientsList.indices) {
+            ingredientsList[index] = ingredient
         }
     }
 
     fun reorderIngredients(fromIndex: Int, toIndex: Int) {
-        val item = ingredientList.removeAt(fromIndex)
-        ingredientList.add(toIndex, item)
-    }
-
-    // Procedure
-    var overlayProcedureList by mutableStateOf(false)
-        internal set
-
-
-    val prodecureList = mutableStateListOf<Item>()
-    init {
-        prodecureList.addAll(listOf())
-    }
-
-    fun openProcedureList() {
-        overlayProcedureList = true
-    }
-
-    fun closeProcedureList() {
-        overlayProcedureList = false
+        if (fromIndex in ingredientsList.indices && toIndex in ingredientsList.indices) {
+            val item = ingredientsList[fromIndex]
+            ingredientsList.removeAt(fromIndex)
+            ingredientsList.add(toIndex, item)
+        }
     }
 
     fun addProcedure() {
-        val nextId = (prodecureList.maxOfOrNull { it.id } ?: 0) + 1
-        prodecureList.add(Item(nextId, ""))
+        val newStep = proceduresList.size + 1
+        proceduresList.add(Procedure(step = newStep, description = ""))
     }
 
-    fun removeProcedure(id: Int) {
-        prodecureList.removeAll { it.id == id }
+    fun removeProcedure(index: Int) {
+        if (index in proceduresList.indices) {
+            proceduresList.removeAt(index)
+        }
     }
 
-    fun updateProcedure(id: Int, newText: String) {
-        val index = prodecureList.indexOfFirst { it.id == id }
-        if (index != -1) {
-            prodecureList[index] = prodecureList[index].copy(text = newText)
+    fun updateProcedure(index: Int, text: String) {
+        if (index in proceduresList.indices) {
+            proceduresList[index] = proceduresList[index].copy(description = text)
         }
     }
 
     fun reorderProcedure(fromIndex: Int, toIndex: Int) {
-        val item = prodecureList.removeAt(fromIndex)
-        prodecureList.add(toIndex, item)
+        if (fromIndex in proceduresList.indices && toIndex in proceduresList.indices) {
+            val item = proceduresList[fromIndex]
+            proceduresList.removeAt(fromIndex)
+            proceduresList.add(toIndex, item)
+        }
+    }
+
+    fun uploadRecipe(onSuccess: (Recipe) -> Unit) {
+        viewModelScope.launch {
+            // Validate inputs
+            if (title.value.isBlank()) {
+                // Handle empty title error
+                return@launch
+            }
+            if (ingredientsList.isEmpty()) {
+                // Handle empty ingredients error
+                return@launch
+            }
+            if (proceduresList.isEmpty()) {
+                // Handle empty procedures error
+                return@launch
+            }
+
+            // Create recipe object
+            val recipe = Recipe(
+                title = title.value,
+                description = description.value,
+                servingSize = servingSize.value,
+                cookTime = cookTime.value,
+                categories = categoryCheckBox.filter { it.isChecked }.map { it.text },
+                ingredients = ingredientsList.toList(),
+                procedures = proceduresList.toList()
+            )
+
+            // TODO: Implement actual upload logic (e.g., API call, database save)
+            // For now, just clear the form and call onSuccess
+            clearForm()
+            onSuccess(recipe)
+        }
+    }
+
+    private fun clearForm() {
+        title.value = ""
+        description.value = ""
+        servingSize.value = ""
+        cookTime.value = ""
+        categoryCheckBox.forEachIndexed { index, _ ->
+            categoryCheckBox[index] = categoryCheckBox[index].copy(isChecked = false)
+        }
+        ingredientsList.clear()
+        proceduresList.clear()
     }
 }

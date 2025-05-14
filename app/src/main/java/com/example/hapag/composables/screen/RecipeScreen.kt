@@ -1,4 +1,4 @@
-package com.example.hapag.composables
+package com.example.hapag.composables.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,10 +12,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,65 +30,64 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.hapag.ViewModel.RecipeViewModel
+import com.example.hapag.composables.TopReturnBar
 import com.example.hapag.data.Recipe
 import com.example.hapag.theme.AppTheme
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeDetails(
+fun RecipeScreen(
     navController: NavController,
-    recipe: Recipe
-) {
-    val recipeViewModel = viewModel<RecipeViewModel>()
-    var isFavorite by remember { mutableStateOf(recipeViewModel.isFavorite(recipe))}
+    recipe: Recipe,
+    recipeViewModel: RecipeViewModel
+){
+    var isFavorite by remember { mutableStateOf(recipeViewModel.isFavorite(recipe)) }
 
-        Scaffold(
-            modifier = Modifier.fillMaxWidth(),
-            topBar = {
-                TopReturnBar(
-                    title = recipe.title,
-                    arrowBack = true,
-                    onNavigateBack = { navController.navigateUp() }
-                )
-            }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(innerPadding)
-                    .padding(horizontal = 16.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+    Scaffold(
+        modifier = Modifier.fillMaxWidth(),
+        topBar = {
+            TopReturnBar(
+                title = recipe.title,
+                arrowBack = true,
+                onNavigateBack = { navController.navigateUp() }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // Title
+            Text(
+                text = recipe.title,
+                style = AppTheme.typography.labelLarge.copy(fontSize = 28.sp),
+                color = AppTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Metadata (Categories and Cook Time)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Title
                 Text(
-                    text = recipe.title,
-                    style = AppTheme.typography.labelLarge.copy(fontSize = 28.sp),
-                    color = AppTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier.fillMaxWidth()
+                    text = recipe.categories.joinToString(", "),
+                    style = AppTheme.typography.labelMedium.copy(fontSize = 16.sp),
+                    color = AppTheme.colorScheme.onBackground
                 )
-
-                // Metadata (Categories and Cook Time)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = recipe.categories.joinToString(", "),
-                        style = AppTheme.typography.labelMedium.copy(fontSize = 16.sp),
-                        color = AppTheme.colorScheme.onBackground
-                    )
-                    Text(
-                        text = "Cook Time: ${recipe.cookTime}",
-                        style = AppTheme.typography.labelSmall.copy(fontSize = 14.sp),
-                        color = AppTheme.colorScheme.onBackground
-                    )
-                }
+                Text(
+                    text = "Cook Time: ${recipe.cookTime}",
+                    style = AppTheme.typography.labelSmall.copy(fontSize = 14.sp),
+                    color = AppTheme.colorScheme.onBackground
+                )
 
                 // Serving Size
                 Text(
@@ -173,9 +173,5 @@ fun RecipeDetails(
             }
         }
     }
-
-// Preview
-@Composable
-fun PreviewRecipeDetails() {
-
 }
+
