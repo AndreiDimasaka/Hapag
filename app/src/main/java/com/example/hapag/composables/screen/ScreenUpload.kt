@@ -15,8 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -144,6 +142,7 @@ fun UploadScreen(navController: NavController) {
                             )
                         }
                         Spacer(Modifier.height(30.dp))
+<<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenUpload.kt
                         Text(
                             text = "Category",
                             color = AppTheme.colorScheme.onBackground,
@@ -175,6 +174,8 @@ fun UploadScreen(navController: NavController) {
                             }
                         }
                         Spacer(Modifier.height(30.dp))
+=======
+>>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen):app/src/main/java/com/example/hapag/View/Upload.kt
                         OutlinedButton(
                             modifier = Modifier.fillMaxWidth(),
                             contentPadding = PaddingValues(horizontal = 50.dp),
@@ -224,6 +225,7 @@ fun UploadScreen(navController: NavController) {
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Button(
+<<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenUpload.kt
                                 onClick = {
                                     uploadViewModel.uploadRecipe { recipe ->
                                         recipeViewModel.addMyRecipe(recipe)
@@ -232,6 +234,9 @@ fun UploadScreen(navController: NavController) {
                                         }
                                     }
                                 },
+=======
+                                onClick = {TODO()},
+>>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen):app/src/main/java/com/example/hapag/View/Upload.kt
                                 shape = RoundedCornerShape(5.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = AppTheme.colorScheme.secondary

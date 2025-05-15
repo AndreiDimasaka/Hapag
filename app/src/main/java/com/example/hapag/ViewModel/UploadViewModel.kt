@@ -2,6 +2,7 @@ package com.example.hapag.ViewModel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+<<<<<<< HEAD
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hapag.data.Ingredient
@@ -12,6 +13,16 @@ import kotlinx.coroutines.launch
 
 class UploadViewModel : ViewModel() {
 
+=======
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import com.example.hapag.composables.Item
+
+class UploadViewModel: ViewModel() {
+
+    var uploadedImage by mutableStateOf<Uri?>(null)
+>>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen)
     var title = mutableStateOf("")
         private set
 
@@ -22,6 +33,7 @@ class UploadViewModel : ViewModel() {
         private set
 
     var cookTime = mutableStateOf("")
+<<<<<<< HEAD
         private set
 
     // Category checkbox list
@@ -32,11 +44,17 @@ class UploadViewModel : ViewModel() {
         toggleableCategory("Snack", false),
         toggleableCategory("Dessert", false)
     )
+=======
+
+
+
+>>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen)
 
     // Ingredient and Procedure lists
     val ingredientsList = mutableStateListOf<Ingredient>()
     val proceduresList = mutableStateListOf<Procedure>()
 
+<<<<<<< HEAD
     // Overlay states
     var overlayIngredientList = mutableStateOf(false)
         private set
@@ -47,6 +65,14 @@ class UploadViewModel : ViewModel() {
     // Update functions for text fields
     fun updateTitle(newTitle: String) {
         title.value = newTitle
+=======
+    val ingredientList = mutableStateListOf<Item>()
+    init {
+        ingredientList.addAll(listOf(
+            Item(1, ""),
+            Item(2, "")
+        ))
+>>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen)
     }
 
     fun updateDescription(newDescription: String) {
@@ -96,11 +122,37 @@ class UploadViewModel : ViewModel() {
     }
 
     fun reorderIngredients(fromIndex: Int, toIndex: Int) {
+<<<<<<< HEAD
         if (fromIndex in ingredientsList.indices && toIndex in ingredientsList.indices) {
             val item = ingredientsList[fromIndex]
             ingredientsList.removeAt(fromIndex)
             ingredientsList.add(toIndex, item)
         }
+=======
+        val item = ingredientList.removeAt(fromIndex)
+        ingredientList.add(toIndex, item)
+    }
+
+    // Procedure
+    var overlayProcedureList by mutableStateOf(false)
+        internal set
+
+
+    val prodecureList = mutableStateListOf<Item>()
+    init {
+        prodecureList.addAll(listOf(
+            Item(1, ""),
+            Item(2, "")
+        ))
+    }
+
+    fun openProcedureList() {
+        overlayProcedureList = true
+    }
+
+    fun closeProcedureList() {
+        overlayProcedureList = false
+>>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen)
     }
 
     fun addProcedure() {

@@ -2,7 +2,7 @@ package com.example.hapag.DummyInputs
 
 import androidx.compose.runtime.Composable
 import com.example.hapag.R
-import com.example.hapag.composables.RecipeScreen
+import com.example.hapag.RecipeScreen
 
 @Composable
 fun LecheFlanRecipeScreen(
