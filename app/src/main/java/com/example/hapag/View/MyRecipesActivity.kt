@@ -1,16 +1,22 @@
-package com.example.hapag.composables.screen
+package com.example.hapag
 
 import android.content.Intent
 <<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenMyRecipe.kt
+<<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenMyRecipe.kt
 =======
+=======
+>>>>>>> parent of e5dfdad (adding navcontroller):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+<<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenMyRecipe.kt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 >>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
+=======
+>>>>>>> parent of e5dfdad (adding navcontroller):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 <<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenMyRecipe.kt
+<<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenMyRecipe.kt
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.hapag.RecipeActivity
@@ -43,13 +50,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 >>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
+=======
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hapag.ViewModel.MyRecipeViewModel
+>>>>>>> parent of e5dfdad (adding navcontroller):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
 import com.example.hapag.composables.MyRecipeCard
 import com.example.hapag.composables.TopReturnBar
 import com.example.hapag.theme.AppTheme
 import com.example.hapag.ui.BottomNavigationBar
 
+class MyRecipesActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            AppTheme {
+                MyRecipesScreen(onBack = { finish() }) // Pass the finish() lambda
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+<<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenMyRecipe.kt
 <<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenMyRecipe.kt
 fun MyRecipesScreen(onBack: () -> Unit,
                     navController: NavController,
@@ -59,6 +85,10 @@ fun MyRecipesScreen(onBack: () -> Unit,
 =======
 fun MyRecipesScreen(onBack: () -> Unit) { // Add the onBack parameter
 >>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
+=======
+fun MyRecipesScreen(onBack: () -> Unit) { // Add the onBack parameter
+    val viewModel = viewModel<MyRecipeViewModel>()
+>>>>>>> parent of e5dfdad (adding navcontroller):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
     val context = LocalContext.current
     Scaffold(
         topBar = { TopReturnBar(title = "My Recipes", arrowBack = false,) },
@@ -102,18 +132,25 @@ fun MyRecipesScreen(onBack: () -> Unit) { // Add the onBack parameter
                         }
                         context.startActivity(intent) }
                 )
-            }
         }
     }
+<<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenMyRecipe.kt
 =======
         }
     }
 }
+=======
+}
+    }
+>>>>>>> parent of e5dfdad (adding navcontroller):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
 
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MyRecipesScreenPreview() {
     MyRecipesScreen(onBack = {})
+<<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenMyRecipe.kt
 >>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
+=======
+>>>>>>> parent of e5dfdad (adding navcontroller):app/src/main/java/com/example/hapag/View/MyRecipesActivity.kt
 }

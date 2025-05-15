@@ -10,41 +10,45 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+<<<<<<< HEAD
 <<<<<<< HEAD
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.hapag.ViewModel.RecipeViewModel
 import com.example.hapag.data.Recipe
+=======
+import com.example.hapag.buttonBackgroundColor
+>>>>>>> parent of e5dfdad (adding navcontroller)
 import com.example.hapag.theme.AppTheme
 =======
 import com.example.hapag.buttonBackgroundColor
 >>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen)
 
-
 @Composable
 fun RecipeDetails(
-    navController: NavController,
-    recipe: Recipe
+    recipeTitle: String,
+    foodType: String,
+    prepTime: String,
+    description: String,
+    ingredients: List<String>,
+    procedure: List<String>,
+    onAddToFavorites: () -> Unit
 ) {
+<<<<<<< HEAD
 <<<<<<< HEAD
     val recipeViewModel = viewModel<RecipeViewModel>()
     var isFavorite by remember { mutableStateOf(recipeViewModel.isFavorite(recipe))}
@@ -73,11 +77,30 @@ fun RecipeDetails(
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
+=======
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            recipeTitle,
+            style = AppTheme.typography.labelLarge.copy(fontSize = 26.sp),
+            color = AppTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Start,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp, bottom = 4.dp)
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+>>>>>>> parent of e5dfdad (adding navcontroller)
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 foodType,
+<<<<<<< HEAD
                 style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
                 color = buttonBackgroundColor
             )
@@ -85,6 +108,15 @@ fun RecipeDetails(
                 prepTime,
                 style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
                 color = buttonBackgroundColor
+=======
+                style = AppTheme.typography.labelMedium,
+                color = AppTheme.colorScheme.onBackground
+            )
+            Text(
+                prepTime,
+                style = AppTheme.typography.labelSmall.copy(fontSize = 14.sp),
+                color = AppTheme.colorScheme.onBackground
+>>>>>>> parent of e5dfdad (adding navcontroller)
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -99,12 +131,18 @@ fun RecipeDetails(
             Icon(
                 Icons.Filled.FavoriteBorder,
                 contentDescription = "Add to Favorites",
+<<<<<<< HEAD
                 tint = buttonBackgroundColor,
                 modifier = Modifier.size(20.dp)
+=======
+                tint = AppTheme.colorScheme.onBackground,
+                modifier = Modifier.size(25.dp)
+>>>>>>> parent of e5dfdad (adding navcontroller)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 "Add to Favorites",
+<<<<<<< HEAD
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
                 color = buttonBackgroundColor
             )
@@ -132,17 +170,53 @@ fun RecipeDetails(
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp),
                 color = buttonBackgroundColor,
                 modifier = Modifier.padding(vertical = 1.dp)
+=======
+                style = AppTheme.typography.labelMedium.copy(fontSize = 14.sp),
+                color = AppTheme.colorScheme.onBackground
+            )
+        }
+        Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            "Description",
+            style = AppTheme.typography.labelMedium,
+            color = AppTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(description, style = AppTheme.typography.bodySmall, color = AppTheme.colorScheme.onBackground)
+        Spacer(modifier = Modifier.height(12.dp))
+        Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            "Ingredients",
+            style = AppTheme.typography.labelMedium,
+            color = AppTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        ingredients.forEach { ingredient ->
+            Text(
+                "- $ingredient",
+                style = AppTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                color = AppTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(vertical = 6.dp)
+>>>>>>> parent of e5dfdad (adding navcontroller)
             )
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             "Procedure",
+<<<<<<< HEAD
             style = MaterialTheme.typography.headlineSmall.copy(fontSize = 18.sp),
             color = buttonBackgroundColor
+=======
+            style = AppTheme.typography.labelMedium,
+            color = AppTheme.colorScheme.onBackground
+>>>>>>> parent of e5dfdad (adding navcontroller)
         )
         Spacer(modifier = Modifier.height(4.dp))
         Column {
             procedure.forEachIndexed { index, step ->
+<<<<<<< HEAD
                 Text(
                     "${index + 1}. $step",
                     style = MaterialTheme.typography.bodyLarge.copy(fontSize = 14.sp),
@@ -161,122 +235,55 @@ fun RecipeDetails(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Title
+=======
+>>>>>>> parent of e5dfdad (adding navcontroller)
                 Text(
-                    text = recipe.title,
-                    style = AppTheme.typography.labelLarge.copy(fontSize = 28.sp),
+                    "${index + 1}. $step",
+                    style = AppTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                     color = AppTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
-
-                // Metadata (Categories and Cook Time)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = recipe.categories.joinToString(", "),
-                        style = AppTheme.typography.labelMedium.copy(fontSize = 16.sp),
-                        color = AppTheme.colorScheme.onBackground
-                    )
-                    Text(
-                        text = "Cook Time: ${recipe.cookTime}",
-                        style = AppTheme.typography.labelSmall.copy(fontSize = 14.sp),
-                        color = AppTheme.colorScheme.onBackground
-                    )
-                }
-
-                // Serving Size
-                Text(
-                    text = "Serves: ${recipe.servingSize}",
-                    style = AppTheme.typography.labelSmall.copy(fontSize = 14.sp),
-                    color = AppTheme.colorScheme.onBackground
-                )
-
-                // Favorite Button
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            recipeViewModel.toggleFavorite(recipe)
-                            isFavorite = recipeViewModel.isFavorite(recipe)
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Icon(
-                        imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                        contentDescription = if (isFavorite) "Remove from Favorites" else "Add to Favorites",
-                        tint = AppTheme.colorScheme.secondary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = if (isFavorite) "Remove from Favorites" else "Add to Favorites",
-                        style = AppTheme.typography.labelMedium.copy(fontSize = 14.sp),
-                        color = AppTheme.colorScheme.onBackground
-                    )
-                }
-
-                Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
-
-                // Description
-                Text(
-                    text = "Description",
-                    style = AppTheme.typography.labelMedium.copy(fontSize = 18.sp),
-                    color = AppTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = recipe.description,
-                    style = AppTheme.typography.bodyMedium.copy(fontSize = 16.sp),
-                    color = AppTheme.colorScheme.onBackground
-                )
-
-                Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
-
-                // Ingredients
-                Text(
-                    text = "Ingredients",
-                    style = AppTheme.typography.labelMedium.copy(fontSize = 18.sp),
-                    color = AppTheme.colorScheme.onBackground
-                )
-                recipe.ingredients.forEach { ingredient ->
-                    Text(
-                        text = "• ${ingredient.value}",
-                        style = AppTheme.typography.bodyMedium.copy(fontSize = 16.sp),
-                        color = AppTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                }
-
-                Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
-
-                // Procedure
-                Text(
-                    text = "Procedure",
-                    style = AppTheme.typography.labelMedium.copy(fontSize = 18.sp),
-                    color = AppTheme.colorScheme.onBackground
-                )
-                recipe.procedures.forEach { procedure ->
-                    Text(
-                        text = "${procedure.step}. ${procedure.description}",
-                        style = AppTheme.typography.bodyMedium.copy(fontSize = 16.sp),
-                        color = AppTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
             }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+}
+>>>>>>> parent of e5dfdad (adding navcontroller)
 
 // Preview
 @Composable
+@Preview(showBackground = true)
 fun PreviewRecipeDetails() {
-
+ AppTheme {
+ RecipeDetails(
+ recipeTitle = "Delicious Chicken Adobo",
+ foodType = "Main Course",
+ prepTime = "45 mins",
+ description = "A classic Filipino dish made with chicken, soy sauce, vinegar, garlic, and black peppercorns.",
+ ingredients = listOf(
+ "1 kg chicken, cut into serving pieces",
+ "1/2 cup soy sauce",
+ "1/2 cup vinegar",
+ "1 head garlic, crushed",
+ "1 tbsp whole black peppercorns",
+ "2 pcs bay leaves",
+ "Cooking oil"
+ ),
+ procedure = listOf(
+ "In a large pot, combine chicken, soy sauce, vinegar, garlic, peppercorns, and bay leaves. Marinate for at least 30 minutes.",
+ "Place the pot over medium heat and bring to a boil. Reduce heat and simmer for 30-40 minutes, or until chicken is tender and sauce has thickened.",
+ "Remove chicken from the pot and pan-fry in a separate pan until golden brown.",
+ "Return fried chicken to the pot with the sauce. Simmer for another 5-10 minutes.",
+ "Serve hot with rice."
+ ),
+ onAddToFavorites = {
+ // Handle add to favorites action
+ }
+ )
+ }
 }
 =======
 }
