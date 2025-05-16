@@ -5,6 +5,7 @@
       <SelectionState runConfigName="IngredientInputListPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+<<<<<<< HEAD
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -23,6 +24,8 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
 >>>>>>> parent of e5dfdad (adding navcontroller)
+=======
+>>>>>>> parent of cdb655a (Applied app theme to all activities and composables, building view model)
     </selectionStates>
   </component>
 </project>

@@ -27,8 +27,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hapag.ViewModel.IngredientILViewModel
 import com.example.hapag.R
-import com.example.hapag.ViewModel.UploadViewModel
 import com.example.hapag.theme.AppTheme
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -39,7 +39,7 @@ fun ReorderableIngredientColumn(
     onClose: () -> Unit
 ) {
 
-    var viewModel = viewModel<UploadViewModel>()
+    var viewModel = viewModel<IngredientILViewModel>()
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->

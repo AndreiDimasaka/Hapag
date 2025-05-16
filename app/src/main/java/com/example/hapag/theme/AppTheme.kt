@@ -97,7 +97,7 @@ private val typography = AppTypography(
     labelSmall = TextStyle(
         fontFamily = monserrat,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 12.sp,
+        fontSize = 10.sp,
         lineHeight = 24.sp,
     )
 )

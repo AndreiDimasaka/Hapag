@@ -1,6 +1,5 @@
 package com.example.hapag.View
 
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,15 +30,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hapag.ViewModel.IngredientILViewModel
 import com.example.hapag.R
-import com.example.hapag.ViewModel.UploadViewModel
 import com.example.hapag.composables.ImageSelect
 import com.example.hapag.composables.ReorderableIngredientColumn
 import com.example.hapag.composables.ReorderableProcedureColumn
@@ -62,9 +60,8 @@ class Upload : ComponentActivity() {
 
 @Composable
 fun MyScreen() {
-    val viewModel = viewModel<UploadViewModel>()
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val viewModel = viewModel<IngredientILViewModel>()
+    var openProcedureList by remember { mutableStateOf(false) }
 
 
     Scaffold(
@@ -77,7 +74,7 @@ fun MyScreen() {
                 selectedIndex = 1
             )
         },
-        topBar = { TopReturnBar(title = "Upload", arrowBack = false) },
+        topBar = { TopReturnBar(title = "Upload") },
     ) { innerPadding ->
         Box(modifier = Modifier
             .fillMaxSize()) {
@@ -97,7 +94,7 @@ fun MyScreen() {
                             end.linkTo(parent.end)
                         }
                         .fillMaxWidth()
-                        .fillMaxHeight(if (isLandscape) 0.5f else 0.25f)
+                        .fillMaxHeight(0.25f)
                         .background(AppTheme.colorScheme.tertiary.copy(alpha = 0.7f))
                 ) {
                     ImageSelect()
@@ -120,15 +117,13 @@ fun MyScreen() {
                     item {
                         ThemedTitleTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            hint = "Title: Sinigang na baboy ",
-                            onValueChange = {onValueChange -> viewModel.title}
+                            hint = "Title: Sinigang na baboy "
                         )
                         Spacer(Modifier.height(10.dp))
                         ThemedTitleTextField(
                             style = AppTheme.typography.bodySmall,
                             modifier = Modifier.fillMaxWidth(),
-                            hint = "Share the inspiration for this recipe. Describe the dish's flavors, textures, and aroma, and tell us your favorite way to savor it.",
-                            onValueChange = {onValueChange -> viewModel.description}
+                            hint = "Share the inspiration for this recipe. Describe the dish's flavors, textures, and aroma, and tell us your favorite way to savor it."
                         )
                         Spacer(Modifier.height(20.dp))
                         Row(
@@ -141,11 +136,11 @@ fun MyScreen() {
                                 style = AppTheme.typography.labelMedium,
                             )
                             Spacer(Modifier.weight(1f))
+
                             ThemedTitleTextField(
                                 modifier = Modifier.fillMaxWidth().padding(start = 120.dp),
                                 hint = "3 People",
-                                style = AppTheme.typography.bodySmall,
-                                onValueChange = {onValueChange -> viewModel.servingSize}
+                                style = AppTheme.typography.bodySmall
                             )
                         }
                         Spacer(Modifier.height(20.dp))
@@ -163,8 +158,7 @@ fun MyScreen() {
                             ThemedTitleTextField(
                                 modifier = Modifier.fillMaxWidth().padding(start = 83.dp),
                                 hint = "1 hr 10 mins",
-                                style = AppTheme.typography.bodySmall,
-                                onValueChange = {onValueChange -> viewModel.cookTime}
+                                style = AppTheme.typography.bodySmall
                             )
                         }
                         Spacer(Modifier.height(30.dp))
@@ -210,12 +204,10 @@ fun MyScreen() {
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.baseline_add),
-                                contentDescription = "Add Ingredients",
-                                tint = AppTheme.colorScheme.onBackground
+                                contentDescription = "Add Ingredients"
                             )
                             Text(
                                 text = "ADD INGREDIENTS",
-                                color = AppTheme.colorScheme.onBackground,
                                 style = AppTheme.typography.labelMedium,
                                 modifier = Modifier.padding(start = 8.dp)
                             )
@@ -224,7 +216,7 @@ fun MyScreen() {
                         OutlinedButton(
                             modifier = Modifier.fillMaxWidth(),
                             contentPadding = PaddingValues(horizontal = (50.dp) ),
-                            onClick = {viewModel.openProcedureList()},
+                            onClick = { viewModel.openIngredientList() },
                             colors = ButtonDefaults.outlinedButtonColors(
                                 contentColor = AppTheme.colorScheme.onSecondary
                             ),
@@ -232,12 +224,10 @@ fun MyScreen() {
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.baseline_add),
-                                contentDescription = "Add Steps",
-                                tint = AppTheme.colorScheme.onBackground
+                                contentDescription = "Add Ingredients"
                             )
                             Text(
                                 text = "ADD STEPS",
-                                color = AppTheme.colorScheme.onBackground,
                                 style = AppTheme.typography.labelMedium,
                                 modifier = Modifier.padding(start = 8.dp)
                             )
@@ -248,6 +238,7 @@ fun MyScreen() {
                             horizontalArrangement = Arrangement.Center
                         ){
                             Button(
+<<<<<<< HEAD
 <<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenUpload.kt
 <<<<<<< HEAD:app/src/main/java/com/example/hapag/composables/screen/ScreenUpload.kt
                                 onClick = {
@@ -264,13 +255,15 @@ fun MyScreen() {
 =======
                                 onClick = {viewModel.uploadRecipe()},
 >>>>>>> parent of e5dfdad (adding navcontroller):app/src/main/java/com/example/hapag/View/Upload.kt
+=======
+                                onClick = {viewModel.openIngredientList()},
+>>>>>>> parent of cdb655a (Applied app theme to all activities and composables, building view model)
                                 shape = RoundedCornerShape(5.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = AppTheme.colorScheme.secondary
                                 )
                             ) { Text(
                                 text = "UPLOAD",
-                                color = AppTheme.colorScheme.onSecondary,
                                 style = AppTheme.typography.labelLarge,
                             ) }
                         }
@@ -279,10 +272,10 @@ fun MyScreen() {
             }
         }
         if (viewModel.overlayIngredientList) {
-            ReorderableIngredientColumn(onClose = {viewModel.closeIngredientList()})
+            ReorderableIngredientColumn(onClose = { viewModel.closeIngredientList()})
         }
-        if(viewModel.overlayProcedureList){
-            ReorderableProcedureColumn (onClose = {viewModel.closeProcedureList()} )
+        if(openProcedureList){
+            ReorderableProcedureColumn (onClose = {openProcedureList = false } )
         }
     }
 }
@@ -292,7 +285,7 @@ fun MyScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun UploadPreview() {
+fun GreetingPreview() {
     AppTheme {
         MyScreen()
     }

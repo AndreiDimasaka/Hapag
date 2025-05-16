@@ -33,9 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hapag.R
-import com.example.hapag.ViewModel.UploadViewModel
 import com.example.hapag.theme.AppTheme
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -45,11 +43,23 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun ReorderableProcedureColumn(
     onClose: () -> Unit
 ) {
-    var viewModel = viewModel<UploadViewModel>()
+    var nextId by rememberSaveable { mutableStateOf(3) }
+    var procedureList by remember {
+        mutableStateOf(
+            listOf(
+                Item(id = 1, text = ""),
+                Item(id = 2, text = "")
+            )
+        )
+    }
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        viewModel.reorderProcedure(fromIndex = from.index, toIndex = to.index)
+        procedureList = procedureList.toMutableList().apply {
+            val fromIndex = from.index
+
+            add(to.index, removeAt(fromIndex))
+        }
     }
     Box(
         modifier = Modifier
@@ -83,7 +93,7 @@ fun ReorderableProcedureColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
-                    viewModel.prodecureList,
+                    procedureList,
                     key = { _, item -> item.id }) { index, procedureItem ->
                     ReorderableItem(
                         reorderableLazyListState,
@@ -100,10 +110,17 @@ fun ReorderableProcedureColumn(
                             TextItemRow(
                                 item = procedureItem.text,
                                 onTextChange = { newText ->
-                                    viewModel.updateProcedure(procedureItem.id, newText)
-                                    },
+                                    procedureList = procedureList.map {
+                                        if (it.id == procedureItem.id) {
+                                            it.copy(text = newText)
+                                        } else {
+                                            it
+                                        }
+                                    }
+                                },
                                 onOptionsClick = {
-                                    viewModel.removeProcedure(procedureItem.id)
+                                    procedureList =
+                                        procedureList.filter { it.id != procedureItem.id }
                                 },
                                 hint = "Heat oil in pan and sauté garlic and onions add chicken to the pan and sear on all sides",
                                 reorderHandlerModifier = Modifier
@@ -117,7 +134,7 @@ fun ReorderableProcedureColumn(
                 item {
                     OutlinedButton(
                         onClick = {
-                            viewModel.addProcedure()
+                            procedureList = procedureList + Item(nextId++, "")
                         },
                         modifier = Modifier
                             .fillMaxWidth()
