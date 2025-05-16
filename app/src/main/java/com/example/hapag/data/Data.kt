@@ -1,26 +1,47 @@
 package com.example.hapag.data
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-import android.os.Parcelable import kotlinx.parcelize.Parcelize
-=======
 import android.net.Uri
-import androidx.compose.runtime.mutableStateOf
->>>>>>> parent of e5dfdad (adding navcontroller)
+import androidx.annotation.DrawableRes
+import com.example.hapag.R
 
-data class Item(val id: Int, val text: String)
 
-data class toggleableCategory(val isChecked: Boolean, val text: String)
+data class toggleableCategory(
+    var isChecked: Boolean,
+    val text: String
+)
 
-<<<<<<< HEAD
-@Parcelize data class toggleableCategory( val text: String, val isChecked: Boolean ) : Parcelable
 
-@Parcelize data class Recipe(val title: String, val description: String, val servingSize: String, val cookTime: String, val categories: List<String>, val ingredients: List<Ingredient>, val procedures: List<Procedure> ) : Parcelable
-=======
-data class Data(var counter: Int ) // Dummy class
+sealed class Screen(val route: String, @DrawableRes val icon: Int) {
+    object Home : Screen("home", R.drawable.home_icon)
+    object Upload : Screen("upload", R.drawable.baseline_file_upload_24)
+    object Recipe : Screen("recipe", R.drawable.baseline_menu_book_24)
+    object MyRecipes : Screen("myRecipes", R.drawable.baseline_menu_book_24)
+    object Favorites : Screen("favorites", R.drawable.btn_3)
 
-data class Item(val id: Int, val text: String)
->>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen)
-=======
-data class Recipe(var photo : Uri ,val title: String, val description: String, val servingSize: String, val cookTime: String, val category: String, val ingredients: List<String>, val instructions: List<String>)
->>>>>>> parent of e5dfdad (adding navcontroller)
+    companion object {
+        val bottomNavScreens = listOf(Home, Upload, MyRecipes, Favorites)
+    }
+}
+
+sealed class ImageData {
+    data class DrawableRes(@androidx.annotation.DrawableRes val resId: Int) : ImageData()
+    data class UriVal(val uri: Uri?) : ImageData()
+    object Empty : ImageData()
+}
+
+sealed class Item{
+    data class WithID(val id: Int, val text : String) : Item()
+    data class Text(val text: String) : Item()
+
+}
+
+data class Recipe(
+    var image: ImageData,
+    val title: String,
+    val description: String,
+    val servingSize: String,
+    val cookTime: String,
+    val category: String,
+    val ingredients: List<Item>,
+    val instructions: List<Item>
+)

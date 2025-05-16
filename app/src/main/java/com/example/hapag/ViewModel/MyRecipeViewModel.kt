@@ -3,7 +3,7 @@ package com.example.hapag.ViewModel
 import androidx.lifecycle.ViewModel
 import com.example.hapag.data.Recipe
 
-class MyRecipeViewModel: ViewModel() {
+class RecipeViewModel: ViewModel() {
 
     val myRecipeList = mutableListOf<Recipe>(
     )

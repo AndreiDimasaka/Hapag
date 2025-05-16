@@ -1,10 +1,6 @@
 package com.example.hapag
 
 import android.content.Intent
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,36 +15,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.hapag.composables.MyRecipeCard
-import com.example.hapag.composables.TopReturnBar
+import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hapag.ViewModel.MyRecipeViewModel
+import com.example.hapag.composables.UI.MyRecipeCard
+import com.example.hapag.composables.UI.TopReturnBar
 import com.example.hapag.theme.AppTheme
 import com.example.hapag.ui.BottomNavigationBar
 
-class MyFavoritesActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            AppTheme {
-                MyFavoritesScreen(onBack = { finish() }) // Pass a lambda to handle back navigation
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyFavoritesScreen(onBack: () -> Unit) { // Add onBack parameter
+fun MyRecipesScreen(onBack: () -> Unit,
+                    navController: NavController,
+){
+    val viewModel = viewModel<MyRecipeViewModel>()
     val context = LocalContext.current
     Scaffold(
-        topBar = { TopReturnBar(title = "Favorites", arrowBack = false, onNavigateBack = onBack) },
+        topBar = { TopReturnBar(title = "My Recipes", arrowBack = false,) },
         bottomBar = {
             BottomNavigationBar(onItemSelected = { index ->
                 // TODO: Implement navigation based on the selected index
-                println("Favorites: Bottom navigation item selected at index: $index")
-            }, selectedIndex = 3) // Favorites is at index 3
+                println("My Recipes: Bottom navigation item selected at index: $index")
+            }, selectedIndex = 2) // My Recipes is at index 2
         },
         containerColor = AppTheme.colorScheme.background
     ) { paddingValues ->
@@ -72,15 +61,19 @@ fun MyFavoritesScreen(onBack: () -> Unit) { // Add onBack parameter
                     context.startActivity(intent)
                 }
             )
+            viewModel.myRecipeList.forEach{
+                MyRecipeCard(
+                    title = it.title,
+                    category = it.category,
+                    modifier = Modifier.fillMaxWidth(),
+                    onRecipeClick = {
+                        val intent = Intent(context, RecipeActivity::class.java).apply {
+                            putExtra("recipe", it.title)
+                        }
+                        context.startActivity(intent) }
+                )
         }
     }
 }
-
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MyFavoritesScreenPreview() {
-    AppTheme {
-        MyFavoritesScreen(onBack = {}) // Provide an empty lambda for the preview
     }
-}
+

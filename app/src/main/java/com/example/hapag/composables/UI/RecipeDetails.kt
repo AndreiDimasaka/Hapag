@@ -1,4 +1,4 @@
-package com.example.hapag.composables
+package com.example.hapag.composables.UI
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,15 +27,13 @@ import androidx.compose.ui.unit.sp
 <<<<<<< HEAD
 <<<<<<< HEAD
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.hapag.ViewModel.RecipeViewModel
-import com.example.hapag.data.Recipe
+
 =======
 import com.example.hapag.buttonBackgroundColor
 >>>>>>> parent of e5dfdad (adding navcontroller)
 import com.example.hapag.theme.AppTheme
 =======
-import com.example.hapag.buttonBackgroundColor
 >>>>>>> parent of 38f4f3f (starting to route viewmodels to recipescreen, myrecipe etc. Updated uplaod screen)
 
 @Composable

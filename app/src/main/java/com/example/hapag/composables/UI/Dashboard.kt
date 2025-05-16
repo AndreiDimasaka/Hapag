@@ -1,4 +1,4 @@
-package com.example.hapag.composables
+package com.example.hapag.composables.UI
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateColorAsState
@@ -25,6 +25,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,21 +37,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.hapag.R
-import com.example.hapag.buttonTextColor
+import com.example.hapag.ViewModel.sharedViewModel
+import com.example.hapag.data.DummyDataViewModel
+import com.example.hapag.data.ImageData
+import com.example.hapag.data.Recipe
+import com.example.hapag.data.Screen
 import com.example.hapag.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FigmaDashboardLayout(
     modifier: Modifier = Modifier,
-    buttonBackgroundColor: Color,
-    onRecipeClick: (String) -> Unit
+    navController: NavController,
 ) {
     var searchText by remember { mutableStateOf("") }
     var isActive by remember { mutableStateOf(false) }
@@ -58,49 +63,23 @@ fun FigmaDashboardLayout(
     var selectedSweetSavoryTab by remember { mutableStateOf("All") }
     val categories = listOf("All", "Breakfast", "Lunch", "Merienda", "Dinner")
 
-    val sweetFilipinoFoods = remember {
-        listOf(
-            Triple("Halo-Halo", "Merienda", R.drawable.halohalo),
-            Triple("Leche Flan", "Dessert", R.drawable.lecheflan),
-            Triple("Ube Halaya", "Dessert", R.drawable.ubehalaya),
-            Triple("Bibingka", "Breakfast", R.drawable.bibingka),
-            Triple("Puto Bumbong", "Breakfast", R.drawable.bumbong),
-            Triple("Kutsinta", "Merienda", R.drawable.kutsinta),
-            Triple("Suman", "Breakfast", R.drawable.suman),
-            Triple("Buko Pandan", "Dessert", R.drawable.bukopandan),
-            Triple("Turon", "Merienda", R.drawable.turon),
-            Triple("Banana Cue", "Merienda", R.drawable.bananacue)
-        )
-    }
+    val dataViewModel = viewModel<DummyDataViewModel>()
+    val sharedViewModel = sharedViewModel()
 
-    val savoryFilipinoFoods = remember {
-        listOf(
-            Triple("Pork Adobo", "Lunch", R.drawable.adobo),
-            Triple("Pork Sinigang", "Dinner", R.drawable.sinigang),
-            Triple("Tortang Talong", "Dinner", R.drawable.torta),
-            Triple("Kare-Kare", "Lunch", R.drawable.karekare),
-            Triple("Pinakbet", "Lunch", R.drawable.pinakbet),
-            Triple("Laing", "Dinner", R.drawable.laing),
-            Triple("Pancit Bihon", "Merienda", R.drawable.pancit),
-            Triple("Lumpia", "Merienda", R.drawable.lumpia),
-            Triple("Sisig", "Lunch", R.drawable.sisig),
-            Triple("Bulalo", "Dinner", R.drawable.bulalo)
-        )
-    }
 
     val filteredByCategory = remember(selectedCategory) {
         if (selectedCategory == "All") {
-            sweetFilipinoFoods + savoryFilipinoFoods
+            dataViewModel.sweetFilipinoFoods + dataViewModel.savoryFilipinoFoods
         } else {
-            (sweetFilipinoFoods + savoryFilipinoFoods).filter { it.second.equals(selectedCategory, ignoreCase = true) }
+            (dataViewModel.sweetFilipinoFoods + dataViewModel.savoryFilipinoFoods).filter { it.category.equals(selectedCategory, ignoreCase = true) }
         }
     }
 
     val displayFoods = remember(selectedSweetSavoryTab, filteredByCategory) {
         when (selectedSweetSavoryTab) {
             "All" -> filteredByCategory
-            "Sweet" -> filteredByCategory.filter { it.first in sweetFilipinoFoods.map { it.first } }
-            "Savory" -> filteredByCategory.filter { it.first in savoryFilipinoFoods.map { it.first } }
+            "Sweet" -> filteredByCategory.filter { it.title in dataViewModel.sweetFilipinoFoods.map { it.title } }
+            "Savory" -> filteredByCategory.filter { it.title in dataViewModel.savoryFilipinoFoods.map { it.title } }
             else -> filteredByCategory
         }
     }
@@ -120,7 +99,7 @@ fun FigmaDashboardLayout(
             modifier = Modifier.fillMaxWidth()
         ) {
             SearchBar(
-                colors = androidx.compose.material3.SearchBarDefaults.colors(
+                colors = SearchBarDefaults.colors(
                     containerColor = AppTheme.colorScheme.tertiary,
                     dividerColor = AppTheme.colorScheme.tertiary
                 ),
@@ -219,12 +198,16 @@ fun FigmaDashboardLayout(
                     for (i in 0 until columnCount) {
                         val foodIndex = rowIndex * columnCount + i
                         if (foodIndex < displayFoods.size) {
-                            val (foodName, foodType, imageRes) = displayFoods[foodIndex]
+
                             RecipeCard(
-                                foodName = foodName,
-                                foodType = foodType,
-                                imageRes = imageRes,
-                                onClick = { onRecipeClick(foodName) },
+                                recipe = displayFoods[foodIndex],
+                                onClick = {
+                                    val selectedFood = displayFoods[foodIndex]
+                                    sharedViewModel.selectRecipe(selectedFood)
+                                    navController.navigate("${Screen.Home.route}/${displayFoods[foodIndex].title}") {
+                                        launchSingleTop = true
+                                    }
+                                },
                                 modifier = Modifier.weight(1f)
                             )
                         } else {
@@ -252,7 +235,6 @@ fun FigmaDashboardLayoutPreview() {
         color = AppTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ) {
-        FigmaDashboardLayout(buttonBackgroundColor = Color.LightGray, onRecipeClick = {})
     }
 }
 }

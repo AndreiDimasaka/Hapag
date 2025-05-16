@@ -1,4 +1,4 @@
-package com.example.hapag.composables
+package com.example.hapag.composables.UI
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -33,7 +33,6 @@ import com.example.hapag.theme.AppTheme
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
-data class Item(val id: Int, val text: String)
 @Composable
 fun ReorderableIngredientColumn(
     onClose: () -> Unit

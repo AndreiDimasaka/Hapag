@@ -1,23 +1,26 @@
 package com.example.hapag
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.hapag.composables.FigmaDashboardLayout
-import com.example.hapag.composables.TopReturnBar
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.hapag.composables.Screens.HomeScreen
+import com.example.hapag.composables.UI.TopReturnBar
+import com.example.hapag.data.Screen
 import com.example.hapag.theme.AppTheme
 import com.example.hapag.ui.BottomNavigationBar
+import androidx.compose.runtime.getValue
+import com.example.hapag.composables.Screens.UploadScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,57 +28,63 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                MainActivityScreen()
-            }
-        }
-    }
-
-    @Composable
-    @Preview(showBackground = true, showSystemUi = true)
-    fun MainActivityScreen() {
-        val context = LocalContext.current
-        Scaffold(
-            bottomBar = {
-                BottomNavigationBar(onItemSelected = { index ->
-                    println("Main Activity: Bottom navigation item selected at index: $index")
-                }, selectedIndex = 0)
-            },
-            topBar = {
-                TopReturnBar(title = "Home", onNavigateBack = {}, arrowBack = false)
-            }
-        ) { paddingValues ->
-            ConstraintLayout(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(AppTheme.colorScheme.background)
-                    .padding(paddingValues)
-            ) {
-                val dashboard = createRef()
-                FigmaDashboardLayout(
-                    modifier = Modifier.constrainAs(dashboard) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
+                val navController = rememberNavController()
+                val currentRoute = currentRoute(navController)
+                Scaffold(
+                    topBar = {
+                        if (currentRoute != Screen.Recipe.route )
+                            TopReturnBar(title = currentRoute.toString() , onNavigateBack = {}, arrowBack = false)
                     },
-                    buttonBackgroundColor = buttonBackgroundColor,
-                    onRecipeClick = { recipeName ->
-                        val formattedRecipeName = recipeName.lowercase().replace(" ", "").replace("-", "")
-                        val intent = Intent(context, RecipeActivity::class.java).apply {
-                            putExtra("recipe", formattedRecipeName)
-                        }
-                        context.startActivity(intent)
+                    bottomBar = {
+                        if (currentRoute != Screen.Recipe.route )
+                        BottomNavigationBar(navController)
                     }
                 )
+
+                { paddingValues ->
+                    Surface(modifier = Modifier.padding(paddingValues)) {
+                        NavHost(
+                            navController = navController,
+                            startDestination = "home"
+                        ) {
+                            composable(Screen.Home.route) {
+                                HomeScreen(
+                                    navController = navController,
+                                    paddingValues = paddingValues
+                                )
+                            }
+                            composable(Screen.Upload.route) {
+                                UploadScreen(
+                                    navController = navController,
+                                    paddingValues = paddingValues
+                                )
+                            }
+                            composable(Screen.Recipe.route) {
+
+                            }
+                            composable(Screen.MyRecipes.route){
+
+                            }
+                            composable(Screen.Favorites.route){
+
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-
-@Preview
 @Composable
-fun MainActivityScreenPreview() {
-    AppTheme {
-        MainActivity().MainActivityScreen()
-    }
+fun currentRoute(navController: NavHostController): String? {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route
 }
+
+@Composable
+fun Navigation(){
+
+}
+
+

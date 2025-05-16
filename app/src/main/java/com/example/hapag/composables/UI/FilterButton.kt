@@ -1,4 +1,4 @@
-package com.example.hapag.composables
+package com.example.hapag.composables.UI
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
