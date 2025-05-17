@@ -1,4 +1,4 @@
-package com.example.hapag.composables.UI
+package com.example.hapag.composables.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,11 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.hapag.DummyInputs.BlankRecipeScreen
-import com.example.hapag.DummyInputs.HaloHaloRecipeScreen
-import com.example.hapag.DummyInputs.LecheFlanRecipeScreen
-import com.example.hapag.buttonBackgroundColor
-import com.example.hapag.buttonTextColor
+import com.example.hapag.dummyinputs.BlankRecipeScreen
+import com.example.hapag.dummyinputs.HaloHaloRecipeScreen
+import com.example.hapag.dummyinputs.LecheFlanRecipeScreen
+import com.example.hapag.theme.AppTheme
+
 
 @Composable
 fun RecipeContent(recipeName: String?, onNavigateBack: () -> Unit) {
@@ -32,7 +32,7 @@ fun RecipeContent(recipeName: String?, onNavigateBack: () -> Unit) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(buttonTextColor)
+                    .background(AppTheme.colorScheme.background)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -40,11 +40,11 @@ fun RecipeContent(recipeName: String?, onNavigateBack: () -> Unit) {
                 Text(
                     "Recipe Not Found: $recipeName",
                     style = MaterialTheme.typography.headlineMedium,
-                    color = buttonBackgroundColor,
+                    color = AppTheme.colorScheme.background,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = onNavigateBack, colors = ButtonDefaults.buttonColors(containerColor = buttonBackgroundColor, contentColor = buttonTextColor)) {
+                Button(onClick = onNavigateBack, colors = ButtonDefaults.buttonColors(containerColor = AppTheme.colorScheme.background, contentColor = AppTheme.colorScheme.onBackground)) {
                     Text("Go Back")
                 }
             }

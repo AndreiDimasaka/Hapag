@@ -1,4 +1,4 @@
-package com.example.hapag.ViewModel
+package com.example.hapag.viewModel
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -12,7 +12,6 @@ import com.example.hapag.data.Recipe
 import com.example.hapag.data.toggleableCategory
 
 class UploadViewModel: ViewModel() {
-    val viewmodel = sharedViewModel()
 
     var uploadedImage by mutableStateOf<Uri?>(null)
         internal set
@@ -78,8 +77,8 @@ class UploadViewModel: ViewModel() {
     var overlayIngredientList by mutableStateOf(false)
         internal set
 
-    private val _ingredientList = mutableStateListOf<Item>()
-    val ingredientList: List<Item> = _ingredientList
+    private val _ingredientList = mutableStateListOf<Item.WithID>()
+    val ingredientList: List<Item.WithID> = _ingredientList
 
     fun openIngredientList() {
         overlayIngredientList = true
@@ -89,20 +88,20 @@ class UploadViewModel: ViewModel() {
         overlayIngredientList = false
     }
 
-    fun addIngredient(item: Item) {
-        val nextId = (_ingredientList.maxOfOrNull { (it as? Item.WithID?)?.id ?: 0 } ?: 0) + 1
+    fun addIngredient() {
+        val nextId = (_ingredientList.maxOfOrNull { it.id } ?: 0) + 1
         _ingredientList.add(Item.WithID(nextId, ""))
     }
 
-    fun removeIngredient(id: Int, item: Item) {
-        _ingredientList.removeAll { (it as? Item.WithID?)?.id == id }
+    fun removeIngredient(id: Int) {
+        _ingredientList.removeAll { it.id == id }
     }
 
     fun updateIngredient(id: Int, newText: String) {
-        val index = _ingredientList.indexOfFirst { (it as? Item.WithID?)?.id == id }
+        val index = _ingredientList.indexOfFirst { it.id == id }
         if (index != -1) {
-            val item = _ingredientList[index] as? Item.WithID?
-            item?.let {
+            val item = _ingredientList[index]
+            item.let{
                 _ingredientList[index] = it.copy(text = newText)
             }
         }
@@ -118,8 +117,8 @@ class UploadViewModel: ViewModel() {
         internal set
 
 
-    private val _procedureList = mutableStateListOf<Item>()
-    val procedureList: List<Item> = _procedureList
+    private val _procedureList = mutableStateListOf<Item.WithID>()
+    val procedureList: List<Item.WithID> = _procedureList
 
     fun openProcedureList() {
         overlayProcedureList = true
@@ -131,19 +130,19 @@ class UploadViewModel: ViewModel() {
 
 
     fun addProcedure() {
-        val nextId = (_procedureList.maxOfOrNull { (it as? Item.WithID?)?.id ?: 0 } ?: 0) + 1
+        val nextId = (_procedureList.maxOfOrNull { it.id } ?: 0) + 1
         _procedureList.add(Item.WithID(nextId, ""))
     }
 
     fun removeProcedure(id: Int) {
-        _procedureList.removeAll { (it as? Item.WithID?)?.id == id }
+        _procedureList.removeAll { it.id == id }
     }
 
     fun updateProcedure(id: Int, newText: String) {
-        val index = _procedureList.indexOfFirst { (it as? Item.WithID?)?.id == id }
+        val index = _procedureList.indexOfFirst { it.id == id }
         if (index != -1) {
-            val item = _procedureList[index] as? Item.WithID?
-            item?.let {
+            val item = _procedureList[index]
+            item.let {
                 _procedureList[index] = it.copy(text = newText)
             }
         }
@@ -154,7 +153,7 @@ class UploadViewModel: ViewModel() {
         }
 
 
-        fun uploadRecipe() {
+        fun uploadRecipe(): Recipe {
             category()
             recipe = Recipe(
                 image = ImageData.UriVal(uploadedImage),
@@ -166,6 +165,6 @@ class UploadViewModel: ViewModel() {
                 ingredients = ingredientList,
                 instructions = procedureList
             )
-            viewmodel.selectRecipe(recipe)
+            return recipe
         }
 }

@@ -1,4 +1,4 @@
-package com.example.hapag
+package com.example.hapag.composables.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,55 +26,36 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.hapag.DummyInputs.BlankRecipeScreen
-import com.example.hapag.DummyInputs.HaloHaloRecipeScreen
-import com.example.hapag.DummyInputs.LecheFlanRecipeScreen
-import com.example.hapag.composables.UI.RecipeContent
-import com.example.hapag.composables.UI.RecipeDetails
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.hapag.dummyinputs.BlankRecipeScreen
+import com.example.hapag.dummyinputs.HaloHaloRecipeScreen
+import com.example.hapag.dummyinputs.LecheFlanRecipeScreen
+import com.example.hapag.composables.widgets.RecipeDetails
+import com.example.hapag.data.ImageData
 import com.example.hapag.theme.AppTheme
-import com.example.hapag.ui.BottomNavigationBar
+import com.example.hapag.viewModel.sharedViewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
-val buttonTextColor = Color(0xFFF1EDE7)
-val buttonBackgroundColor = Color(0xFF403A35)
-
-class RecipeActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            AppTheme {
-                val recipeName = intent.getStringExtra("recipe")
-                RecipeContent(recipeName = recipeName) { finish() }
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeScreen(
-    recipeTitle: String,
-    foodType: String,
-    prepTime: String,
-    description: String,
-    ingredients: List<String>,
-    procedure: List<String>,
-    onNavigateBack: () -> Unit,
-    onAddToFavorites: () -> Unit,
-    mainImageResId: Int?,
-    onHomeClick: () -> Unit = {},
-    onUploadClick: () -> Unit = {},
-    onMyRecipesClick: () -> Unit = {},
-    onFavoritesClick: () -> Unit = {}
+    navController: NavController,
+    sharedViewModel: sharedViewModel
+
 ) {
     var showFullScreenImage by remember { mutableStateOf(false) }
+    val recipe by sharedViewModel.selectedRecipe.collectAsState()
+
     AppTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { /* Title is now below the image */ },
+                    title = {},
                     navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
+                        IconButton(onClick =  {navController.navigateUp()}) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
@@ -82,37 +63,39 @@ fun RecipeScreen(
                             )
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = buttonTextColor)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = AppTheme.colorScheme.secondary)
                 )
             },
-            bottomBar = {
-                BottomNavigationBar(onItemSelected = { index ->
-                    when (index) {
-                        0 -> onHomeClick()
-                        1 -> onUploadClick()
-                        2 -> onMyRecipesClick()
-                        3 -> onFavoritesClick()
-                    }
-                })
-            }
         ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(buttonTextColor)
+                    .background(AppTheme.colorScheme.background)
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
             ) {
-                if (mainImageResId != null) {
+                (recipe?.image as? ImageData.DrawableRes)?.let {
                     Image(
-                        painter = painterResource(id = mainImageResId),
-                        contentDescription = recipeTitle,
+                        painter = painterResource(id = it.resId),
+                        contentDescription = recipe!!.title,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp)
                             .clickable { showFullScreenImage = true },
                         contentScale = ContentScale.Crop
                     )
+                }
+                (recipe?.image as? ImageData.UriVal)?.let {
+                    AsyncImage(
+                        model = it.uri,
+                        contentDescription = recipe!!.title,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(180.dp)
+                            .clickable{showFullScreenImage = true },
+                        contentScale = ContentScale.Crop
+                    )
+                }
                     AnimatedVisibility(
                         visible = showFullScreenImage,
                         enter = fadeIn(),
@@ -122,12 +105,12 @@ fun RecipeScreen(
                             Box(
                                 Modifier.fillMaxSize()
                             ) {
-                                if (mainImageResId != null) {
+                                if (recipe?.image is ImageData.DrawableRes) {
                                     Image(
                                         painter = painterResource(
-                                            id = mainImageResId
+                                            id = (recipe!!.image as ImageData.DrawableRes).resId
                                         ),
-                                        contentDescription = recipeTitle,
+                                        contentDescription = recipe!!.title,
                                         modifier = Modifier.fillMaxSize()
                                             .clickable { showFullScreenImage = false },
                                         contentScale = ContentScale.Fit
@@ -148,15 +131,9 @@ fun RecipeScreen(
                             }
                         }
                     }
-                }
                 RecipeDetails(
-                    recipeTitle = recipeTitle,
-                    foodType = foodType,
-                    prepTime = prepTime,
-                    description = description,
-                    ingredients = ingredients,
-                    procedure = procedure,
-                    onAddToFavorites = onAddToFavorites
+                    onAddToFavorites = {},
+                    recipe = recipe
                 )
             }
         }

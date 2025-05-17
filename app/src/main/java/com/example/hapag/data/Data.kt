@@ -12,11 +12,11 @@ data class toggleableCategory(
 
 
 sealed class Screen(val route: String, @DrawableRes val icon: Int) {
-    object Home : Screen("home", R.drawable.home_icon)
-    object Upload : Screen("upload", R.drawable.baseline_file_upload_24)
-    object Recipe : Screen("recipe", R.drawable.baseline_menu_book_24)
-    object MyRecipes : Screen("myRecipes", R.drawable.baseline_menu_book_24)
-    object Favorites : Screen("favorites", R.drawable.btn_3)
+    object Home : Screen("Home", R.drawable.home_icon)
+    object Upload : Screen("Upload", R.drawable.baseline_file_upload_24)
+    object Recipe : Screen("Recipe", R.drawable.baseline_menu_book_24)
+    object MyRecipes : Screen("My Recipes", R.drawable.baseline_menu_book_24)
+    object Favorites : Screen("Favorites", R.drawable.btn_3)
 
     companion object {
         val bottomNavScreens = listOf(Home, Upload, MyRecipes, Favorites)

@@ -1,4 +1,4 @@
-package com.example.hapag.composables.UI
+package com.example.hapag.composables.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

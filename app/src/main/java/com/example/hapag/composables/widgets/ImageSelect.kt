@@ -1,4 +1,4 @@
-package com.example.hapag.composables.UI
+package com.example.hapag.composables.widgets
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.hapag.R
-import com.example.hapag.ViewModel.UploadViewModel
+import com.example.hapag.viewModel.UploadViewModel
 import com.example.hapag.theme.AppTheme
 
 @Composable

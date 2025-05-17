@@ -1,4 +1,4 @@
-package com.example.hapag.composables.Screens
+package com.example.hapag.composables.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -33,25 +33,27 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.hapag.R
-import com.example.hapag.ViewModel.UploadViewModel
+import com.example.hapag.viewModel.UploadViewModel
 import com.example.hapag.composables.ReorderableProcedureColumn
-import com.example.hapag.composables.UI.ImageSelect
-import com.example.hapag.composables.UI.ReorderableIngredientColumn
-import com.example.hapag.composables.UI.ThemedTitleTextField
+import com.example.hapag.composables.widgets.ImageSelect
+import com.example.hapag.composables.widgets.ReorderableIngredientColumn
+import com.example.hapag.composables.widgets.ThemedTitleTextField
 import com.example.hapag.data.Screen
 import com.example.hapag.theme.AppTheme
+import com.example.hapag.viewModel.sharedViewModel
 
 @Composable
 fun UploadScreen(
     paddingValues: PaddingValues,
-    navController: NavController
+    navController: NavController,
+    sharedViewModel: sharedViewModel = viewModel()
     ) {
     val viewModel = viewModel<UploadViewModel>()
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
 
-        Box(modifier = Modifier
+    Box(modifier = Modifier
             .fillMaxSize()) {
             ConstraintLayout(
                 modifier = Modifier
@@ -218,7 +220,8 @@ fun UploadScreen(
                         ){
                             Button(
                                 onClick = {
-                                    viewModel.uploadRecipe()
+                                    val recipe = viewModel.uploadRecipe()
+                                    sharedViewModel.selectRecipe(recipe)
                                     navController.navigate("${Screen.Recipe.route}/${viewModel.recipe.title}")
                                 },
                                 shape = RoundedCornerShape(5.dp),

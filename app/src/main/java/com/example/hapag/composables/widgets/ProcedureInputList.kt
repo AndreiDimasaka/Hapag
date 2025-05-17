@@ -1,8 +1,10 @@
-package com.example.hapag.composables.UI
+package com.example.hapag.composables
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,23 +30,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hapag.R
-import com.example.hapag.ViewModel.UploadViewModel
+import com.example.hapag.composables.widgets.TextItemRow
+import com.example.hapag.viewModel.UploadViewModel
 import com.example.hapag.theme.AppTheme
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ReorderableIngredientColumn(
+fun ReorderableProcedureColumn(
     onClose: () -> Unit
 ) {
-
     var viewModel = viewModel<UploadViewModel>()
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        viewModel.reorderIngredients(fromIndex = from.index, toIndex = to.index)
-        }
-
+        viewModel.reorderProcedure(fromIndex = from.index, toIndex = to.index)
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -53,8 +55,6 @@ fun ReorderableIngredientColumn(
     ) {
         Card(
             colors = CardDefaults.cardColors(
-
-
                 containerColor = AppTheme.colorScheme.background
             ),
             border = BorderStroke(1.dp, Color.Black),
@@ -75,39 +75,45 @@ fun ReorderableIngredientColumn(
 
             LazyColumn(
                 state = lazyListState,
-                contentPadding = PaddingValues(16.dp),
+                contentPadding = PaddingValues(5.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
-                    viewModel.ingredientList,
-                    key = { _, item -> item.id }) { index, ingredientItem ->
+                    viewModel.procedureList,
+                    key = { _, item -> item.id }) { index, procedureItem ->
                     ReorderableItem(
                         reorderableLazyListState,
-                        key = ingredientItem.id
+                        key = procedureItem.id
                     ) { isDragging ->
-
-                        TextItemRow(
-                            item = ingredientItem.text,
-                            onTextChange = { newText ->
-                                viewModel.updateIngredient(ingredientItem.id, newText)
-                            },
-
-                            onOptionsClick = {
-                                viewModel.removeIngredient(ingredientItem.id)
-                            },
-                            hint = "1 clove of garlic",
+                        Column(
+                            Modifier.fillMaxSize().padding(start = 16.dp)
+                        ) {
+                            Text(
+                                text = "Step ${index + 1}",
+                                style = AppTheme.typography.labelMedium,
+                                color = AppTheme.colorScheme.onBackground
+                            )
+                            TextItemRow(
+                                item = procedureItem.text,
+                                onTextChange = { newText ->
+                                    viewModel.updateProcedure(procedureItem.id, newText)
+                                    },
+                                onOptionsClick = {
+                                    viewModel.removeProcedure(procedureItem.id)
+                                },
+                                hint = "Heat oil in pan and sauté garlic and onions add chicken to the pan and sear on all sides",
                                 reorderHandlerModifier = Modifier
-                                .draggableHandle()
-                                .background(Color.Transparent)
-                                .padding(8.dp)
-                                .size(24.dp)
-                        )
+                                    .draggableHandle()
+                                    .background(Color.Transparent)
+                                    .size(24.dp)
+                            )
+                        }
                     }
                 }
                 item {
                     OutlinedButton(
                         onClick = {
-                            viewModel.addIngredient()
+                            viewModel.addProcedure()
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -119,7 +125,7 @@ fun ReorderableIngredientColumn(
                         border = null
                     ) {
                         Text(
-                            text = "+ Ingredient",
+                            text = "+ Step",
                             style = AppTheme.typography.labelMedium
                         )
                     }
@@ -132,9 +138,9 @@ fun ReorderableIngredientColumn(
 
 
 @Preview(showBackground = true)
-@Composable fun IngredientInputListPreview()
+@Composable fun ProcedureInputListPreview()
 {
     AppTheme {
-        ReorderableIngredientColumn(onClose = {})
+        ReorderableProcedureColumn {  }
     }
 }

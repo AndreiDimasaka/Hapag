@@ -1,4 +1,4 @@
-package com.example.hapag.composables.UI
+package com.example.hapag.composables.widgets
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateColorAsState
@@ -43,11 +43,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.hapag.R
-import com.example.hapag.ViewModel.sharedViewModel
+import com.example.hapag.viewModel.sharedViewModel
 import com.example.hapag.data.DummyDataViewModel
-import com.example.hapag.data.ImageData
-import com.example.hapag.data.Recipe
 import com.example.hapag.data.Screen
 import com.example.hapag.theme.AppTheme
 
@@ -56,15 +53,14 @@ import com.example.hapag.theme.AppTheme
 fun FigmaDashboardLayout(
     modifier: Modifier = Modifier,
     navController: NavController,
+    sharedViewModel: sharedViewModel
 ) {
     var searchText by remember { mutableStateOf("") }
     var isActive by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf("All") }
     var selectedSweetSavoryTab by remember { mutableStateOf("All") }
     val categories = listOf("All", "Breakfast", "Lunch", "Merienda", "Dinner")
-
     val dataViewModel = viewModel<DummyDataViewModel>()
-    val sharedViewModel = sharedViewModel()
 
 
     val filteredByCategory = remember(selectedCategory) {
@@ -203,8 +199,8 @@ fun FigmaDashboardLayout(
                                 recipe = displayFoods[foodIndex],
                                 onClick = {
                                     val selectedFood = displayFoods[foodIndex]
-                                    sharedViewModel.selectRecipe(selectedFood)
-                                    navController.navigate("${Screen.Home.route}/${displayFoods[foodIndex].title}") {
+                                    sharedViewModel.addToRecipe(selectedFood)
+                                    navController.navigate("${Screen.Recipe.route}/${displayFoods[foodIndex].title}") {
                                         launchSingleTop = true
                                     }
                                 },

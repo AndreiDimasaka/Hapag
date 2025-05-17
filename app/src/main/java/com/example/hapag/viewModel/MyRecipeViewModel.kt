@@ -1,4 +1,4 @@
-package com.example.hapag.ViewModel
+package com.example.hapag.viewModel
 
 import androidx.lifecycle.ViewModel
 import com.example.hapag.data.Recipe

@@ -1,4 +1,4 @@
-package com.example.hapag.composables.Screens
+package com.example.hapag.composables.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,13 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.example.hapag.composables.UI.FigmaDashboardLayout
+import com.example.hapag.composables.widgets.FigmaDashboardLayout
 import com.example.hapag.theme.AppTheme
+import com.example.hapag.viewModel.sharedViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    sharedViewModel: sharedViewModel
 ){
         ConstraintLayout(
             modifier = Modifier
@@ -30,6 +32,7 @@ fun HomeScreen(
                     end.linkTo(parent.end)
                 },
                 navController = navController,
+                sharedViewModel = sharedViewModel
             )
         }
     }

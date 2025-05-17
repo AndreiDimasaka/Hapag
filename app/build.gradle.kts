@@ -1,3 +1,4 @@
+import org.gradle.api.JavaVersion.VERSION_11
 import org.gradle.kotlin.dsl.implementation
 
 plugins {
@@ -30,8 +31,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = VERSION_11
+        targetCompatibility = VERSION_11
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -42,6 +43,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
     }
+    dependenciesInfo {
+        includeInApk = true
+        includeInBundle = true
+    }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
@@ -64,19 +70,19 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation ("androidx.navigation:navigation-compose:2.8.9")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.0")
     implementation("sh.calvin.reorderable:reorderable:2.4.3")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
-    implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.28.0")
-    implementation("com.google.accompanist:accompanist-pager:0.28.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.8")
-    implementation("com.github.bumptech.glide:glide:4.13.0")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
-    implementation("androidx.compose.foundation:foundation:1.7.6")
+    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.21")
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.36.0")
+    implementation("com.google.accompanist:accompanist-pager:0.36.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.8.1")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.google.code.gson:gson:2.13.1")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
+    implementation("androidx.compose.foundation:foundation:1.8.1")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
-
 }
