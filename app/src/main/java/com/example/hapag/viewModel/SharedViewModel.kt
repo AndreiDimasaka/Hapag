@@ -7,6 +7,7 @@ import com.example.hapag.data.Recipe
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 
 class sharedViewModel: ViewModel() {
@@ -16,8 +17,8 @@ class sharedViewModel: ViewModel() {
     private val _recipeList = mutableListOf<Recipe>()
     val recipeList: List<Recipe> = _recipeList
 
-    private val _myRecipeList = mutableListOf<Recipe>()
-    val myRecipeList: List<Recipe> = _myRecipeList
+    private val _myRecipeList = MutableStateFlow<List<Recipe>>(emptyList())
+    val myRecipeList: StateFlow<List<Recipe>> = _myRecipeList
 
     private val _myFavoriteList = mutableListOf<Recipe>()
     val myFavoriteList: List<Recipe> = _myFavoriteList
@@ -31,12 +32,17 @@ class sharedViewModel: ViewModel() {
     }
 
     fun addToMyRecipe(recipe: Recipe) {
-        _myRecipeList.add(recipe)
+        _myRecipeList.update { currentList ->
+            currentList + recipe
+        }
     }
-
+    fun removeAtMyRecipe(recipe: Recipe) {
+        _myRecipeList.update { currentList ->
+            currentList - recipe
+        }
+    }
     fun addToMyFavorite(recipe: Recipe) {
         _myFavoriteList.add(recipe)
     }
-
 
 }

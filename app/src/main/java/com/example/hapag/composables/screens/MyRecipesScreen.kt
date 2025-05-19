@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,26 +35,24 @@ fun MyRecipesScreen(
                     viewModel: sharedViewModel = viewModel(),
                     paddingValues: PaddingValues
 ) {
-    val context = LocalContext.current
-    val uploadedRecipe by viewModel.selectedRecipe.collectAsState()
+    val myRecipes by viewModel.myRecipeList.collectAsState()
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(AppTheme.colorScheme.background)
-            .padding(paddingValues)
-            .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (uploadedRecipe != null) {
-            Spacer(modifier = Modifier.height(16.dp))
+            .padding(paddingValues),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(16.dp)
+    ){
+        items(
+            items = myRecipes){
             MyRecipeCard(
-                title = uploadedRecipe?.title ?: "",
-                category = uploadedRecipe?.category ?: "",
-                modifier = Modifier.fillMaxWidth(),
+                title = it.title,
+                category = it.category,
+                modifier = Modifier,
                 onRecipeClick = {
-                    navController.navigate("${Screen.Recipe.route}/${uploadedRecipe?.title}")
+                    navController.navigate("myRecipes/${it.title}")
                 }
             )
         }

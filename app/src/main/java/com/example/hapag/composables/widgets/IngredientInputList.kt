@@ -29,9 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hapag.R
-import com.example.hapag.data.Item
-import com.example.hapag.viewModel.UploadViewModel
 import com.example.hapag.theme.AppTheme
+import com.example.hapag.viewModel.UploadViewModel
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -83,10 +82,10 @@ fun ReorderableIngredientColumn(
             ) {
                 itemsIndexed(
                     viewModel.ingredientList,
-                    key = { _, item -> item}) { index, ingredientItem ->
+                    key = { _, item -> item.id}) { index, ingredientItem ->
                     ReorderableItem(
                         reorderableLazyListState,
-                        key = ingredientItem
+                        key = ingredientItem.id
                     ) { isDragging ->
 
                         TextItemRow(

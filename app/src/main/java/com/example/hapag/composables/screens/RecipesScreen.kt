@@ -1,9 +1,5 @@
 package com.example.hapag.composables.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -37,17 +33,17 @@ import com.example.hapag.theme.AppTheme
 import com.example.hapag.viewModel.sharedViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.hapag.data.Recipe
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeScreen(
     navController: NavController,
-    sharedViewModel: sharedViewModel
-
+    sharedViewModel: sharedViewModel,
+    recipe: Recipe?
 ) {
     var showFullScreenImage by remember { mutableStateOf(false) }
-    val recipe by sharedViewModel.selectedRecipe.collectAsState()
 
     AppTheme {
         Scaffold(

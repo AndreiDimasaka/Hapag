@@ -4,9 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.example.hapag.composables.widgets.FigmaDashboardLayout
 import com.example.hapag.theme.AppTheme
@@ -18,19 +18,14 @@ fun HomeScreen(
     paddingValues: PaddingValues,
     sharedViewModel: sharedViewModel
 ){
-        ConstraintLayout(
+        Surface(
             modifier = Modifier
                 .fillMaxSize()
                 .background(AppTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
-            val dashboard = createRef()
             FigmaDashboardLayout(
-                modifier = Modifier.constrainAs(dashboard) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
+                modifier = Modifier,
                 navController = navController,
                 sharedViewModel = sharedViewModel
             )

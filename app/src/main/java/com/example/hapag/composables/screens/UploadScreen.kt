@@ -221,8 +221,9 @@ fun UploadScreen(
                             Button(
                                 onClick = {
                                     val recipe = viewModel.uploadRecipe()
-                                    sharedViewModel.selectRecipe(recipe)
-                                    navController.navigate("${Screen.Recipe.route}/${viewModel.recipe.title}")
+                                    sharedViewModel.addToMyRecipe(recipe)
+                                    navController.navigate("MyRecipes/${recipe.title}")
+                                    viewModel.clear()
                                 },
                                 shape = RoundedCornerShape(5.dp),
                                 colors = ButtonDefaults.buttonColors(

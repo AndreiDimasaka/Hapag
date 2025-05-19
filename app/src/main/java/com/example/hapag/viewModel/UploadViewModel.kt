@@ -13,8 +13,15 @@ import com.example.hapag.data.toggleableCategory
 
 class UploadViewModel: ViewModel() {
 
-    var uploadedImage by mutableStateOf<Uri?>(null)
-        internal set
+    private val _uploadedImage = mutableStateOf<Uri?>(null)
+    val uploadedImage: Uri? get() = _uploadedImage.value
+
+    fun setImageUri(uri: Uri) {
+        _uploadedImage.value = uri
+    }
+    fun removeImageUri() {
+        _uploadedImage.value = null
+    }
 
     var title by mutableStateOf("")
         private set
@@ -28,17 +35,15 @@ class UploadViewModel: ViewModel() {
     var cookTime by mutableStateOf("")
         private set
 
-    var category by mutableStateOf("")
-        private set
+    private val _categoryList = mutableStateListOf<String>()
+    val categoryList: List<String> = _categoryList
+
 
     lateinit var recipe: Recipe
 
-    fun addImage(uri: Uri) {
-        uploadedImage = uri
-    }
 
     fun addTitle(newTitle : String){
-        title = newTitle
+        title = newTitle 
     }
 
     fun addDescription(newDescription : String){
@@ -55,13 +60,9 @@ class UploadViewModel: ViewModel() {
 
     fun category() {
         categoryCheckBox.forEach {
-            it.isChecked = it.text + "," == category
+            it.isChecked = _categoryList.add(it.text)
         }
     }
-
-
-
-
 
     val categoryCheckBox = mutableStateListOf<toggleableCategory>(
         toggleableCategory(false, "Breakfast"),
@@ -101,11 +102,11 @@ class UploadViewModel: ViewModel() {
         val index = _ingredientList.indexOfFirst { it.id == id }
         if (index != -1) {
             val item = _ingredientList[index]
-            item.let{
+            item.let {
                 _ingredientList[index] = it.copy(text = newText)
             }
         }
-    }
+        }
 
     fun reorderIngredients(fromIndex: Int, toIndex: Int) {
         val item = _ingredientList.removeAt(fromIndex)
@@ -147,13 +148,13 @@ class UploadViewModel: ViewModel() {
             }
         }
     }
-        fun reorderProcedure(fromIndex: Int, toIndex: Int) {
+
+    fun reorderProcedure(fromIndex: Int, toIndex: Int) {
             val item = _procedureList.removeAt(fromIndex)
             _procedureList.add(toIndex, item)
-        }
+    }
 
-
-        fun uploadRecipe(): Recipe {
+    fun uploadRecipe(): Recipe {
             category()
             recipe = Recipe(
                 image = ImageData.UriVal(uploadedImage),
@@ -161,10 +162,21 @@ class UploadViewModel: ViewModel() {
                 description = description,
                 servingSize = servingSize,
                 cookTime = cookTime,
-                category = category,
+                category = categoryList,
                 ingredients = ingredientList,
                 instructions = procedureList
             )
             return recipe
         }
+    fun clear(){
+         _uploadedImage.value = null
+         title = ""
+         description = ""
+         servingSize = ""
+         cookTime = ""
+         _categoryList.clear()
+         _ingredientList.clear()
+         _procedureList.clear()
+     }
+
 }

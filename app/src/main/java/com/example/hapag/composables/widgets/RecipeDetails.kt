@@ -16,6 +16,10 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +34,8 @@ fun RecipeDetails(
     onAddToFavorites: () -> Unit,
     recipe: Recipe?
 ) {
+   var categories by remember { mutableStateOf("")}
+    categories = recipe?.category?.forEach { category -> "$category, " }.toString()
 
     Column(
         modifier = Modifier
@@ -50,7 +56,7 @@ fun RecipeDetails(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                recipe?.category ?: "" ,
+                text = categories,
                 style = AppTheme.typography.labelMedium,
                 color = AppTheme.colorScheme.onBackground
             )

@@ -13,6 +13,7 @@ fun HaloHaloRecipeScreen(
 ) {
     RecipeScreen(
         navController = TODO(),
-        sharedViewModel = TODO()
+        sharedViewModel = TODO(),
+        recipe = TODO()
     )
 }

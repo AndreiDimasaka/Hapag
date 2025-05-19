@@ -1,5 +1,6 @@
 package com.example.hapag.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import com.example.hapag.data.Screen
 
 import com.example.hapag.theme.AppTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -61,8 +63,8 @@ fun BottomNavigationBar(navController: NavController) {
                     selectedTextColor = AppTheme.colorScheme.primary,
                     unselectedIconColor = AppTheme.colorScheme.onSecondary,
                     unselectedTextColor = AppTheme.colorScheme.onSecondary,
-                    disabledIconColor = TODO(),
-                    disabledTextColor = TODO()
+                    disabledIconColor = AppTheme.colorScheme.onSecondary,
+                    disabledTextColor = AppTheme.colorScheme.onSecondary,
                 ),
                 label = { Text (
                     screen.route,

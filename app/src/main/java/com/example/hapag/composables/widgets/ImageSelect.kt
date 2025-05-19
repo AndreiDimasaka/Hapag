@@ -24,6 +24,8 @@ import coil.compose.AsyncImage
 import com.example.hapag.R
 import com.example.hapag.viewModel.UploadViewModel
 import com.example.hapag.theme.AppTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun ImageSelect(
@@ -34,25 +36,23 @@ fun ImageSelect(
     val singleImagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            viewModel.uploadedImage
+            uri?.let { viewModel.setImageUri(it) }
         }
     )
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        if (viewModel.uploadedImage != null) {
+        viewModel.uploadedImage?.let { imageUri ->
             AsyncImage(
-                model = viewModel.uploadedImage,
+                model = imageUri,
                 contentDescription = "Selected Recipe Photo",
                 modifier = Modifier
                     .fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
             FloatingActionButton(
-                onClick = {
-                    viewModel.uploadedImage = null
-                },
+                onClick = { viewModel.removeImageUri() },
                 modifier = Modifier.align(Alignment.BottomEnd).padding(10.dp).size(30.dp),
                 containerColor = AppTheme.colorScheme.background,
                 contentColor = AppTheme.colorScheme.onBackground,
@@ -63,7 +63,7 @@ fun ImageSelect(
                 contentDescription = "Remove Image",
                     modifier = Modifier.padding(3.dp)
                 )}
-        } else {
+        } ?: run {
             OutlinedButton(
                 onClick = {
                     singleImagePicker.launch(
