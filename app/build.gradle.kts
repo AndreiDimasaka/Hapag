@@ -1,5 +1,4 @@
 import org.gradle.api.JavaVersion.VERSION_11
-import org.gradle.kotlin.dsl.implementation
 
 plugins {
     alias(libs.plugins.android.application)

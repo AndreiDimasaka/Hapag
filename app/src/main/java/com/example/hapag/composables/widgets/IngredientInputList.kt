@@ -43,6 +43,7 @@ fun ReorderableIngredientColumn(
     var viewModel = viewModel<UploadViewModel>()
 
     val lazyListState = rememberLazyListState()
+
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
         viewModel.reorderIngredients(fromIndex = from.index, toIndex = to.index)
         }

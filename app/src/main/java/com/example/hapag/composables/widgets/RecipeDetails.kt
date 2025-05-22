@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,16 +27,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hapag.data.Recipe
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.hapag.model.Item
+import com.example.hapag.model.Recipe
 import com.example.hapag.theme.AppTheme
+import com.example.hapag.viewModel.SharedViewModel
 
 @Composable
 fun RecipeDetails(
-    onAddToFavorites: () -> Unit,
-    recipe: Recipe?
+    recipe: Recipe?,
+    sharedViewModel: SharedViewModel
 ) {
+    val myFavoriteList by sharedViewModel.myFavoriteList.collectAsState()
    var categories by remember { mutableStateOf("")}
-    categories = recipe?.category?.forEach { category -> "$category, " }.toString()
+    categories = recipe?.category?.joinToString(", ") ?: "No categories"
 
     Column(
         modifier = Modifier
@@ -67,27 +72,14 @@ fun RecipeDetails(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 12.dp)
-                .clickable { onAddToFavorites() },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-        ) {
-            Icon(
-                Icons.Filled.FavoriteBorder,
+        Icon(
+                if(myFavoriteList.contains(recipe)) {Icons.Filled.Favorite } else Icons.Filled.FavoriteBorder,
                 contentDescription = "Add to Favorites",
-                tint = AppTheme.colorScheme.onBackground,
-                modifier = Modifier.size(25.dp)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                "Add to Favorites",
-                style = AppTheme.typography.labelMedium.copy(fontSize = 14.sp),
-                color = AppTheme.colorScheme.onBackground
-            )
-        }
+                tint = AppTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .size(25.dp)
+                    .clickable { sharedViewModel.toggleMyFavorite(recipe)}
+        )
         Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
         Spacer(modifier = Modifier.height(12.dp))
         Text(
@@ -109,7 +101,10 @@ fun RecipeDetails(
         Spacer(modifier = Modifier.height(8.dp))
         recipe?.ingredients?.forEach { ingredient ->
             Text(
-                "- $ingredient",
+                text = when (ingredient) {
+                    is Item.WithID -> ingredient.text
+                    is Item.Text -> ingredient.text
+                },
                 style = AppTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                 color = AppTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(vertical = 6.dp)
@@ -125,7 +120,10 @@ fun RecipeDetails(
         Column {
             recipe?.instructions?.forEachIndexed { index, step ->
                 Text(
-                    "${index + 1}. $step",
+                    text = when (step) {
+                        is Item.WithID -> "${index + 1}.${step.text}"
+                        is Item.Text -> "${index + 1}.${step.text}"
+                    },
                     style = AppTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                     color = AppTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(vertical = 8.dp)
@@ -144,7 +142,7 @@ fun PreviewRecipeDetails() {
     AppTheme {
         RecipeDetails(
             recipe = TODO(),
-            onAddToFavorites = {}
+            sharedViewModel = viewModel()
         )
     }
 }

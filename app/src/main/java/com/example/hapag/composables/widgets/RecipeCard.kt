@@ -20,9 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.hapag.data.ImageData
+import com.example.hapag.model.ImageData
+import com.example.hapag.model.Recipe
 import com.example.hapag.theme.AppTheme
-import com.example.hapag.data.Recipe
 
 
 @Composable
@@ -73,8 +73,9 @@ fun RecipeCard(
                 }
             }
             Text(text = recipe.title, fontWeight = FontWeight.Bold)
-            Text(text = recipe.category)
+            Text(text = recipe.category[0])
         }
     }
 
 }
+

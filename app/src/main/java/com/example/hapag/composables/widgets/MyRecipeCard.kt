@@ -19,7 +19,12 @@ import androidx.compose.ui.unit.dp
 import com.example.hapag.theme.AppTheme
 
 @Composable
-fun MyRecipeCard(title: String, category: String, modifier: Modifier = Modifier, onRecipeClick: () -> Unit) {
+fun MyRecipeCard(
+    title: String,
+    category: List<String>?,
+    modifier: Modifier = Modifier,
+    onRecipeClick: () -> Unit
+) {
     Row(
         modifier = modifier
             .background(AppTheme.colorScheme.tertiary)
@@ -31,7 +36,7 @@ fun MyRecipeCard(title: String, category: String, modifier: Modifier = Modifier,
     ) {
         Column {
             Text(title, style = AppTheme.typography.labelLarge, color = AppTheme.colorScheme.onTertiary)
-            Text("Category: $category", style = AppTheme.typography.labelSmall, color = AppTheme.colorScheme.onTertiary)
+            Text("Category: ${category?.get(0)}", style = AppTheme.typography.labelSmall, color = AppTheme.colorScheme.onTertiary)
         }
         IconButton(onClick = { /* TODO: Remove recipe */ }) {
             Icon(Icons.Filled.Favorite, contentDescription = "Remove Recipe", tint = AppTheme.colorScheme.secondary)

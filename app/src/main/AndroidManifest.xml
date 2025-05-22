@@ -13,43 +13,8 @@
         android:theme="@style/Theme.Hapag"
         tools:targetApi="31">
         <activity
-            android:name=".view.Upload"
-            android:exported="false"
-            android:label="@string/title_activity_upload"
-            android:theme="@style/Theme.Hapag" />
-        <activity
-            android:name="com.example.MainActivity"
-            android:exported="false"
-            android:label="@string/title_activity_main"
-            android:theme="@style/Theme.Hapag" />
-        <activity
-            android:name="com.example.IngredientsAdd"
-            android:exported="false"
-            android:label="@string/title_activity_ingredients_add"
-            android:theme="@style/Theme.Hapag" />
-        <activity
-            android:name=".BottomNavigationBar"
-            android:exported="false" />
-        <activity
-            android:name="com.example.MyRecipes"
-            android:exported="false" />
-        <activity
-            android:name="com.example.FavoriteActivity"
-            android:exported="false" />
-        <activity
-            android:name="com.example.recipe"
-            android:exported="false" />
-        <activity
-            android:name="com.example.BaseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".BaseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.theme.FrontActivity"
-            android:exported="false" />
-        <activity
             android:name=".view.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Hapag">
@@ -59,15 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RecipeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MyRecipesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".composables.screens.MyFavoritesActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

@@ -33,20 +33,19 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.hapag.R
-import com.example.hapag.viewModel.UploadViewModel
 import com.example.hapag.composables.ReorderableProcedureColumn
 import com.example.hapag.composables.widgets.ImageSelect
 import com.example.hapag.composables.widgets.ReorderableIngredientColumn
 import com.example.hapag.composables.widgets.ThemedTitleTextField
-import com.example.hapag.data.Screen
 import com.example.hapag.theme.AppTheme
-import com.example.hapag.viewModel.sharedViewModel
+import com.example.hapag.viewModel.SharedViewModel
+import com.example.hapag.viewModel.UploadViewModel
 
 @Composable
 fun UploadScreen(
     paddingValues: PaddingValues,
     navController: NavController,
-    sharedViewModel: sharedViewModel = viewModel()
+    sharedViewModel: SharedViewModel = viewModel()
     ) {
     val viewModel = viewModel<UploadViewModel>()
     val configuration = LocalConfiguration.current
@@ -93,12 +92,14 @@ fun UploadScreen(
                 {
                     item {
                         ThemedTitleTextField(
+                            initialValue = viewModel.title,
                             modifier = Modifier.fillMaxWidth(),
                             hint = "Title: Sinigang na baboy ",
                             onValueChange = {viewModel.addTitle(it)}
                         )
                         Spacer(Modifier.height(10.dp))
                         ThemedTitleTextField(
+                            initialValue = viewModel.description,
                             style = AppTheme.typography.bodySmall,
                             modifier = Modifier.fillMaxWidth(),
                             hint = "Share the inspiration for this recipe. Describe the dish's flavors, textures, and aroma, and tell us your favorite way to savor it.",
@@ -116,6 +117,7 @@ fun UploadScreen(
                             )
                             Spacer(Modifier.weight(1f))
                             ThemedTitleTextField(
+                                initialValue = viewModel.servingSize,
                                 modifier = Modifier.fillMaxWidth().padding(start = 120.dp),
                                 hint = "3 People",
                                 style = AppTheme.typography.bodySmall,
@@ -135,6 +137,7 @@ fun UploadScreen(
                             Spacer(Modifier.weight(1f))
 
                             ThemedTitleTextField(
+                                initialValue = viewModel.cookTime,
                                 modifier = Modifier.fillMaxWidth().padding(start = 83.dp),
                                 hint = "1 hr 10 mins",
                                 style = AppTheme.typography.bodySmall,
@@ -148,7 +151,7 @@ fun UploadScreen(
                             style = AppTheme.typography.labelMedium,
                         )
                         Spacer(Modifier.height(10.dp))
-                        viewModel.categoryCheckBox.forEachIndexed{index, info ->
+                        viewModel.categories.forEachIndexed{index, info ->
                             Row(
                                 Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
@@ -162,7 +165,7 @@ fun UploadScreen(
                                     ),
                                     checked = info.isChecked,
                                     onCheckedChange = {
-                                        viewModel.categoryCheckBox[index] = viewModel.categoryCheckBox[index].copy(isChecked = it)
+                                        viewModel.toggleCategory(index)
                                     },
                                 )
                                 Text( text = info.text, style = AppTheme.typography.labelSmall, color = AppTheme.colorScheme.onBackground)
@@ -223,7 +226,6 @@ fun UploadScreen(
                                     val recipe = viewModel.uploadRecipe()
                                     sharedViewModel.addToMyRecipe(recipe)
                                     navController.navigate("MyRecipes/${recipe.title}")
-                                    viewModel.clear()
                                 },
                                 shape = RoundedCornerShape(5.dp),
                                 colors = ButtonDefaults.buttonColors(
