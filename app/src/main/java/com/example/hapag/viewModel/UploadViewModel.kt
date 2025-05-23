@@ -1,6 +1,7 @@
 package com.example.hapag.viewModel
 
 import android.net.Uri
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +11,8 @@ import com.example.hapag.model.ImageData
 import com.example.hapag.model.Item
 import com.example.hapag.model.Recipe
 import com.example.hapag.model.toggleableCategory
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class UploadViewModel: ViewModel() {
 
@@ -24,68 +27,102 @@ class UploadViewModel: ViewModel() {
         _uploadedImage.value = null
     }
 
-    var title by mutableStateOf("")
-        private set
+    private val _title = mutableStateOf("")
+    val title: State<String> = _title
+    private val _description = mutableStateOf("")
+    val description: State<String> = _description
 
-    var description by mutableStateOf("")
-        private set
+    private val _servingSize = mutableStateOf("")
+    val servingSize: State<String> = _servingSize
 
-    var servingSize by mutableStateOf("")
-        private set
+    private val _cookTime = mutableStateOf("")
+    val cookTime: State<String> = _cookTime
 
-    var cookTime by mutableStateOf("")
-        private set
+    private val _categories1 = MutableStateFlow<List<toggleableCategory>>(emptyList())
+    val categories1: StateFlow<List<toggleableCategory>> = _categories1
 
-    lateinit var recipe: Recipe
+    private val _categories2 = MutableStateFlow<List<toggleableCategory>>(emptyList())
+    val categories2: StateFlow<List<toggleableCategory>> = _categories2
+
+    private val _ingredientList = mutableStateListOf<Item.WithID>()
+    val ingredientList: List<Item.WithID> = _ingredientList
+
+    private val _procedureList = mutableStateListOf<Item.WithID>()
+    val procedureList: List<Item.WithID> = _procedureList
+
+
+
+    fun uploadReset() {
+        _title.value = ""
+        _description.value = ""
+        _servingSize.value = ""
+        _cookTime.value = ""
+        _uploadedImage.value = null
+        _categories1.value = resetCategory1State()
+        _categories2.value = resetCategory2State()
+        _ingredientList.clear()
+        _procedureList.clear()
+    }
 
 
     fun addTitle(newTitle: String) {
-        title = newTitle
+        _title.value = newTitle
     }
 
     fun addDescription(newDescription: String) {
-        description = newDescription
+        _description.value = newDescription
     }
 
     fun addServingSize(newServingSize: String) {
-        servingSize = newServingSize
+        _servingSize.value = newServingSize
     }
 
     fun addCookTime(newCookTime: String) {
-        cookTime = newCookTime
+        _cookTime.value = newCookTime
     }
 
-
-    private val _categories = mutableStateListOf<toggleableCategory>()
-    val categories: List<toggleableCategory> = _categories
-
-    init {
-        _categories.addAll(
-            listOf(
+    fun resetCategory1State(): List<toggleableCategory> {
+        return listOf(
                 toggleableCategory(false, "Breakfast"),
                 toggleableCategory(false, "Lunch"),
                 toggleableCategory(false, "Dinner"),
                 toggleableCategory(false, "Merienda"),
-                toggleableCategory(false, "Sweet"),
-                toggleableCategory(false, "Savory")
             )
+    }
+
+    fun resetCategory2State(): List<toggleableCategory> {
+        return listOf(
+            toggleableCategory(false, "Sweet"),
+            toggleableCategory(false, "Savory"),
         )
     }
 
-    fun toggleCategory(index: Int) {
-        _categories[index] = _categories[index].copy(isChecked = !_categories[index].isChecked)
+
+    fun toggleCategory1(index: Int) {
+        val currentCategories = _categories1.value.toMutableList()
+        currentCategories[index] =
+            currentCategories[index].copy(isChecked = !currentCategories[index].isChecked)
+        _categories1.value = currentCategories
     }
 
-    val selectedCategoryNames: List<String>
-        get() = _categories.filter { it.isChecked }.map { it.text }
+    fun toggleCategory2(index: Int) {
+        val currentCategories = _categories2.value.toMutableList()
+        currentCategories[index] =
+            currentCategories[index].copy(isChecked = !currentCategories[index].isChecked)
+        _categories2.value = currentCategories
+    }
+
+    fun joinCategories(): List<String> {
+        val selectedCategories1 = _categories1.value.filter { it.isChecked }.map { it.text }
+        val selectedCategories2 = _categories2.value.filter { it.isChecked }.map { it.text }
+        return selectedCategories1 + selectedCategories2
+    }
 
 
     //Ingredient
     var overlayIngredientList by mutableStateOf(false)
         internal set
 
-    private val _ingredientList = mutableStateListOf<Item.WithID>()
-    val ingredientList: List<Item.WithID> = _ingredientList
 
     fun openIngredientList() {
         overlayIngredientList = true
@@ -94,6 +131,7 @@ class UploadViewModel: ViewModel() {
     fun closeIngredientList() {
         overlayIngredientList = false
     }
+
 
     fun addIngredient() {
         val nextId = (_ingredientList.maxOfOrNull { it.id } ?: 0) + 1
@@ -122,9 +160,6 @@ class UploadViewModel: ViewModel() {
         internal set
 
 
-    private val _procedureList = mutableStateListOf<Item.WithID>()
-    val procedureList: List<Item.WithID> = _procedureList
-
     fun openProcedureList() {
         overlayProcedureList = true
     }
@@ -145,7 +180,7 @@ class UploadViewModel: ViewModel() {
 
     fun updateProcedure(id: Int, newText: String) {
         val index = _procedureList.indexOfFirst { it.id == id }
-        val item = _ingredientList[index]
+        val item = _procedureList[index]
         item.let {
             _procedureList[index] = it.copy(text = newText)
         }
@@ -156,16 +191,30 @@ class UploadViewModel: ViewModel() {
         _procedureList.add(toIndex, item)
     }
 
-    fun uploadRecipe(): Recipe {
+    fun ingcopyList(): List<Item.WithID> {
+        val newIngredientList = _ingredientList.map { it.copy() }
+        return newIngredientList
+    }
+    fun procopyList(): List<Item.WithID> {
+        val newProcedureList = _ingredientList.map { it.copy() }
+        return newProcedureList
+    }
+
+
+    fun uploadRecipe(): Recipe? {
+        if (title.value.isBlank() || _ingredientList.isEmpty() || _procedureList.isEmpty()) {
+            return null
+        }
+
         val recipe = Recipe(
             image = ImageData.UriVal(uploadedImage),
-            title = title,
-            description = description,
-            servingSize = servingSize,
-            cookTime = cookTime,
-            category = selectedCategoryNames,
-            ingredients = _ingredientList,
-            instructions = _procedureList
+            title = title.value.trim(),
+            description = description.value.trim(),
+            servingSize = servingSize.value,
+            cookTime = cookTime.value,
+            category = joinCategories().toList(),
+            ingredients = ingcopyList().toList(),
+            instructions = procopyList().toList()
         )
         return recipe
     }

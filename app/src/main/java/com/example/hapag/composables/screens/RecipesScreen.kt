@@ -133,12 +133,16 @@ fun RecipeScreen(
                                         )
                                     }
                                 }
+                                if (recipe?.image is ImageData.UriVal){
+
+                                }
                             }
                         }
                     }
                     RecipeDetails(
                         recipe = recipe,
                         sharedViewModel = sharedViewModel,
+                        navController = navController
                     )
                 }
             }

@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">Hapag</string>
-    <string name="title_activity_upload">Upload</string>
-    <string name="title_activity_ingredients_add">IngredientsAdd</string>
-    <string name="title_activity_main">MainActivity</string>
 </resources>

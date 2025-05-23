@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.hapag.model.Item
 import com.example.hapag.model.Recipe
 import com.example.hapag.theme.AppTheme
@@ -36,7 +37,8 @@ import com.example.hapag.viewModel.SharedViewModel
 @Composable
 fun RecipeDetails(
     recipe: Recipe?,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    navController: NavController
 ) {
     val myFavoriteList by sharedViewModel.myFavoriteList.collectAsState()
    var categories by remember { mutableStateOf("")}
@@ -78,7 +80,13 @@ fun RecipeDetails(
                 tint = AppTheme.colorScheme.secondary,
                 modifier = Modifier
                     .size(25.dp)
-                    .clickable { sharedViewModel.toggleMyFavorite(recipe)}
+                    .clickable {
+                        sharedViewModel.toggleMyFavorite(recipe)
+
+                        if (myFavoriteList.contains(recipe)) {
+                            navController.popBackStack()
+                        }
+                    }
         )
         Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
         Spacer(modifier = Modifier.height(12.dp))
@@ -142,7 +150,8 @@ fun PreviewRecipeDetails() {
     AppTheme {
         RecipeDetails(
             recipe = TODO(),
-            sharedViewModel = viewModel()
+            sharedViewModel = viewModel(),
+            navController = TODO()
         )
     }
 }

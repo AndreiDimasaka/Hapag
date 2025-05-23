@@ -59,16 +59,17 @@ fun RecipeCard(
                             .aspectRatio(1.7f),
                         contentScale = ContentScale.Crop
                     )
-                    if (recipe.image is ImageData.UriVal) {
-                        AsyncImage(
-                            model = (recipe.image as ImageData.UriVal).uri,
-                            contentDescription = recipe.title,
-                            modifier = Modifier.fillMaxSize()
-                                .aspectRatio(1.7f),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                } else {
+                }
+                else if (recipe.image is ImageData.UriVal) {
+                    AsyncImage(
+                        model = (recipe.image as ImageData.UriVal).uri,
+                        contentDescription = recipe.title,
+                        modifier = Modifier.fillMaxSize()
+                            .aspectRatio(1.7f),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                else {
                     Text("No Image", textAlign = TextAlign.Center)
                 }
             }

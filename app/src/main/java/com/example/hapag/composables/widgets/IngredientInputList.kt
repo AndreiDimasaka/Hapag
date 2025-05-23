@@ -39,9 +39,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun ReorderableIngredientColumn(
     onClose: () -> Unit
 ) {
-
     var viewModel = viewModel<UploadViewModel>()
-
     val lazyListState = rememberLazyListState()
 
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->

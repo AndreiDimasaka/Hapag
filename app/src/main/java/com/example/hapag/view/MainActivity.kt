@@ -55,6 +55,8 @@ fun MainScreenNav(){
         val recipeList = viewModel.recipeList.collectAsState()
         val navController = rememberNavController()
         val currentRoute = currentRoute(navController)
+
+
         Scaffold(
             topBar = {
                 if (currentRoute != Screen.Recipe.route && currentRoute != "myRecipes/{recipeTitle}" && currentRoute != "myFavorites/{recipeTitle}")

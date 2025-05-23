@@ -55,7 +55,11 @@ class SharedViewModel: ViewModel() {
     private val _myFavoriteList = MutableStateFlow<List<Recipe?>>(emptyList())
     val myFavoriteList: StateFlow<List<Recipe?>> = _myFavoriteList.asStateFlow()
 
-
+    fun addToRecipeList(recipe: Recipe) {
+        _recipeList.update { currentList ->
+            currentList + recipe
+        }
+    }
 
     fun addToMyRecipe(recipe: Recipe) {
         _myRecipeList.update { currentList ->

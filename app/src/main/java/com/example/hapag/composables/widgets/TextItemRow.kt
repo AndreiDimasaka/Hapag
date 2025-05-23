@@ -56,9 +56,10 @@ fun TextItemRow(
                 .weight(1f)
                 .background(Color.Transparent),
             colors = TextFieldDefaults.colors(
-
-
-
+                focusedTextColor = AppTheme.colorScheme.onBackground,
+                unfocusedTextColor = AppTheme.colorScheme.onBackground,
+                disabledTextColor = AppTheme.colorScheme.onBackground,
+                errorTextColor = AppTheme.colorScheme.onBackground,
                 focusedContainerColor = AppTheme.colorScheme.tertiary,
                 unfocusedContainerColor = AppTheme.colorScheme.tertiary,
                 disabledContainerColor = AppTheme.colorScheme.tertiary,

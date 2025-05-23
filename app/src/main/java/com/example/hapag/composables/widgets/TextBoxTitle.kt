@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +29,7 @@ fun ThemedTitleTextField(
     style: TextStyle = AppTheme.typography.bodyMedium
 ) {
 
-    var text by rememberSaveable { mutableStateOf(initialValue) }
+    var text by remember { mutableStateOf(initialValue) }
 
     TextField(
         value = text,
@@ -50,20 +53,13 @@ fun ThemedTitleTextField(
             unfocusedContainerColor = AppTheme.colorScheme.tertiary,
             disabledContainerColor = AppTheme.colorScheme.tertiary.copy(alpha = 0.5f),
             errorContainerColor = AppTheme.colorScheme.tertiary,
-
-
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Transparent,
-
-
             unfocusedTextColor = AppTheme.colorScheme.onBackground,
             cursorColor = AppTheme.colorScheme.onBackground,
-
-
             unfocusedPlaceholderColor = AppTheme.colorScheme.onBackground.copy(alpha = 0.5f), // Use onSurfaceVariant for a slightly dimmer placeholder
-
             // --- Leading/Trailing Icon Color ---
             // leadingIconColor = MaterialTheme.colorScheme.onBackground,
             // trailingIconColor = MaterialTheme.colorScheme.onBackground,

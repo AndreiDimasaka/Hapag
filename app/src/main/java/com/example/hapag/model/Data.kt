@@ -42,6 +42,5 @@ sealed class Item {
         val category: List<String>,
         val ingredients: List<Item>,
         val instructions: List<Item>
-    ) {
-    }
+    )
 

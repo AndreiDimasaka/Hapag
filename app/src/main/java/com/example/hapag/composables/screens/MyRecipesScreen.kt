@@ -36,16 +36,19 @@ fun MyRecipesScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(16.dp)
     ){
-        items(
-            items = myRecipes){ recipe ->
-            MyRecipeCard(
-                title = recipe.title,
-                category = recipe.category,
-                modifier = Modifier.padding(12.dp),
-                onRecipeClick = {
-                    navController.navigate("myRecipes/${recipe.title}")
-                }
-            )
+        if (myRecipes.isNotEmpty()) {
+            items(
+                items = myRecipes
+            ) { recipe ->
+                MyRecipeCard(
+                    title = recipe.title,
+                    category = recipe.category,
+                    modifier = Modifier.padding(12.dp),
+                    onRecipeClick = {
+                        navController.navigate("myRecipes/${recipe.title}")
+                    }
+                )
+            }
         }
     }
 }
