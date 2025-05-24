@@ -2,6 +2,8 @@ package com.example.hapag.model
 
 import android.net.Uri
 import androidx.annotation.DrawableRes
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.hapag.R
 
 
@@ -26,6 +28,7 @@ sealed class Screen(val route: String, val title: String, @DrawableRes val icon:
 sealed class ImageData {
     data class DrawableRes(@androidx.annotation.DrawableRes val resId: Int) : ImageData()
     data class UriVal(val uri: Uri?) : ImageData()
+    object Blank : ImageData()
 }
 
 sealed class Item {
@@ -33,14 +36,18 @@ sealed class Item {
     data class Text(val text: String) : Item()
 }
 
-    data class Recipe(
-        var image: ImageData,
-        val title: String,
-        val description: String,
-        val servingSize: String,
-        val cookTime: String,
-        val category: List<String>,
-        val ingredients: List<Item>,
-        val instructions: List<Item>
+
+@Entity(tableName = "recipe_table")
+data class Recipe(
+    var image: ImageData,
+    val title: String,
+    val description: String,
+    val servingSize: Int,
+    val cookTime: String,
+    val category: List<String>,
+    val ingredients: List<Item>,
+    val instructions: List<Item>,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = 0,
     )
 

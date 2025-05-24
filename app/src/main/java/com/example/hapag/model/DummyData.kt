@@ -11,7 +11,7 @@ class DummyDataViewModel: ViewModel() {
                 image = ImageData.DrawableRes(R.drawable.adobo),
                 title = "Pork Adobo",
                 description = "Savory pork stew simmered in soy sauce, vinegar, and garlic.",
-                servingSize = "4 servings",
+                servingSize = 4,
                 cookTime = "1 hour",
                 category = listOf("Lunch", "Savory"),
                 ingredients = listOf(

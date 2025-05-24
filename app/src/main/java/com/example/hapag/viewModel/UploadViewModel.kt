@@ -7,14 +7,16 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.hapag.model.ImageData
 import com.example.hapag.model.Item
-import com.example.hapag.model.Recipe
+import com.example.hapag.model.RecipeEvent
+import com.example.hapag.model.RecipeState
 import com.example.hapag.model.toggleableCategory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class UploadViewModel: ViewModel() {
+class UploadViewModel(
+    state: RecipeState = RecipeState(),
+    onEvent: (RecipeEvent) -> Unit): ViewModel() {
 
     private val _uploadedImage = mutableStateOf<Uri?>(null)
     val uploadedImage: Uri? get() = _uploadedImage.value
@@ -51,7 +53,6 @@ class UploadViewModel: ViewModel() {
     val procedureList: List<Item.WithID> = _procedureList
 
 
-
     fun uploadReset() {
         _title.value = ""
         _description.value = ""
@@ -83,11 +84,11 @@ class UploadViewModel: ViewModel() {
 
     fun resetCategory1State(): List<toggleableCategory> {
         return listOf(
-                toggleableCategory(false, "Breakfast"),
-                toggleableCategory(false, "Lunch"),
-                toggleableCategory(false, "Dinner"),
-                toggleableCategory(false, "Merienda"),
-            )
+            toggleableCategory(false, "Breakfast"),
+            toggleableCategory(false, "Lunch"),
+            toggleableCategory(false, "Dinner"),
+            toggleableCategory(false, "Merienda"),
+        )
     }
 
     fun resetCategory2State(): List<toggleableCategory> {
@@ -195,27 +196,11 @@ class UploadViewModel: ViewModel() {
         val newIngredientList = _ingredientList.map { it.copy() }
         return newIngredientList
     }
+
     fun procopyList(): List<Item.WithID> {
         val newProcedureList = _ingredientList.map { it.copy() }
         return newProcedureList
     }
-
-
-    fun uploadRecipe(): Recipe? {
-        if (title.value.isBlank() || _ingredientList.isEmpty() || _procedureList.isEmpty()) {
-            return null
-        }
-
-        val recipe = Recipe(
-            image = ImageData.UriVal(uploadedImage),
-            title = title.value.trim(),
-            description = description.value.trim(),
-            servingSize = servingSize.value,
-            cookTime = cookTime.value,
-            category = joinCategories().toList(),
-            ingredients = ingcopyList().toList(),
-            instructions = procopyList().toList()
-        )
-        return recipe
-    }
 }
+
+

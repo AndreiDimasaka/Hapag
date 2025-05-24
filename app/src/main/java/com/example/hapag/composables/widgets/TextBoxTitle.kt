@@ -26,10 +26,12 @@ fun ThemedTitleTextField(
     initialValue: String = "",
     onValueChange: (String) -> Unit = {},
     hint: String,
-    style: TextStyle = AppTheme.typography.bodyMedium
+    style: TextStyle = AppTheme.typography.bodyMedium,
+    isValid: Boolean = true
 ) {
 
     var text by remember { mutableStateOf(initialValue) }
+
 
     TextField(
         value = text,
@@ -67,7 +69,16 @@ fun ThemedTitleTextField(
 
         ),
         shape = AppTheme.shape.textbox,
-        modifier = modifier
+        modifier = modifier,
+        isError = !isValid,
+        supportingText = {
+            if (!isValid) {
+                Text(
+                    text = "Numbers only",
+                    color = Color.Red
+                )
+            }
+        }
     )
 }
 

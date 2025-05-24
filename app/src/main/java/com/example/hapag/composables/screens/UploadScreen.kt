@@ -22,13 +22,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -39,6 +39,8 @@ import com.example.hapag.composables.ReorderableProcedureColumn
 import com.example.hapag.composables.widgets.ImageSelect
 import com.example.hapag.composables.widgets.ReorderableIngredientColumn
 import com.example.hapag.composables.widgets.ThemedTitleTextField
+import com.example.hapag.model.RecipeEvent
+import com.example.hapag.model.RecipeState
 import com.example.hapag.theme.AppTheme
 import com.example.hapag.viewModel.SharedViewModel
 import com.example.hapag.viewModel.UploadViewModel
@@ -47,17 +49,17 @@ import com.example.hapag.viewModel.UploadViewModel
 fun UploadScreen(
     paddingValues: PaddingValues,
     navController: NavController,
-    sharedViewModel: SharedViewModel = viewModel()
+    sharedViewModel: SharedViewModel = viewModel(),
+    state: RecipeState = RecipeState(),
+    onEvent: (RecipeEvent) -> Unit
     ) {
     val viewModel = viewModel<UploadViewModel>()
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val category1 = viewModel.categories1.collectAsState()
     val category2 = viewModel.categories2.collectAsState()
+    val isValid = remember { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) {
-        viewModel.uploadReset()
-    }
 
 
     Box(modifier = Modifier
@@ -103,7 +105,7 @@ fun UploadScreen(
                             initialValue = "",
                             modifier = Modifier.fillMaxWidth(),
                             hint = "Title: Sinigang na baboy ",
-                            onValueChange = {viewModel.addTitle(it)}
+                            onValueChange = {onEvent(RecipeEvent.SetTitle(it))}
                         )
                         Spacer(Modifier.height(10.dp))
                         ThemedTitleTextField(
@@ -111,7 +113,7 @@ fun UploadScreen(
                             style = AppTheme.typography.bodySmall,
                             modifier = Modifier.fillMaxWidth(),
                             hint = "Share the inspiration for this recipe. Describe the dish's flavors, textures, and aroma, and tell us your favorite way to savor it.",
-                            onValueChange = {viewModel.addDescription(it)}
+                            onValueChange = {onEvent(RecipeEvent.SetDescription(it))}
                         )
                         Spacer(Modifier.height(20.dp))
                         Row(
@@ -129,7 +131,11 @@ fun UploadScreen(
                                 modifier = Modifier.fillMaxWidth().padding(start = 120.dp),
                                 hint = "3 People",
                                 style = AppTheme.typography.bodySmall,
-                                onValueChange = {viewModel.addServingSize(it)}
+                                onValueChange = {
+                                    onEvent(RecipeEvent.SetServingSize(it.toIntOrNull() ?: 0))
+                                    isValid.value = it.toIntOrNull() != null
+                                },
+                                isValid = isValid.value
                             )
                         }
                         Spacer(Modifier.height(20.dp))
@@ -149,7 +155,7 @@ fun UploadScreen(
                                 modifier = Modifier.fillMaxWidth().padding(start = 83.dp),
                                 hint = "1 hr 10 mins",
                                 style = AppTheme.typography.bodySmall,
-                                onValueChange = {viewModel.addCookTime(it)}
+                                onValueChange = {onEvent(RecipeEvent.SetCookTime(it))}
                             )
                         }
                         Spacer(Modifier.height(30.dp))
@@ -294,14 +300,3 @@ fun UploadScreen(
 
 
 
-
-@Preview(showBackground = true)
-@Composable
-fun UploadPreview() {
-    AppTheme {
-        UploadScreen(
-            paddingValues = TODO(),
-            navController = TODO()
-        )
-    }
-}
