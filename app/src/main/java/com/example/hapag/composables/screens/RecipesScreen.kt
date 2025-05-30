@@ -22,6 +22,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,20 +38,24 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.hapag.composables.widgets.RecipeDetails
-import com.example.hapag.model.ImageData
-import com.example.hapag.model.Recipe
+import com.example.hapag.model.data.ImageData
 import com.example.hapag.theme.AppTheme
-import com.example.hapag.viewModel.SharedViewModel
+import com.example.hapag.viewModel.RecipeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeScreen(
     navController: NavController,
-    sharedViewModel: SharedViewModel,
-    recipe: Recipe?
+    viewModel: RecipeViewModel,
+    recipeId: Long?,
 ) {
     var showFullScreenImage by remember { mutableStateOf(false) }
+    val recipe by viewModel.recipeState.collectAsState()
+
+  LaunchedEffect(recipeId) {
+      viewModel.loadRecipe(recipeId)
+       }
 
     AppTheme {
         Scaffold(
@@ -58,7 +64,6 @@ fun RecipeScreen(
                     title = {},
                     navigationIcon = {
                         IconButton(onClick =  {
-
                             navController.navigateUp()
                         }) {
                             Icon(
@@ -82,7 +87,7 @@ fun RecipeScreen(
                     (recipe?.image as? ImageData.DrawableRes)?.let {
                         Image(
                             painter = painterResource(id = it.resId),
-                            contentDescription = recipe.title,
+                            contentDescription = recipe!!.title,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(180.dp)
@@ -93,7 +98,7 @@ fun RecipeScreen(
                     (recipe?.image as? ImageData.UriVal)?.let {
                         AsyncImage(
                             model = it.uri,
-                            contentDescription = recipe.title,
+                            contentDescription = recipe!!.title,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(180.dp)
@@ -113,9 +118,9 @@ fun RecipeScreen(
                                 if (recipe?.image is ImageData.DrawableRes) {
                                     Image(
                                         painter = painterResource(
-                                            id = (recipe.image as ImageData.DrawableRes).resId
+                                            id = (recipe!!.image as ImageData.DrawableRes).resId
                                         ),
-                                        contentDescription = recipe.title,
+                                        contentDescription = recipe!!.title,
                                         modifier = Modifier.fillMaxSize()
                                             .clickable { showFullScreenImage = false },
                                         contentScale = ContentScale.Crop
@@ -134,14 +139,33 @@ fun RecipeScreen(
                                     }
                                 }
                                 if (recipe?.image is ImageData.UriVal){
+                                    AsyncImage(
+                                        model = (recipe!!.image as ImageData.UriVal).uri,
+                                        contentDescription = recipe!!.title,
+                                        modifier = Modifier.fillMaxSize()
+                                            .clickable { showFullScreenImage = false },
+                                        contentScale = ContentScale.Crop
+                                    )
+                                    IconButton(
+                                        onClick = { showFullScreenImage = false },
+                                        modifier = Modifier
+                                            .align(Alignment.TopEnd)
+                                            .padding(8.dp)
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.Close,
+                                            contentDescription = "Close",
+                                            tint = Color.White
+                                        )
+                                    }
 
                                 }
                             }
                         }
                     }
                     RecipeDetails(
-                        recipe = recipe,
-                        sharedViewModel = sharedViewModel,
+                        recipeId = recipeId,
+                        viewModel = viewModel,
                         navController = navController
                     )
                 }

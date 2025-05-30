@@ -2,11 +2,9 @@ package com.example.hapag.composables.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,34 +19,16 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.hapag.composables.widgets.RecipeListItem
-import com.example.hapag.model.Recipe
+import com.example.hapag.model.data.Recipe
 import com.example.hapag.theme.AppTheme
-import com.example.hapag.viewModel.SharedViewModel
-
-
-@Composable
-fun SearchScreen(
-    paddingValues: PaddingValues,
-    navController: NavController,
-    viewModel: SharedViewModel
-) {
-
-    val searchResults by viewModel.searchResults.collectAsStateWithLifecycle()
-
-    SearchScreen(
-        searchQuery = viewModel.searchQuery,
-        searchResults = searchResults,
-        onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
-        navController = navController,
-        paddingValues = paddingValues,
-    )
-}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,15 +38,10 @@ fun SearchScreen(
     searchResults: List<Recipe>,
     onSearchQueryChange: (String) -> Unit,
     navController: NavController,
-    paddingValues: PaddingValues
 ) {
+    var searching by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-            .background(AppTheme.colorScheme.background)
-    ){
+
         SearchBar(
             colors = SearchBarDefaults.colors(
                 containerColor = AppTheme.colorScheme.tertiary,
@@ -99,9 +74,9 @@ fun SearchScreen(
             query = searchQuery,
             onQueryChange = onSearchQueryChange,
             onSearch = { keyboardController?.hide() },
-            active = true,
+            active = searching,
             windowInsets = WindowInsets(0.dp),
-            onActiveChange = { },
+            onActiveChange = { searching = it },
             placeholder = {
                 Text(
                     text = "Search Recipes",
@@ -111,6 +86,7 @@ fun SearchScreen(
             }
         )
         {
+            if (searching)
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(32.dp),
                 contentPadding = PaddingValues(16.dp),
@@ -118,12 +94,12 @@ fun SearchScreen(
             ) {
                 items(
                     items = searchResults,
-                    key = { it.title }) { recipe ->
+                    key = { it.id ?: 0 }) { recipe ->
                     RecipeListItem(
                         recipe = recipe,
                         modifier = Modifier.fillMaxSize(),
                         onClick = {
-                            navController.navigate("Recipe/${recipe.title}")
+                            navController.navigate("Recipe/${recipe.id}")
                         }
                     )
 
@@ -131,4 +107,3 @@ fun SearchScreen(
             }
         }
     }
-}

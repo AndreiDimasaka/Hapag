@@ -20,17 +20,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.hapag.model.ImageData
-import com.example.hapag.model.Recipe
+import com.example.hapag.model.data.ImageData
+import com.example.hapag.model.data.RecipeWithCategories
 import com.example.hapag.theme.AppTheme
 
 
 @Composable
 fun RecipeCard(
-    recipe: Recipe,
+    recipeWithCategories: RecipeWithCategories,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+
     Card(
         modifier = modifier.padding(4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -51,19 +53,19 @@ fun RecipeCard(
                     .aspectRatio(1.5f),
                 contentAlignment = Alignment.Center
             ) {
-                if (recipe.image is ImageData.DrawableRes) {
+                if (recipeWithCategories.recipe.image is ImageData.DrawableRes) {
                     Image(
-                        painter = painterResource(id = (recipe.image as ImageData.DrawableRes).resId),
-                        contentDescription = recipe.title,
+                        painter = painterResource(id = (recipeWithCategories.recipe.image as ImageData.DrawableRes).resId),
+                        contentDescription = recipeWithCategories.recipe.title,
                         modifier = Modifier.fillMaxSize()
                             .aspectRatio(1.7f),
                         contentScale = ContentScale.Crop
                     )
                 }
-                else if (recipe.image is ImageData.UriVal) {
+                else if (recipeWithCategories.recipe.image is ImageData.UriVal) {
                     AsyncImage(
-                        model = (recipe.image as ImageData.UriVal).uri,
-                        contentDescription = recipe.title,
+                        model = (recipeWithCategories.recipe.image as ImageData.UriVal).uri,
+                        contentDescription = recipeWithCategories.recipe.title,
                         modifier = Modifier.fillMaxSize()
                             .aspectRatio(1.7f),
                         contentScale = ContentScale.Crop
@@ -73,8 +75,10 @@ fun RecipeCard(
                     Text("No Image", textAlign = TextAlign.Center)
                 }
             }
-            Text(text = recipe.title, fontWeight = FontWeight.Bold)
-            Text(text = recipe.category[0])
+            Text(text = recipeWithCategories.recipe.title, fontWeight = FontWeight.Bold)
+            if (recipeWithCategories.categories.isNotEmpty()) {
+                Text(text = recipeWithCategories.categories[0].name)
+            }
         }
     }
 

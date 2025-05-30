@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hapag.R
 import com.example.hapag.composables.widgets.TextItemRow
-import com.example.hapag.viewModel.UploadViewModel
 import com.example.hapag.theme.AppTheme
+import com.example.hapag.viewModel.RecipeViewModel
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -41,7 +41,8 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun ReorderableProcedureColumn(
     onClose: () -> Unit
 ) {
-    var viewModel = viewModel<UploadViewModel>()
+    var viewModel = viewModel<RecipeViewModel>()
+
 
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
@@ -79,7 +80,7 @@ fun ReorderableProcedureColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
-                    viewModel.procedureList,
+                    viewModel.procedureInputList,
                     key = { _, item -> item.id }) { index, procedureItem ->
                     ReorderableItem(
                         reorderableLazyListState,

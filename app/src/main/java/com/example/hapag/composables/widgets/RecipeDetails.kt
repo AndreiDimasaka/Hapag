@@ -16,33 +16,35 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.hapag.model.Item
-import com.example.hapag.model.Recipe
 import com.example.hapag.theme.AppTheme
-import com.example.hapag.viewModel.SharedViewModel
+import com.example.hapag.viewModel.RecipeViewModel
 
 @Composable
 fun RecipeDetails(
-    recipe: Recipe?,
-    sharedViewModel: SharedViewModel,
+    recipeId: Long?,
+    viewModel: RecipeViewModel,
     navController: NavController
 ) {
-    val myFavoriteList by sharedViewModel.myFavoriteList.collectAsState()
-   var categories by remember { mutableStateOf("")}
-    categories = recipe?.category?.joinToString(", ") ?: "No categories"
+    val recipe by viewModel.recipeState.collectAsState()
+    val ingredients by viewModel.ingredientsState.collectAsState()
+    val instructions by viewModel.instructionsState.collectAsState()
+    val listCategories by viewModel.categoriesState.collectAsState()
+
+    LaunchedEffect(recipeId) {
+        viewModel.loadRecipe(recipeId)
+    }
+
+    val categories = listCategories.joinToString { it.name }
 
     Column(
         modifier = Modifier
@@ -75,16 +77,14 @@ fun RecipeDetails(
         }
         Spacer(modifier = Modifier.height(8.dp))
         Icon(
-                if(myFavoriteList.contains(recipe)) {Icons.Filled.Favorite } else Icons.Filled.FavoriteBorder,
+                if(recipe?.isFavorite == true) {Icons.Filled.Favorite } else Icons.Filled.FavoriteBorder,
                 contentDescription = "Add to Favorites",
                 tint = AppTheme.colorScheme.secondary,
                 modifier = Modifier
                     .size(25.dp)
                     .clickable {
-                        sharedViewModel.toggleMyFavorite(recipe)
-
-                        if (myFavoriteList.contains(recipe)) {
-                            navController.popBackStack()
+                        recipe?.let {
+                            viewModel.toggleFavorite(it.id, !it.isFavorite)
                         }
                     }
         )
@@ -96,9 +96,7 @@ fun RecipeDetails(
             color = AppTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.height(4.dp))
-        if (recipe != null) {
-            Text(recipe.description, style = AppTheme.typography.bodySmall, color = AppTheme.colorScheme.onBackground)
-        }
+        recipe?.let { Text(it.description, style = AppTheme.typography.bodySmall, color = AppTheme.colorScheme.onBackground) }
         Spacer(modifier = Modifier.height(12.dp))
         Divider(color = AppTheme.colorScheme.secondary, thickness = 1.dp)
         Text(
@@ -107,12 +105,9 @@ fun RecipeDetails(
             color = AppTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.height(8.dp))
-        recipe?.ingredients?.forEach { ingredient ->
+        ingredients.forEach { ingredient ->
             Text(
-                text = when (ingredient) {
-                    is Item.WithID -> ingredient.text
-                    is Item.Text -> ingredient.text
-                },
+                text = ingredient.name,
                 style = AppTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                 color = AppTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(vertical = 6.dp)
@@ -126,12 +121,9 @@ fun RecipeDetails(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Column {
-            recipe?.instructions?.forEachIndexed { index, step ->
+            instructions.forEachIndexed { index, step ->
                 Text(
-                    text = when (step) {
-                        is Item.WithID -> "${index + 1}.${step.text}"
-                        is Item.Text -> "${index + 1}.${step.text}"
-                    },
+                    text = "${index + 1}. ${step.instructionText}" ,
                     style = AppTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                     color = AppTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(vertical = 8.dp)
@@ -147,11 +139,5 @@ fun RecipeDetails(
 @Composable
 @Preview(showBackground = true)
 fun PreviewRecipeDetails() {
-    AppTheme {
-        RecipeDetails(
-            recipe = TODO(),
-            sharedViewModel = viewModel(),
-            navController = TODO()
-        )
-    }
+
 }

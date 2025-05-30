@@ -1,5 +1,7 @@
+
 package com.example.hapag.ui
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.hapag.model.Screen
+import com.example.hapag.model.data.Screen
 
 import com.example.hapag.theme.AppTheme
 
@@ -35,6 +37,8 @@ fun BottomNavigationBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    Log.d("BottomNavDebug", "Current visible route: $currentRoute")
 
     NavigationBar(
         modifier = Modifier
@@ -81,8 +85,8 @@ fun BottomNavigationBar(
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
-                        launchSingleTop = true
                         restoreState = true
+                        launchSingleTop = true
                     }
                 }
 

@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.hapag.model.Recipe
+import com.example.hapag.model.data.Recipe
 import com.example.hapag.theme.AppTheme
 
 @Composable
@@ -24,11 +24,6 @@ fun RecipeListItem(
     ) {
         Text(
             text = recipe.title,
-            style = AppTheme.typography.bodyMedium,
-            color = AppTheme.colorScheme.onBackground
-        )
-        Text(
-            text = recipe.category[0],
             style = AppTheme.typography.bodyMedium,
             color = AppTheme.colorScheme.onBackground
         )

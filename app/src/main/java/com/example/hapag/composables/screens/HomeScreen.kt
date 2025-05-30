@@ -9,13 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.hapag.composables.widgets.FigmaDashboardLayout
 import com.example.hapag.theme.AppTheme
-import com.example.hapag.viewModel.SharedViewModel
+import com.example.hapag.viewModel.RecipeViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     paddingValues: PaddingValues,
-    sharedViewModel: SharedViewModel
+    viewModel: RecipeViewModel
 ) {
 
     AppTheme {
@@ -28,7 +28,7 @@ fun HomeScreen(
             FigmaDashboardLayout(
                 modifier = Modifier,
                 navController = navController,
-                sharedViewModel = sharedViewModel
+                viewModel = viewModel
             )
         }
     }

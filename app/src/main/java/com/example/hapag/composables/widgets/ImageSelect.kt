@@ -22,16 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.hapag.R
-import com.example.hapag.viewModel.UploadViewModel
+import com.example.hapag.viewModel.RecipeViewModel
 import com.example.hapag.theme.AppTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 
 @Composable
 fun ImageSelect(
     modifier: Modifier = Modifier
 ) {
-    val viewModel = viewModel<UploadViewModel>()
+    val viewModel = viewModel<RecipeViewModel>()
 
     val singleImagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),

@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,9 +18,11 @@ import com.example.hapag.theme.AppTheme
 @Composable
 fun MyRecipeCard(
     title: String,
-    category: List<String>?,
+    category: List<String>,
     modifier: Modifier = Modifier,
-    onRecipeClick: () -> Unit
+    onRecipeClick: () -> Unit,
+    onRemoveClick: () -> Unit,
+    icon : @Composable () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -36,10 +35,16 @@ fun MyRecipeCard(
     ) {
         Column {
             Text(title, style = AppTheme.typography.labelLarge, color = AppTheme.colorScheme.onTertiary)
-            Text("Category: ${category?.get(0)}", style = AppTheme.typography.labelSmall, color = AppTheme.colorScheme.onTertiary)
+            if (category.isNotEmpty()) {
+                Text(
+                    "Category: ${category[0]}",
+                    style = AppTheme.typography.labelSmall,
+                    color = AppTheme.colorScheme.onTertiary
+                )
+            }
         }
-        IconButton(onClick = { /* TODO: Remove recipe */ }) {
-            Icon(Icons.Filled.Favorite, contentDescription = "Remove Recipe", tint = AppTheme.colorScheme.secondary)
+        IconButton(onClick = onRemoveClick) {
+            icon()
         }
     }
 }
