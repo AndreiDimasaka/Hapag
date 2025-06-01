@@ -20,39 +20,42 @@ interface RecipeDao {
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertRecipe(recipe: Recipe): Long
 
-    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertIngredient(ingredient: Ingredient): Long
 
     @Query("SELECT ingredient_id FROM ingredient_table WHERE name = :name")
     suspend fun getIngredientIdByName(name: String): Long?
 
-    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertRecipeIngredientCrossRef(crossRef: RecipeIngredientCrossRef)
 
-    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertProcedures(procedures: Procedure): Long
+
+    @Query("SELECT MAX(procedure_id) FROM procedure_table")
+    suspend fun getMaxProcedureId(): Long?
 
     @Query("SELECT procedure_id FROM procedure_table WHERE instructionText = :name")
     suspend fun getProcedureIdByName(name: String): Long?
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProcedureCrossRefs(crossRefs: RecipeProcedureCrossRef)
 
 
-    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertCategory(category: Category): Long
 
     @Query("SELECT category_id FROM category_table WHERE name = :name")
     suspend fun getCategoryIdByName(name: String): Long?
 
-    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertCategoryCrossRef(crossRef: RecipeCategoryCrossRef)
 
 
         @Transaction
         @Query(
             """
-        SELECT * FROM recipe_table
+        SELECT * FROM recipe_table ORDER BY title ASC
     """
         )
         fun getAllRecipesWithCategories(): Flow<List<RecipeWithCategories>>

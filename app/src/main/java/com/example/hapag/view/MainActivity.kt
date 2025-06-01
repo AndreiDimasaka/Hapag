@@ -77,7 +77,7 @@ fun MainScreenNav(){
                     UploadScreen(
                         navController = navController,
                         paddingValues = paddingValues,
-                        sharedViewModel = viewModel
+                        viewModel = viewModel
                     )
                 }
                 composable(

@@ -1,5 +1,7 @@
 package com.example.hapag.model
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.example.hapag.model.data.Category
 import com.example.hapag.model.data.Ingredient
 import com.example.hapag.model.data.Procedure
@@ -88,21 +90,33 @@ class Repository(
         recipeId: Long,
         procedures: List<String>
     ) {
-        procedures.forEachIndexed{ index, instruction ->
+        procedures.forEachIndexed { index, instruction ->
+            Log.d(TAG, "Processing procedure step ${index + 1}: '$instruction'")
 
-            var procedureId = recipeDao.getProcedureIdByName(instruction)
+            var procedureId: Long? = null
 
-            if (procedureId == null) {
-                val procedure = Procedure(instructionText = instruction)
-                procedureId = recipeDao.insertProcedures(procedure)
+            procedureId = recipeDao.getMaxProcedureId()
+            val id  = procedureId?.plus(1)
+
+            val newProcedure = Procedure(id = id ,instructionText = instruction)
+
+            recipeDao.insertProcedures(newProcedure)
+
+            if (procedureId != null) {
+                val crossRef = RecipeProcedureCrossRef(
+                    recipeId = recipeId,
+                    procedureId = procedureId,
+                )
+                try {
+                    Log.d(TAG, "Inserting cross-reference for recipeId: $recipeId, procedureId: $procedureId, step: ${index + 1}")
+                    recipeDao.insertProcedureCrossRefs(crossRef)
+                    Log.d(TAG, "Successfully inserted cross-reference for recipeId: $recipeId, procedureId: $procedureId")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error inserting RecipeProcedureCrossRef for recipeId: $recipeId, procedureId: $procedureId: ${e.message}", e)
+                }
+            } else {
+                Log.e(TAG, "Procedure ID is null after attempted insertion for instruction: '$instruction'. Cannot create cross-reference.")
             }
-
-            val crossRef = RecipeProcedureCrossRef(
-                recipeId = recipeId,
-                procedureId = procedureId,
-                stepNumber = (index + 1).toLong()
-            )
-            recipeDao.insertProcedureCrossRefs(crossRef)
         }
 
     }
@@ -136,6 +150,7 @@ class Repository(
         procedures: List<String>,
         categories: List<String>
     ): Long {
+
         val recipeId = recipeDao.insertRecipe(recipe)
         insertCategoriesForRecipe(recipeId, categories)
         insertRecipeWithIngredients(recipeId, ingredients)

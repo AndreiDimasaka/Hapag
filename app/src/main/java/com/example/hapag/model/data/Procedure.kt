@@ -39,5 +39,4 @@ data class Procedure(
 data class RecipeProcedureCrossRef(
     val recipeId: Long,
     val procedureId: Long,
-    val stepNumber: Long,
 )

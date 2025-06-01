@@ -41,6 +41,7 @@ import com.example.hapag.composables.ReorderableProcedureColumn
 import com.example.hapag.composables.widgets.ImageSelect
 import com.example.hapag.composables.widgets.ReorderableIngredientColumn
 import com.example.hapag.composables.widgets.ThemedTitleTextField
+import com.example.hapag.model.data.Screen
 import com.example.hapag.theme.AppTheme
 import com.example.hapag.viewModel.RecipeViewModel
 
@@ -48,15 +49,15 @@ import com.example.hapag.viewModel.RecipeViewModel
 fun UploadScreen(
     paddingValues: PaddingValues,
     navController: NavController,
-    sharedViewModel: RecipeViewModel = viewModel(),
+    viewModel: RecipeViewModel
     ) {
-    val viewModel = viewModel<RecipeViewModel>()
+    val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val categories = viewModel.category.collectAsState()
     val tastes = viewModel.taste.collectAsState()
     val isValid = remember { mutableStateOf(true) }
-
+    val imagepath = viewModel.imagePath.collectAsState()
 
 
 
@@ -267,8 +268,7 @@ fun UploadScreen(
                                 onClick = {
                                     viewModel.uploadCompleteRecipe()
                                     viewModel.uploadReset()
-                                    navController.navigateUp()
-
+                                    navController.navigate(Screen.MyRecipes.route)
                                     },
                                 shape = RoundedCornerShape(5.dp),
                                 colors = ButtonDefaults.buttonColors(
@@ -299,7 +299,7 @@ fun UploadScreenPreview() {
     UploadScreen(
         paddingValues = PaddingValues(0.dp),
         navController = NavController(LocalContext.current),
-        sharedViewModel = viewModel()
+        viewModel = viewModel()
     )
 }
 

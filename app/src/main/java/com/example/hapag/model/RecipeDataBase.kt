@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.hapag.model.data.Category
 import com.example.hapag.model.data.Ingredient
+import com.example.hapag.model.data.MIGRATION_1_2
 import com.example.hapag.model.data.Procedure
 import com.example.hapag.model.data.Recipe
 import com.example.hapag.model.data.RecipeCategoryCrossRef
@@ -24,7 +25,7 @@ import com.example.hapag.model.data.RecipeProcedureCrossRef
         RecipeIngredientCrossRef::class,
         RecipeProcedureCrossRef::class,
                ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(ImageConverter::class)
@@ -43,7 +44,7 @@ abstract class RecipeDataBase: RoomDatabase() {
                     context.applicationContext,
                     RecipeDataBase::class.java,
                     "recipe_database"
-                ).createFromAsset(databaseFilePath = "database/final recipes.db").build()
+                ).addMigrations(MIGRATION_1_2).createFromAsset(databaseFilePath = "database/final recipes.db").build()
                 INSTANCE = instance
                 return instance
             }

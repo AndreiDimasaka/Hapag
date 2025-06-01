@@ -54,8 +54,6 @@ fun ReorderableIngredientColumn(
     ) {
         Card(
             colors = CardDefaults.cardColors(
-
-
                 containerColor = AppTheme.colorScheme.background
             ),
             border = BorderStroke(1.dp, Color.Black),
@@ -92,7 +90,6 @@ fun ReorderableIngredientColumn(
                             onTextChange = { newText ->
                                 viewModel.updateIngredient(ingredientItem.id,newText)
                             },
-
                             onOptionsClick = {
                                 viewModel.removeIngredient(ingredientItem.id)
                             },

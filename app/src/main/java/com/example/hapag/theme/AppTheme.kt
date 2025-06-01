@@ -20,18 +20,17 @@ private val BahayKubo = AppColorScheme(
     background = ParchmentWhite,
     onBackground = DarkCacaoBrown,
     onTertiary = DarkCacaoBrown
-
     )
 
 private val UbeFiesta = AppColorScheme(
     primary = GoldenYellow,
     onPrimary = DeepUbe,
     secondary = VibrantUbe,
-    onSecondary = ParchmentWhite,
+    onSecondary = CreamyWhite,
     tertiary = MutedTeal,
     background = DeepUbe,
-    onBackground = ParchmentWhite,
-    onTertiary = ParchmentWhite
+    onBackground = CreamyWhite,
+    onTertiary = CreamyWhite
 )
 
 private val typography = AppTypography(
@@ -43,12 +42,14 @@ private val typography = AppTypography(
         lineHeight = 32.sp,
         letterSpacing = 0.sp
     ),
+
     titleMedium = TextStyle(
         fontFamily = merriweather,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 28.sp
     ),
+
     headlineMedium = TextStyle(
         fontFamily = merriweather,
         fontWeight = FontWeight.SemiBold,
@@ -64,6 +65,7 @@ private val typography = AppTypography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
+
     bodyMedium = TextStyle(
         fontFamily = libreBaskerville,
         fontWeight = FontWeight.Normal,

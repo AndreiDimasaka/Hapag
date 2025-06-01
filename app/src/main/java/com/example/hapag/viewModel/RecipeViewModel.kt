@@ -14,7 +14,6 @@ import com.example.hapag.Graph
 import com.example.hapag.model.Repository
 import com.example.hapag.model.data.Category
 import com.example.hapag.model.data.CheckableCategory
-import com.example.hapag.model.data.ImageData
 import com.example.hapag.model.data.Ingredient
 import com.example.hapag.model.data.Item
 import com.example.hapag.model.data.Procedure
@@ -78,6 +77,9 @@ class RecipeViewModel(
 
     private val _uploadedImage = mutableStateOf<Uri?>(null)
     val uploadedImage: Uri? get() = _uploadedImage.value
+
+    private val _imagePath = MutableStateFlow<String?>(null)
+    val imagePath: StateFlow<String?> = _imagePath
 
     private val _title = mutableStateOf("")
     val title: State<String> = _title
@@ -207,7 +209,7 @@ class RecipeViewModel(
     }
 
 
-    fun uploadCompleteRecipe(): Long {
+    fun uploadCompleteRecipe(){
         viewModelScope.launch {
             try {
                 val recipe = Recipe(
@@ -216,7 +218,7 @@ class RecipeViewModel(
                     description = _description.value,
                     cookTime = _cookTime.value,
                     servingSize = _servingSize.value,
-                    image = _uploadedImage.value as ImageData?,
+                    image = null,
                     isUserCreated = true,
                     isFavorite =  false
                 )
@@ -231,12 +233,10 @@ class RecipeViewModel(
                     procedures = procedures,
                     categories = categories
                 )
-                currentRecipeId.longValue = recipeId
             } catch (e: Exception) {
                 ("Error uploading recipe: ${e.message}")
             }
         }
-        return currentRecipeId.longValue
     }
 
     fun setImageUri(uri: Uri) {

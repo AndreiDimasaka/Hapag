@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -18,6 +20,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.hapag.composables.widgets.MyRecipeCard
@@ -74,10 +78,25 @@ fun MyFavoritesScreen(
         }  else{
             item {
                 Text(
-                    text = "You don't have any favorite recipes",
-                    color = AppTheme.colorScheme.onBackground,
+                    text = "You don't have any favorites",
+                    color = Color.Gray,
                     style = AppTheme.typography.labelLarge
                 )
+                Button(
+                    onClick = { navController.navigate("Home") },
+                    modifier = Modifier.padding(top = 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = AppTheme.colorScheme.background
+                    ),
+                    border = null
+                ) {
+                    androidx.compose.material3.Text(
+                        text = "Home",
+                        color = AppTheme.colorScheme.secondary,
+                        textDecoration = TextDecoration.Underline,
+                        style = AppTheme.typography.labelLarge
+                    )
+                }
             }
         }
     }

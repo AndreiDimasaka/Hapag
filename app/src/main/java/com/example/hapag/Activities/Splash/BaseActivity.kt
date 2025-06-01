@@ -14,12 +14,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.hapag.R
-import androidx.compose.ui.layout.ContentScale
+import com.example.hapag.theme.AppTheme
 
 
 @Composable
@@ -28,16 +27,8 @@ fun IntroScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF1EDE7))
+            .background(AppTheme.colorScheme.background)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.background2),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize(), // Make the image fill the Box
-            contentScale = ContentScale.Crop
-        )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()

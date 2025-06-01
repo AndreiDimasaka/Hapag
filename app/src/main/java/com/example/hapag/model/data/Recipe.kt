@@ -12,7 +12,7 @@ data class Recipe(
     @PrimaryKey(autoGenerate = true)
     val id: Long?,
     @TypeConverters(ImageConverter::class)
-    var image: ImageData?,
+    var image: String?,
     val title: String,
     val description: String,
     val servingSize: String,
